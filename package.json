@@ -1,0 +1,20 @@
+{
+  "author": "Remy Loubradou <remy.loubradou@gmail.com> (https://twitter.com/#!/lbdremy)",
+  "name": "solr",
+  "main": "./lib/solr",
+  "description": "Library for Sorl",
+  "version": "0.0.1",
+  "repository": {
+    "type": "git",
+    "url": ""
+  },
+  "engines": {
+    "node": ">= 0.4.8"
+  },
+  "dependencies": {
+      "sax" : ">=0.2.2"
+   },
+  "devDependencies": {
+      "vows": ">=0.5.8"  
+   }
+}

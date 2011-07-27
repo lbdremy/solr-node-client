@@ -19,5 +19,5 @@
     client.commit(callback);
     
 ##TODO
- - Unit Test with Vows
  - Check my english
+ - Support sort for queries

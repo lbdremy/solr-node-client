@@ -14,11 +14,15 @@ suite.addBatch({
             var client = solr.createClient();
             return client;
          },
-         'should returned a Client' : function(client){
+         'should return a `Client`' : function(client){
             assertClient(client);
          }
       },
+<<<<<<< HEAD
+      'with custom host, post, core and path' : {
+=======
       'with custom host,port,core and path' : {
+>>>>>>> origin/HEAD
          topic : function(){
             var host = 'localhost';
             var port = 8983;
@@ -27,13 +31,13 @@ suite.addBatch({
             var client = solr.createClient(host,port,core,path);
             return client
          },
-         'should returned a Client' : function(client){
+         'should return a `Client`' : function(client){
             assertClient(client);
          }
       }
    }
 }).addBatch({
-   'Add' : {
+   'Adding' : {
       topic : function(){
          var client = solr.createClient();
          return client;
@@ -51,7 +55,7 @@ suite.addBatch({
             assertCorrectResponse(res,err);
          }
       },
-      'several document to the Solr DB' : {
+      'several documents to the Solr DB' : {
          topic : function(client){
             client.updateEach = 4;
             for(var i = 0; i < 5; i++){
@@ -70,7 +74,7 @@ suite.addBatch({
       }
    }
 }).addBatch({
-   'Commit' : {
+   'Committing' : {
       topic : function(){
          var client = solr.createClient();
          return client;
@@ -95,7 +99,7 @@ suite.addBatch({
       }
    }
 }).addBatch({
-   'Delete' : {
+   'Deleting' : {
       topic : function(){
          var client = solr.createClient();
          return client;
@@ -118,7 +122,7 @@ suite.addBatch({
       }
    }
 }).addBatch({
-   'Optimize' : {
+   'Optimizing' : {
       topic : function(){
          var client = solr.createClient();
          return client;
@@ -137,12 +141,12 @@ suite.addBatch({
       }
    }
 }).addBatch({
-   'Update' : {
+   'Updating' : {
       topic : function(){
          var client = solr.createClient();
          return client;
       },
-      'the Solr Database with any objects' : {
+      'the Solr Database with any object' : {
          topic : function(client){
             var data = { rollback : {} };
             client.update(data,this.callback);
@@ -153,12 +157,12 @@ suite.addBatch({
       } 
    }
 }).addBatch({
-   'Rollback' : {
+   'Rolling back' : {
       topic : function(){
          var client = solr.createClient();
          return client;
       },
-      'all adds/deletes documents made to the index since the last commit' : {
+      'all documents added or deleted to the index since the last commit' : {
          topic : function(client){
             client.rollback(this.callback);
          },
@@ -168,7 +172,7 @@ suite.addBatch({
       }
    }
 }).addBatch({
-   'Query' : {
+   'Querying' : {
       topic : function(){
          var client = solr.createClient();
          return client;

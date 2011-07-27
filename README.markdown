@@ -17,7 +17,16 @@
     }
     client.add(doc,callback);
     client.commit(callback);
+
+##Examples
+
+Take a look in the folder examples.
+
+##Running Test
+
+    vows --spec test/*
     
 ##TODO
- - Check my english
  - Support sort for queries
+ 
+

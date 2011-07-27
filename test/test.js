@@ -18,11 +18,7 @@ suite.addBatch({
             assertClient(client);
          }
       },
-<<<<<<< HEAD
       'with custom host, post, core and path' : {
-=======
-      'with custom host,port,core and path' : {
->>>>>>> origin/HEAD
          topic : function(){
             var host = 'localhost';
             var port = 8983;

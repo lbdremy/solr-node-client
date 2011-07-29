@@ -9,7 +9,8 @@ var callback = function(json,err){
    if(err) console.log('Error:' + err);
    console.log('JSON:'+json);
 }
-var keywords = ['laptop','json','tv','lol','mdr'];
-for(var i = 0 ; i < keywords.length ; i++){
-   client.query('description_t',keywords[i],0,20,callback);
-}
+
+var query = client.createQuery().q('laptop').dismax().qf({title_t : 0.2 , description_t : 3.3}).mm(2).start(0).rows(10);
+client.query(query,callback);
+var query2 = client.createQuery().q({title_t : 'laptop'}).start(0).rows(10);
+client.query(query2,callback);

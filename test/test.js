@@ -173,11 +173,21 @@ suite.addBatch({
          var client = solr.createClient();
          return client;
       },
-      'the Solr DB with a filter by field and text associated and with the number of row returned and the index of the first row' : {
+      'nicely with DisMaxParserPlugin the Solr Database' : {
          topic : function(client){
-            client.query('title_t','tv',0,20,this.callback);
+            var query = client.createQuery().q('laptop').dismax().qf({title_t : 0.2 , description_t : 3.3}).mm(2).start(0).rows(10);
+            client.query(query,this.callback);
          },
          'should be possible' : function(res,err){
+            assertCorrectResponse(res,err);
+         }
+      },
+      'simply with DefaultRequestHandler the Solr Database' : {
+         topic : function(client){
+            var query = client.createQuery().q({title_t : 'laptop'}).start(0).rows(10);
+            client.query(query,this.callback);
+         },
+         'should be possible' : function(res,err) {
             assertCorrectResponse(res,err);
          }
       }

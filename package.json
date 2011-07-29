@@ -2,7 +2,7 @@
   "author": "Remy Loubradou <remy.loubradou@gmail.com> (https://twitter.com/#!/lbdremy)",
   "name": "solr",
   "main": "./lib/solr",
-  "description": "Library for Sorl",
+  "description": "Solr Client API",
   "version": "0.0.1",
   "repository": {
     "type": "git",

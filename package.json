@@ -9,7 +9,7 @@
     "url": ""
   },
   "engines": {
-    "node": ">= 0.4.8"
+    "node": ">= 0.4.7"
   },
   "dependencies": {
       "sax" : ">=0.2.2"

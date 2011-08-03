@@ -1,5 +1,8 @@
 #Solr Client API
 
+##Install
+    npm install solr-client
+    
 ##Get started
     // Dependency
     var solr = require('solr');

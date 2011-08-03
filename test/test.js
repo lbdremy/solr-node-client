@@ -184,7 +184,7 @@ suite.addBatch({
       },
       'simply with DefaultRequestHandler the Solr Database' : {
          topic : function(client){
-            var query = client.createQuery().q({title_t : 'laptop'}).start(0).rows(10);
+            var query = client.createQuery().q({title : 'laptop'}).start(0).rows(10);
             client.query(query,this.callback);
          },
          'should be possible' : function(res,err) {

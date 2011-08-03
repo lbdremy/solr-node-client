@@ -1,12 +1,16 @@
 {
-  "author": "Remy Loubradou <remy.loubradou@gmail.com> (https://twitter.com/#!/lbdremy)",
-  "name": "solr",
+  "author": {
+   "name"  : "Remy Loubradou" ,
+   "email" : "remy.loubradou@gmail.com" ,
+   "url" : "https://twitter.com/#!/lbdremy"
+  },
+  "name": "solr-client",
   "main": "./lib/solr",
-  "description": "Solr Client API",
-  "version": "0.0.1",
+  "description": "Solr client using JSON documents to update, the version of Solr have to be >= 3.2",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
-    "url": ""
+    "url": "https://github.com/lbdremy/solr-node-client"
   },
   "engines": {
     "node": ">= 0.4.7"

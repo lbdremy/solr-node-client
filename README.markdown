@@ -20,13 +20,11 @@
 
 ##Examples
 
-Take a look in the folder examples.
+Take a look in the folder examples or [here](https://github.com/lbdremy/solr-node-client/tree/master/examples).
 
 ##Running Test
-
+Before to run the test, start the Solr Server.
     vows --spec test/*
-    
-##TODO
- - Support sort for queries
+
  
 

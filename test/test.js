@@ -175,7 +175,7 @@ suite.addBatch({
       },
       'nicely with DisMaxParserPlugin the Solr Database' : {
          topic : function(client){
-            var query = client.createQuery().q('laptop').dismax().qf({title_t : 0.2 , description_t : 3.3}).mm(2).start(0).rows(10);
+            var query = client.createQuery().q('laptop').dismax().qf({title : 0.2 , description : 3.3}).mm(2).start(0).rows(10);
             client.query(query,this.callback);
          },
          'should be possible' : function(res,err){
@@ -188,6 +188,16 @@ suite.addBatch({
             client.query(query,this.callback);
          },
          'should be possible' : function(res,err) {
+            assertCorrectResponse(res,err);
+         }
+      },
+      'sort a result in ascending or descending order' : {
+         topic : function(client){
+            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).sort({score: 'desc',price: 'asc'});
+            console.log(query.build());
+            client.query(query,this.callback);
+         },
+         'should be possible': function(res,err){
             assertCorrectResponse(res,err);
          }
       }

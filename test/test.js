@@ -168,12 +168,12 @@ suite.addBatch({
       }
    }
 }).addBatch({
-   'Querying' : {
+   'Make a query' : {
       topic : function(){
          var client = solr.createClient();
          return client;
       },
-      'nicely with DisMaxParserPlugin the Solr Database' : {
+      'that will be handle by DisMaxParserPlugin' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 0.2 , description : 3.3}).mm(2).start(0).rows(10);
             client.query(query,this.callback);
@@ -182,7 +182,7 @@ suite.addBatch({
             assertCorrectResponse(res,err);
          }
       },
-      'simply with DefaultRequestHandler the Solr Database' : {
+      'that will be handle by DefaultRequestHandler' : {
          topic : function(client){
             var query = client.createQuery().q({title : 'laptop'}).start(0).rows(10);
             client.query(query,this.callback);
@@ -191,13 +191,49 @@ suite.addBatch({
             assertCorrectResponse(res,err);
          }
       },
-      'sort a result in ascending or descending order' : {
+      'that return a sorted result in ascending or descending order' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).sort({score: 'desc',price: 'asc'});
-            console.log(query.build());
             client.query(query,this.callback);
          },
          'should be possible': function(res,err){
+            assertCorrectResponse(res,err);
+         }
+      },
+      'that return a result where one or more fields are on a range of values' : {
+         topic : function(client){
+            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'price', start : '10',end : '100' },{field: 'delievery_t', start : '10',end : '100' } ]);
+            console.log(query.build());
+            client.query(query,this.callback);
+         },
+         'should be possible' : function(res,err){
+            assertCorrectResponse(res,err);
+         }
+      },
+      'that return a result where one or more fields match a particular value'  : {
+         topic : function(client){
+            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).matchFilter('category','Electronics');
+            client.query(query,this.callback);
+         },
+         'should be possible' : function(res,err){
+            assertCorrectResponse(res,err);
+         }
+      },
+      'that return only a set of fields specified' : {
+         topic : function(client){
+            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).restrict(['title','description']);
+            client.query(query,this.callback);
+         },
+         'should be possible' : function(res,err){
+            assertCorrectResponse(res,err);
+         }
+      },
+      'that return a result within an expected timeout' : {
+         topic : function(client){
+            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).timeout(1000);
+            client.query(query,this.callback); 
+         },
+         'should be possible' : function(res,err){
             assertCorrectResponse(res,err);
          }
       }

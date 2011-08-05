@@ -5,7 +5,7 @@
     
 ##Get started
     // Dependency
-    var solr = require('solr');
+    var solr = require('solr-client');
     
     //Create Client
     var client = solr.createClient();
@@ -23,7 +23,7 @@
 
 ##Examples
 
-Take a look in the folder examples or [here](https://github.com/lbdremy/solr-node-client/tree/master/examples).
+Take a look in the folder examples/[here](https://github.com/lbdremy/solr-node-client/tree/master/examples).
 
 ##Running Test
 Before to run the test, start the Solr Server.

@@ -203,7 +203,6 @@ suite.addBatch({
       'that return a result where one or more fields are on a range of values' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'price', start : '10',end : '100' },{field: 'delievery_t', start : '10',end : '100' } ]);
-            console.log(query.build());
             client.query(query,this.callback);
          },
          'should be possible' : function(res,err){

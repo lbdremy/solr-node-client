@@ -6,7 +6,7 @@ var callback = function(json,err){
    if(json) console.log(json);
 }
 
-client.deleteByID(455,callback);
+//client.deleteByID(455,callback);
 client.delete('id','*',callback); //Delete every single row
 
-client.commit();
+//client.commit();

@@ -7,7 +7,7 @@
   "name": "solr-client",
   "main": "./lib/solr",
   "description": "Solr client using JSON documents to update, the version of Solr have to be >= 3.2",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "repository": {
     "type": "git",
     "url": "https://github.com/lbdremy/solr-node-client"

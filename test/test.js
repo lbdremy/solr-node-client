@@ -115,6 +115,18 @@ suite.addBatch({
          'should be possible' : function(res,err){
             assertCorrectResponse(res,err);
          }
+      },
+      'a range of documents' : {
+         topic : function(client){
+            var start = new Date();
+            start.setDate(start.getDate() -5);
+            var stop = new Date();
+            stop.setDate(stop.getDate() - 4);
+            client.deleteByRange('last_update',start,stop,this.callback);
+         },
+         'should be possible' : function(res,err){
+            assertCorrectResponse(res,err);
+         }
       }
    }
 }).addBatch({
@@ -235,6 +247,20 @@ suite.addBatch({
          'should be possible' : function(res,err){
             assertCorrectResponse(res,err);
          }
+      },
+      'that autoconvert JS Date Object into a properly date format expected by Solr' : {
+         topic : function(client){
+            var start = new Date();
+            start.setDate(start.getDate() -1);
+            var stop = new Date();
+            stop.setDate(stop.getDate());
+            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'last_update', start : start,end : stop },{field: 'price', start : '10',end : '100' } ]);
+            console.log(query);
+            client.query(query,this.callback);
+         },
+         'should be possible' : function(res,err){
+            assertCorrectResponse(res,err);
+         }
       }
    }
 }).export(module);
@@ -253,8 +279,9 @@ function assertClient(client){
 }
 
 function assertCorrectResponse(res,err){
+   assert.isUndefined(err);
    var obj = JSON.parse(res);
    assert.isObject(obj);
    assert.equal(obj.responseHeader.status,0);
-   assert.isUndefined(err);
+   
 }

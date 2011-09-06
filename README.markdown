@@ -1,5 +1,11 @@
 #Solr Client API
 
+##Features
+ - Support commands: Query, Delete, Update, Commit, Rollback, Optimize
+ - Support Dismax Query Syntax
+ - Support implicit conversion for `Date` Object to the supported format by Solr.
+ More informations available about [the Solr Date Format](http://lucidworks.lucidimagination.com/display/LWEUG/Solr+Date+Format).
+ 
 ##Install
     npm install solr-client
     

@@ -47,8 +47,8 @@ suite.addBatch({
             };
             client.add(doc,this.callback);  
          },
-         'should be possible.' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible.' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'several documents to the Solr DB' : {
@@ -64,8 +64,8 @@ suite.addBatch({
             }
             client.purgeAdd(this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       }
    }
@@ -80,8 +80,8 @@ suite.addBatch({
             client.autoCommit = false;
             client.commit(this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'automatically' : {
@@ -104,16 +104,16 @@ suite.addBatch({
          topic : function(client){
             client.deleteByID(1234567890,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'a document with a query' : {
          topic : function(client){
             client.delete('title_t' , 'Test title', this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'a range of documents' : {
@@ -124,8 +124,8 @@ suite.addBatch({
             stop.setDate(stop.getDate() - 4);
             client.deleteByRange('last_update',start,stop,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       }
    }
@@ -143,7 +143,7 @@ suite.addBatch({
             };
             client.optimize(options,this.callback);
          },
-         'should be possible' : function(res,err){
+         'should be possible' : function(err,res){
             
          }
       }
@@ -159,8 +159,8 @@ suite.addBatch({
             var data = { rollback : {} };
             client.update(data,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       } 
    }
@@ -174,8 +174,8 @@ suite.addBatch({
          topic : function(client){
             client.rollback(this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       }
    }
@@ -190,8 +190,8 @@ suite.addBatch({
             var query = client.createQuery().q('laptop').dismax().qf({title : 0.2 , description : 3.3}).mm(2).start(0).rows(10);
             client.query(query,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'that will be handle by DefaultRequestHandler' : {
@@ -199,8 +199,8 @@ suite.addBatch({
             var query = client.createQuery().q({title : 'laptop'}).start(0).rows(10);
             client.query(query,this.callback);
          },
-         'should be possible' : function(res,err) {
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res) {
+            assertCorrectResponse(err,res);
          }
       },
       'that return a sorted result in ascending or descending order' : {
@@ -208,8 +208,8 @@ suite.addBatch({
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).sort({score: 'desc',price: 'asc'});
             client.query(query,this.callback);
          },
-         'should be possible': function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible': function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'that return a result where one or more fields are on a range of values' : {
@@ -217,8 +217,8 @@ suite.addBatch({
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'price', start : '10',end : '100' },{field: 'delievery_t', start : '10',end : '100' } ]);
             client.query(query,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'that return a result where one or more fields match a particular value'  : {
@@ -226,8 +226,8 @@ suite.addBatch({
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).matchFilter('category','Electronics');
             client.query(query,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'that return only a set of fields specified' : {
@@ -235,8 +235,8 @@ suite.addBatch({
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).restrict(['title','description']);
             client.query(query,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'that return a result within an expected timeout' : {
@@ -244,8 +244,8 @@ suite.addBatch({
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).timeout(1000);
             client.query(query,this.callback); 
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       },
       'that autoconvert JS Date Object into a properly date format expected by Solr' : {
@@ -258,8 +258,8 @@ suite.addBatch({
             console.log(query);
             client.query(query,this.callback);
          },
-         'should be possible' : function(res,err){
-            assertCorrectResponse(res,err);
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
          }
       }
    }
@@ -278,8 +278,8 @@ function assertClient(client){
     assert.isFunction(client.query);
 }
 
-function assertCorrectResponse(res,err){
-   assert.isUndefined(err);
+function assertCorrectResponse(err,res){
+   assert.isNull(err);
    var obj = JSON.parse(res);
    assert.isObject(obj);
    assert.equal(obj.responseHeader.status,0);

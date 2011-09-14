@@ -4,7 +4,7 @@ var client = solr.createClient();
 
 client.commit(function(err,res){
    if(err) console.log(err);
-   if(json) console.log(res);
+   if(res) console.log(res);
 });
 var options = {
    waitFlush: false ,
@@ -12,5 +12,5 @@ var options = {
    };
 client.commit(options,function(err,res){
    if(err) console.log(err);
-   if(json) console.log(res);
+   if(res) console.log(res);
 });

@@ -5,7 +5,7 @@ var client = solr.createClient();
 
 var callback = function(err,res){
    if(err) console.log('Error:' + err);
-   if(json) console.log('JSON:' + res);
+   if(res) console.log('res:' + res);
 }
 client.autoCommit = true;
 client.updateEach = 4;

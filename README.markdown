@@ -25,7 +25,7 @@
     }
     var callback = function(err,res){
       if(err) console.log(err);
-      if(json) console.log(res);
+      if(res) console.log(res);
     }
     client.add(doc,callback);
     client.commit(callback);

@@ -12,8 +12,8 @@ client.updateEach = 4;
 for(var i = 0; i <= 2 ; i++){
    var doc = {
        id : 82893 + i,
-       title_t : "Title "+ i,
-       text_t : "Text"+ i + "Alice"
+       title : "Title "+ i,
+       description : "Text"+ i + "Alice"
    }
    client.add(doc,callback);
 }

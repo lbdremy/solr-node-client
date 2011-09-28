@@ -17,7 +17,7 @@ var solr = require('./../lib/solr'),
  */
 
 
-var suite = vows.describe('deleteByRange command');
+var suite = vows.describe('Solr Client API: deleteByRange command');
 
 // Dates
 var today = new Date();

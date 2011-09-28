@@ -5,7 +5,7 @@ var solr = require('./../lib/solr'),
 
 // Suite Test
 
-var suite = vows.describe('Solr Client API');
+var suite = vows.describe('Solr Client API Core');
 
 suite.addBatch({
    'The creation of a Solr Client' : {
@@ -255,7 +255,6 @@ suite.addBatch({
             var stop = new Date();
             stop.setDate(stop.getDate());
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'last_update', start : start,end : stop },{field: 'price', start : '10',end : '100' } ]);
-            console.log(query);
             client.query(query,this.callback);
          },
          'should be possible' : function(err,res){

@@ -6,8 +6,8 @@
   },
   "name": "solr-client",
   "main": "./lib/solr",
-  "description": "Solr client using JSON documents to update, the version of Solr have to be >= 3.2",
-  "version": "0.0.3",
+  "description": " A Solr client library for indexing, adding, deleting, committing, optimizing and searching documents within an Apache Solr installation (version>=3.2)",
+  "version": "0.0.4",
   "repository": {
     "type": "git",
     "url": "https://github.com/lbdremy/solr-node-client"

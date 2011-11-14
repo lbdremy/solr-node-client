@@ -16,12 +16,13 @@
     "node": ">= 0.4.7"
   },
   "dependencies": {
-      "sax" : ">=0.2.2"
+      "sax" : "0.2.x"
    },
   "devDependencies": {
-      "vows": ">=0.5.8"  
+      "vows": "0.5.x",
+      "express" : "*" 
    },
    "scripts" : {
-      "test" : "vows --spec test/*"
+      "test" : "vows --spec test/test-*"
    }
 }

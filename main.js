@@ -1,3 +1,3 @@
-require("./lib/solr");
+module.exports = require("./lib/solr");
 
 

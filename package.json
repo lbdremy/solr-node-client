@@ -5,7 +5,7 @@
    "url" : "https://twitter.com/#!/lbdremy"
   },
   "name": "solr-client",
-  "main": "./lib/solr",
+  "main": "./main",
   "description": " A Solr client library for indexing, adding, deleting, committing, optimizing and searching documents within an Apache Solr installation (version>=3.2)",
   "version": "0.0.5",
   "repository": {

@@ -1,5 +1,5 @@
 // Dependencies 
-var solr = require('./../lib/solr'),
+var solr = require('./../main'),
    vows = require('vows'),
    assert = require('assert');
 

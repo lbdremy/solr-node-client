@@ -1,7 +1,7 @@
 #Solr Client API
 
 ##Features
- - Support commands: Query, Delete, Update, Commit, Rollback, Optimize
+ - Support commands: Query, Delete, Update, Commit, Rollback, Optimize, Ping
  - Support Dismax Query Syntax
  - Support implicit conversion for `Date` Object to the supported format by Solr.
  More informations available about [the Solr Date Format](http://lucidworks.lucidimagination.com/display/LWEUG/Solr+Date+Format).
@@ -33,8 +33,16 @@
 
 ##Test
 Before to run the test, start the Solr Server.
-     
-     vows --spec test/*
+<pre>
+<code>
+// With vows
+vows --spec test/*
+
+// With npm
+npm test
+</pre>
+</code>
+
 ##Examples
 
 Take a look in the [folder examples](https://github.com/lbdremy/solr-node-client/tree/master/examples).

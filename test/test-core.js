@@ -180,6 +180,16 @@ suite.addBatch({
       }
    }
 }).addBatch({
+   'Ping the Solr server' : {
+      topic : function(){
+         var client = solr.createClient();
+         client.ping(this.callback);
+      },
+      'should be possible' : function(err,res){
+         assertCorrectResponse(err,res);
+      }
+   }
+}).addBatch({
    'Make a query' : {
       topic : function(){
          var client = solr.createClient();

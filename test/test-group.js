@@ -36,7 +36,6 @@ suite.addBatch({
             client.query(query,this.callback);
          },
          'should be possible' :function(err,res) {
-            console.log(err);
             assertCorrectResponse(err,res)
          }
       }

@@ -1,7 +1,8 @@
 // Dependencies 
 var solr = require('./../main'),
    vows = require('vows'),
-   assert = require('assert');
+   assert = require('assert'),
+   SolrError = require('./../lib/error/solr-error');
 
 // Suite Test
 
@@ -49,6 +50,18 @@ suite.addBatch({
          },
          'should be possible.' : function(err,res){
             assertCorrectResponse(err,res);
+         }
+      },
+      'one document using unknown fields' : {
+         topic : function(client){
+            var doc = { 
+               id : 1234567810,
+               unknownfield1 : 'Test title',
+            };
+            client.add(doc,this.callback); 
+         },
+         'should return an SolrError' : function(err,res){
+            assertSolrError(err,res);
          }
       },
       'several documents to the Solr DB' : {
@@ -195,6 +208,15 @@ suite.addBatch({
          var client = solr.createClient();
          return client;
       },
+      'using unknown fields' : {
+         topic : function(client){
+            var query = client.createQuery().q({titl : 'laptop'}).start(0).rows(10);
+            client.query(query,this.callback);
+         },
+         'should return an SolrError' : function(err,res){
+            assertSolrError(err,res);
+         }
+      },
       'that will be handle by DisMaxParserPlugin' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 0.2 , description : 3.3}).mm(2).start(0).rows(10);
@@ -292,5 +314,11 @@ function assertCorrectResponse(err,res){
    var obj = JSON.parse(res);
    assert.isObject(obj);
    assert.equal(obj.responseHeader.status,0);
-   
+}
+
+function assertSolrError(err,res){
+   assert.instanceOf(err,SolrError);
+   assert.equal(err.name,'SolrError');
+   assert.match(err.message,/^HTTP status [0-9]{3}\.Reason:[\s\S]+/)
+   assert.isEmpty(res);
 }

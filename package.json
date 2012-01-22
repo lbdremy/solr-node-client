@@ -16,7 +16,6 @@
     "node": ">= 0.4.7"
   },
   "dependencies": {
-      "sax" : "0.2.x"
    },
   "devDependencies": {
       "vows": "0.5.x",

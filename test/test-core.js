@@ -157,7 +157,7 @@ suite.addBatch({
             client.optimize(options,this.callback);
          },
          'should be possible' : function(err,res){
-            
+            assertCorrectResponse(err,res);
          }
       }
    }

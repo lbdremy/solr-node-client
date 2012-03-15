@@ -80,6 +80,20 @@ suite.addBatch({
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
          }
+      },
+      'a list of documents' : {
+         topic : function(client){
+            client.updateEach = 1; // default value when a client is created
+            var docs = [
+               { id : 1 , title_t : 'Hello'},
+               { id : 3 , title_t : 'Hola'},
+               { id : 5 , title_t : 'Bonjour'}
+            ];
+            client.add(docs,this.callback);
+         },
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
+         }
       }
    }
 }).addBatch({

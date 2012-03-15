@@ -25,7 +25,7 @@ client.add({ id : 12, title_t : 'Hello' },function(err,json){
 });
 ```
 
-##Commmands & API supported
+##Commands & API supported
  - commands: query, delete, update, commit, rollback, optimize, ping
  - Lucene query / DisMax query 
  - Grouping / Field Collapsing. (Apache Solr version must be [>= 3.3](http://svn.apache.org/repos/asf/lucene/dev/tags/lucene_solr_3_3/solr/CHANGES.txt))
@@ -33,7 +33,7 @@ client.add({ id : 12, title_t : 'Hello' },function(err,json){
  - HTTP Basic Access Authentication
 
 ##Test
-Before to run the test, start the Solr Server.
+Before to run the test, start the Solr server.
 
 ```js
 npm test

@@ -38,3 +38,7 @@ Before to run the test, start the Solr server.
 ```js
 npm test
 ```
+
+##Licence
+(The MIT License)
+Copyright 2011-2012 HipSnip Limited

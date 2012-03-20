@@ -7,7 +7,7 @@
   "name": "solr-client",
   "main": "./main",
   "description": " A Solr client library for indexing, adding, deleting, committing, optimizing and searching documents within an Apache Solr installation (version>=3.2)",
-  "version": "0.0.6",
+  "version": "0.0.7",
   "repository": {
     "type": "git",
     "url": "https://github.com/lbdremy/solr-node-client"
@@ -18,8 +18,7 @@
   "dependencies": {
    },
   "devDependencies": {
-      "vows": "0.5.x",
-      "express" : "*" 
+      "vows": "0.6.x"
    },
    "scripts" : {
       "test" : "vows --spec test/test-*"

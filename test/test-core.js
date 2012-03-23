@@ -37,6 +37,17 @@ suite.addBatch({
             assert.equal(client.options.path,'/solr');
          }
       },
+      'with custom host' : {
+         topic : function(){
+            var host = 'localhost';
+            var client = solr.createClient(host);
+            return client
+         },
+         'should return a `Client`' : function(client){
+            assertClient(client);
+            assert.equal(client.options.host,'localhost');
+         }
+      },
       'with custom host, post, core and path' : {
          topic : function(){
             var host = 'localhost';

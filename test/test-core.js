@@ -135,9 +135,18 @@ suite.addBatch({
             assertCorrectResponse(err,res);
          }
       },
-      'a document with a query' : {
+      'a document where a field matchs a value' : {
          topic : function(client){
             client.delete('title_t' , 'Test title', this.callback);
+         },
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
+         }
+      },
+      'documents matching a query' : {
+         topic : function(client){
+            var query = 'title_t:Test title';
+            client.deleteByQuery(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);

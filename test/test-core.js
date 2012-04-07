@@ -315,6 +315,19 @@ suite.addBatch({
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
          }
+      },
+      'that use custom parameter in the query thanks to the set method' : {
+         topic : function(client){
+            var query = client.createQuery();
+            query.q('laptop')
+                 .dismax()
+                 .set('fl=description,score')
+                 .set(encodeURIComponent('fq={!q.op=OR%20df=merchant_id_t}837338%208373873%2038738'));
+            client.search(query,this.callback);
+         },
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
+         }
       }
    }
 }).export(module);

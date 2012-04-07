@@ -13,7 +13,7 @@ suite.addBatch({
          topic : function(){
             var client = solr.createClient();
             var query = client.createQuery().q({ description : 'laptop'}).groupBy('title') ;
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -33,7 +33,7 @@ suite.addBatch({
                truncate : false,
                cache : 0
             }); 
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' :function(err,res) {
             assertCorrectResponse(err,res)

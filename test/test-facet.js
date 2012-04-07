@@ -26,7 +26,7 @@ suite.addBatch({
                               missing : false,
                               method : 'fc' ,
                            }); 
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should return a correct response without error' :function(err,res) {
             assertCorrectResponse(err,res)

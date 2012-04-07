@@ -81,7 +81,7 @@ suite.addBatch({
          topic : function(){
             var client = solr.createClient();
             var query = client.createQuery().q({title_t : 'test'}).start(0).rows(10);
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should find 10 documents' : function(err,res){
             assert.isNull(err);

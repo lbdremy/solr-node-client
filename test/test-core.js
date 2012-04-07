@@ -234,7 +234,7 @@ suite.addBatch({
       'using unknown fields' : {
          topic : function(client){
             var query = client.createQuery().q({titl : 'laptop'}).start(0).rows(10);
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should return an SolrError' : function(err,res){
             assertSolrError(err,res);
@@ -243,7 +243,7 @@ suite.addBatch({
       'that will be handle by DisMaxParserPlugin' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 0.2 , description : 3.3}).mm(2).start(0).rows(10);
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -252,7 +252,7 @@ suite.addBatch({
       'that will be handle by DefaultRequestHandler' : {
          topic : function(client){
             var query = client.createQuery().q({title : 'laptop'}).start(0).rows(10);
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res) {
             assertCorrectResponse(err,res);
@@ -261,7 +261,7 @@ suite.addBatch({
       'that return a sorted result in ascending or descending order' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).sort({score: 'desc',price: 'asc'});
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible': function(err,res){
             assertCorrectResponse(err,res);
@@ -270,7 +270,7 @@ suite.addBatch({
       'that return a result where one or more fields are on a range of values' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'price', start : '10',end : '100' },{field: 'delievery_t', start : '10',end : '100' } ]);
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -279,7 +279,7 @@ suite.addBatch({
       'that return a result where one or more fields match a particular value'  : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).matchFilter('category','Electronics');
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -288,7 +288,7 @@ suite.addBatch({
       'that return only a set of fields specified' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).restrict(['title','description']);
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -297,7 +297,7 @@ suite.addBatch({
       'that return a result within an expected timeout' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).timeout(1000);
-            client.query(query,this.callback); 
+            client.search(query,this.callback); 
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -310,7 +310,7 @@ suite.addBatch({
             var stop = new Date();
             stop.setDate(stop.getDate());
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'last_update', start : start,end : stop },{field: 'price', start : '10',end : '100' } ]);
-            client.query(query,this.callback);
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -329,7 +329,7 @@ function assertClient(client){
     assert.isFunction(client.deleteByID);
     assert.isFunction(client.optimize);
     assert.isFunction(client.update);
-    assert.isFunction(client.query);
+    assert.isFunction(client.search);
 }
 
 function assertCorrectResponse(err,res){

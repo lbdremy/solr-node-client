@@ -345,16 +345,15 @@ function assertClient(client){
     assert.isFunction(client.search);
 }
 
-function assertCorrectResponse(err,res){
+function assertCorrectResponse(err,data){
    assert.isNull(err);
-   var obj = JSON.parse(res);
-   assert.isObject(obj);
-   assert.equal(obj.responseHeader.status,0);
+   assert.isObject(data);
+   assert.equal(data.responseHeader.status,0);
 }
 
 function assertSolrError(err,res){
    assert.instanceOf(err,SolrError);
    assert.equal(err.name,'SolrError');
    assert.match(err.message,/^HTTP status [0-9]{3}\.Reason:[\s\S]+/)
-   assert.isEmpty(res);
+   assert.isNull(res);
 }

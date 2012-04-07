@@ -44,9 +44,8 @@ suite.addBatch({
 
 // Macro
 
-function assertCorrectResponse(err,res){
+function assertCorrectResponse(err,data){
    assert.isNull(err);
-   var obj = JSON.parse(res);
-   assert.isObject(obj);
-   assert.equal(obj.responseHeader.status,0);  
+   assert.isObject(data);
+   assert.equal(data.responseHeader.status,0);  
 }

@@ -83,10 +83,9 @@ suite.addBatch({
             var query = client.createQuery().q({title_t : 'test'}).start(0).rows(10);
             client.search(query,this.callback);
          },
-         'should find 10 documents' : function(err,res){
+         'should find 10 documents' : function(err,data){
             assert.isNull(err);
-            var obj = JSON.parse(res);
-            assert.equal(obj.response.numFound,10);
+            assert.equal(data.response.numFound,10);
          }
       }
    }
@@ -94,9 +93,8 @@ suite.addBatch({
 
 // Macro
 
-function assertCorrectResponse(err,res){
+function assertCorrectResponse(err,data){
    assert.isNull(err);
-   var obj = JSON.parse(res);
-   assert.isObject(obj);
-   assert.equal(obj.responseHeader.status,0);  
+   assert.isObject(data);
+   assert.equal(data.responseHeader.status,0);  
 }

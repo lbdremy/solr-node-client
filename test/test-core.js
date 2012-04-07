@@ -19,6 +19,35 @@ suite.addBatch({
             assertClient(client);
          }
       },
+      'with custom options' : {
+         topic : function(){
+            var client = solr.createClient({
+                host: 'localhost',
+                port: 8983,
+                core: '',
+                path: '/solr'
+            });
+            return client;
+         },
+         'should return a `Client`' : function(client){
+            assertClient(client);
+            assert.equal(client.options.host,'localhost');
+            assert.equal(client.options.port,8983);
+            assert.equal(client.options.core,'');
+            assert.equal(client.options.path,'/solr');
+         }
+      },
+      'with custom host' : {
+         topic : function(){
+            var host = 'localhost';
+            var client = solr.createClient(host);
+            return client
+         },
+         'should return a `Client`' : function(client){
+            assertClient(client);
+            assert.equal(client.options.host,'localhost');
+         }
+      },
       'with custom host, post, core and path' : {
          topic : function(){
             var host = 'localhost';

@@ -75,7 +75,7 @@ suite.addBatch({
                };
                client.add(doc,this.callback);
             }
-            client.purgeAdd(this.callback);
+            client.flushAdd(this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -323,7 +323,7 @@ suite.addBatch({
 
 function assertClient(client){
     assert.isFunction(client.add);
-    assert.isFunction(client.purgeAdd);
+    assert.isFunction(client.flushAdd);
     assert.isFunction(client.commit);
     assert.isFunction(client.delete);
     assert.isFunction(client.deleteByID);

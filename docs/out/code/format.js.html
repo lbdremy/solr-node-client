@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Code Documentation for lib/utils/format.js - Solr client for node.js
+    </title>
+    <script type="text/javascript">var ghuser = 'lbdremy'
+  , ghproject = 'solr-node-client';
+
+</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="/public/js/jq-mousewheel.js"></script>
+    <script src="/public/js/antiscroll.js"></script>
+    <script src="/public/js/prettify.js"></script>
+    <script src="/public/js/main.js"></script>
+    <link rel="stylesheet" href="/public/css/antiscroll.css" type="text/css" media="all">
+    <link rel="stylesheet" href="/public/css/main.css" type="text/css" media="all">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300|Quicksand" rel="stylesheet" type="text/css">
+  </head>
+  <body><img id="githubfork" src="/public/img/github_fork.png">
+    <nav>
+      <div class="box-wrap antiscroll-wrap">
+        <div class="box">
+          <div class="antiscroll-inner">
+            <div class="box-inner">
+              <ul class="sections">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="pages">
+        <li><a href="/">Home</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li class="header"><a href="/code/">Code Documentation</a>
+        </li>
+        <li><a href="/code/solr.js.html">lib/solr.js</a>
+        </li>
+        <li><a href="/code/query.js.html">query.js</a>
+        </li>
+        <li><a href="/code/format.js.html">lib/utils/format.js</a>
+        </li>
+        <li><a href="/code/solr-error.js.html">lib/error/solr-error.js</a>
+        </li>
+      </ul>
+    </nav>
+    <header>
+      <h1>Solr client for node.js
+      </h1>
+      <div class="description">A solr client to <b>index</b>, <b>add</b>, <b>delete</b>,<b>commit</b>,<b>optimize</b> and <b>search</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
+      </div>
+      <div class="gh">
+        <h4>Latest Update to Github
+        </h4>
+        <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
+        </div>
+        <div id="latestCommitMessage">Loading...
+        </div>
+        <div id="buttons">
+          <div class="btn">
+            <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=lbdremy&amp;repo=solr-node-client&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px">
+            </iframe>
+          </div>
+          <div class="btn">
+            <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=lbdremy&amp;repo=solr-node-client&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px">
+            </iframe>
+          </div>
+          <div class="btn"><a href="htts://twitter.com/share" data-via="lbdremy" data-url="http://lbdremy.github.com/solr-node-client" data-related="lbdremy" class="twitter-share-button">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+</script>
+          </div>
+        </div>
+        <div id="links"><a id="repoIssues" href="https://github.com/lbdremy/solr-node-client/issues">GitHub Issues</a>
+        </div>
+      </div>
+    </header>
+    <section id="content">
+      <div id="code">
+        <article id="undefined-section" class="codeblock">
+          <div class="header"><p>Expose <code>dateISOify()</code></p>
+          </div>
+          <div class="ctx">
+            <h3>exports.dateISOify
+            </h3>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>exports.dateISOify = dateISOify;</code>
+            </pre>
+          </div>
+        </article>
+        <article id="undefined-section" class="codeblock">
+          <div class="header"><p>ISOify <code>Date</code> objects</p>
+          </div>
+          <div class="ctx">
+            <h3>dateISOify()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Array | Object &#125;</span><span class="name">obj</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Array,Object</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function dateISOify(obj){
+   if( obj instanceof Array ){
+      for(var i = 0; i &lt; obj.length; i++){
+         if(obj[i] instanceof Object &amp;&amp; !(obj[i] instanceof Date) ){
+            for(var key in obj[i]){
+               if( obj[i][key] instanceof Date ) obj[i][key] = obj[i][key].toISOString();   
+            }
+         }else{
+            if( obj[i] instanceof Date ) obj[i] = obj[i].toISOString();
+         }
+      }
+   }else if(obj instanceof Object &amp;&amp; !(obj instanceof Date) ){
+      for(var key in obj){
+         if( obj[key] instanceof Date ) obj[key] = obj[key].toISOString();   
+      }
+   }else{
+      if( obj instanceof Date ) obj = obj.toISOString();
+   }
+   return obj;
+};</code>
+            </pre>
+          </div>
+        </article>
+        <article id="undefined-section" class="codeblock">
+          <div class="header"><p>Expose <code>stringify()</code></p>
+          </div>
+          <div class="ctx">
+            <h3>exports.stringify
+            </h3>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>exports.stringify = stringify;</code>
+            </pre>
+          </div>
+        </article>
+        <article id="undefined-section" class="codeblock">
+          <div class="header"><p>Serialize an object to a string. Optionally override the default separator ('&amp;') and assignment ('=') characters.</p>
+          </div>
+          <div class="ctx">
+            <h3>stringify()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">obj</span><span class="desc">- object to serialiaze</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[sep]</span><span class="desc">- separator character</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[eq]</span><span class="desc">- assignment character</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[name]</span><span class="desc">-</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">String</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function stringify(obj, sep, eq, name) {
+  sep = sep || '&amp;';
+  eq = eq || '=';
+  obj = (obj === null) ? undefined : obj;
+
+  switch (typeof obj) {
+    case 'object':
+      return Object.keys(obj).map(function(k) {
+        if (Array.isArray(obj[k])) {
+          return obj[k].map(function(v) {
+            return stringifyPrimitive(k) +
+                   eq +
+                   stringifyPrimitive(v);
+          }).join(sep);
+        } else {
+          return stringifyPrimitive(k) +
+                 eq +
+                 stringifyPrimitive(obj[k]);
+        }
+      }).join(sep);
+
+    default:
+      if (!name) return '';
+      return stringifyPrimitive(name) + eq +
+             stringifyPrimitive(obj);
+  }
+};</code>
+            </pre>
+          </div>
+        </article>
+        <article id="undefined-section" class="codeblock">
+          <div class="header"><p>Stringify a primitive</p>
+          </div>
+          <div class="ctx">
+            <h3>stringifyPrimitive()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Boolean | Number &#125;</span><span class="name">v</span><span class="desc">- primitive value </span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">String</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">View Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function stringifyPrimitive(v) {
+  switch (typeof v) {
+    case 'string':
+      return v;
+
+    case 'boolean':
+      return v ? 'true' : 'false';
+
+    case 'number':
+      return isFinite(v) ? v : '';
+
+    default:
+      return '';
+  }
+};</code>
+            </pre>
+          </div>
+        </article>
+      </div>
+    </section>
+    <footer>
+      <div class="branding">Solr client for node.js&nbsp;. site generated by
+<a href="http://codexjs.com">codex.</a>
+      </div>
+    </footer>
+  </body>
+</html>

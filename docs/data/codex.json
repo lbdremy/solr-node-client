@@ -1,0 +1,38 @@
+{
+  "locals": {
+    "title": "Solr client for node.js",
+    "googleanalytics": "",
+    "ghuser": "lbdremy",
+    "ghbaseurl": "",
+    "ghproject": "solr-node-client",
+    "tweeturl": "http://lbdremy.github.com/solr-node-client",
+    "tweetvia": "lbdremy",
+    "tweetrelated": "lbdremy",
+    "hasdownloads": false,
+    "description_html": "A solr client to <b>index</b>, <b>add</b>, <b>delete</b>,<b>commit</b>,<b>optimize</b> and <b>search</b> documents within an <a href=\"http://lucene.apache.org/solr/\">Apache Solr</a> installation (version>=3.2).",
+    "description" : "A solr client to index, add, delete, commit, optimize and search documents within an Apache Solr installation (version>=3.2).",
+    "keywords" : "solr,client,javascript,node.js,module,search,add,commit,documents"
+  },
+  "plugins": [
+    { "name": "code"
+    , "files": [
+          { "name": "solr.js"
+          , "title": "lib/solr.js"
+          , "file": "../../lib/solr.js"
+          , "description": "" }
+        , { "name": "query.js"
+          , "title": "query.js"
+          , "file": "../../lib/query.js"
+          , "description": "" }
+         , { "name": "format.js"
+          , "title": "lib/utils/format.js"
+          , "file": "../../lib/utils/format.js"
+          , "description": "" }
+         , { "name": "solr-error.js"
+          , "title": "lib/error/solr-error.js"
+          , "file": "../../lib/error/solr-error.js"
+          , "description": "" }
+      ]
+    }
+  ]
+}

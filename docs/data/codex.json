@@ -3,7 +3,7 @@
         "title": "Solr client for node.js",
         "googleanalytics": "",
         "ghuser": "lbdremy",
-        "ghbaseurl": "",
+        "ghbaseurl": "solr-node-client",
         "ghproject": "solr-node-client",
         "tweeturl": "http://lbdremy.github.com/solr-node-client",
         "tweetvia": "lbdremy",

@@ -1,7 +1,18 @@
 // Dependencies 
-var solr = require('./../main'),
+var nock = require('nock'), 
+   solr = require('./../main'),
    vows = require('vows'),
    assert = require('assert');
+   mocks = require('./mocks'),
+   fs = require('fs');
+
+// Load configuration file
+var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
+
+if(config.mocked){
+   //nock.recorder.rec();
+   mocks.mlt(nock);
+}
 
 // Suite Test
 

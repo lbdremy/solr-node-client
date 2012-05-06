@@ -1,9 +1,19 @@
 // Dependencies 
-var solr = require('./../main'),
+var nock = require('nock'), 
+   solr = require('./../main'),
    vows = require('vows'),
    assert = require('assert'),
-   SolrError = require('./../lib/error/solr-error');
+   SolrError = require('./../lib/error/solr-error'),
+   mocks = require('./mocks')
+   fs = require('fs');
 
+// Load configuration file
+var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
+
+if(config.mocked){
+   //nock.recorder.rec();
+   mocks.core(nock);
+}
 // Suite Test
 
 var suite = vows.describe('Solr Client API Core');
@@ -183,10 +193,8 @@ suite.addBatch({
       },
       'a range of documents' : {
          topic : function(client){
-            var start = new Date();
-            start.setDate(start.getDate() -5);
-            var stop = new Date();
-            stop.setDate(stop.getDate() - 4);
+            var start = new Date('2012-05-01T21:50:08.309Z');
+            var stop = new Date('2012-05-02T21:50:08.310Z');
             client.deleteByRange('last_update',start,stop,this.callback);
          },
          'should be possible' : function(err,res){
@@ -334,10 +342,8 @@ suite.addBatch({
       },
       'that autoconvert JS Date Object into a properly date format expected by Solr' : {
          topic : function(client){
-            var start = new Date();
-            start.setDate(start.getDate() -1);
-            var stop = new Date();
-            stop.setDate(stop.getDate());
+            var start = new Date('2012-05-05T21:50:08.783Z');
+            var stop = new Date('2012-05-06T21:50:08.783Z');
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'last_update', start : start,end : stop },{field: 'price', start : '10',end : '100' } ]);
             client.search(query,this.callback);
          },

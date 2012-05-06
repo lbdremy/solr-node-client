@@ -1,8 +1,19 @@
 // Dependencies 
-var solr = require('./../main'),
+var nock = require('nock'), 
+   solr = require('./../main'),
    vows = require('vows'),
-   assert = require('assert');
-   
+   assert = require('assert'),
+   fs = require('fs'),
+   mocks = require('./mocks');
+
+// Load configuration file
+var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
+
+if(config.mocked){
+   //nock.recorder.rec();
+   mocks.deleteByRange(nock);
+}
+
 // Suite Test
 
 /**
@@ -20,11 +31,9 @@ var solr = require('./../main'),
 var suite = vows.describe('Solr Client API: deleteByRange command');
 
 // Dates
-var today = new Date();
-var yesterday = new Date();
-yesterday.setDate(today.getDate() - 1);
-var beforeYesterday = new Date();
-beforeYesterday.setDate(today.getDate() - 2);
+var today = new Date('2012-05-07T21:50:08.309Z');
+var yesterday = new Date('2012-05-06T21:50:08.309Z');
+var beforeYesterday = new Date('2012-05-05T21:50:08.309Z');
             
 suite.addBatch({
    'Add 20 documents' : {

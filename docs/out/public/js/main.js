@@ -51,6 +51,12 @@ $(function () {
   $('.view-source').click(function(){
     var $obj = $(this).next('.code-wrap')
       , will = ($obj.css('display') == 'none') ? true : false;
+    
+    if(will){
+      $('.view-source').text('Hide source');
+    }else{
+      $('.view-source').text('Show source');
+    }
 
     $obj.toggle(200);
 
@@ -77,5 +83,5 @@ $(function () {
     mpq.track('Github Fork clicked');
   });
 
-  $('.code-wrap').hide();
+  $('.code-wrap').show();
 });

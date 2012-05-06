@@ -26,14 +26,23 @@ block nav
         - if (page.template == 'code-index')
           li.header: a(href=site.ghbaseurl + page.href)= page.title
       for page in files.code
-        - if (page.template == 'code')
+        - if (page.template == 'code' && !page.title.match(/examples/))
           li: a(href=site.ghbaseurl + page.href)= page.title
+  - if (files.code)
+    - var count = 0;
+    ul.code
+      for page in files.code
+        - if (page.template == 'code' && page.title.match(/examples/))
+            - count++;
+            - if(count === 1)
+              li.header(style='font-family:"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;color:#666;font-size:14px') examples
+            li: a(href=site.ghbaseurl + page.href)= page.name
 
 block content
   #code
     for comment in file.prepared
       unless comment.ignore
-        article.codeblock(id=comment.anchor + '-section')
+        article.codeblock
           .header!= comment.description.summary
           - if (comment.ctx && comment.ctx.string)
             .ctx
@@ -66,7 +75,7 @@ block content
                   - console.log(tag)
           .description!= comment.description.body
           - if (comment.code)
-            .view-source View Source
+            .view-source Hide Source
             .code-wrap
               pre.source.prettyprint
                 code= comment.code

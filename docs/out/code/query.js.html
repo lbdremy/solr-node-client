@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Code Documentation for query.js - Solr client for node.js
+    <title>Code Documentation for lib/query.js - Solr client for node.js
     </title>
     <script type="text/javascript">var ghuser = 'lbdremy'
   , ghproject = 'solr-node-client';
@@ -35,23 +35,51 @@
       <ul class="code">
         <li class="header"><a href="/code/">Code Documentation</a>
         </li>
-        <li><a href="/code/solr.js.html">lib/solr.js</a>
-        </li>
-        <li><a href="/code/query.js.html">query.js</a>
+        <li><a href="/code/query.js.html">lib/query.js</a>
         </li>
         <li><a href="/code/format.js.html">lib/utils/format.js</a>
         </li>
         <li><a href="/code/solr-error.js.html">lib/error/solr-error.js</a>
+        </li>
+        <li><a href="/code/solr.js.html">lib/solr.js</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li style="font-family:&quot;Lato&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;color:#666;font-size:14px" class="header">examples
+        </li>
+        <li><a href="/code/rollback.js.html">rollback.js</a>
+        </li>
+        <li><a href="/code/add.js.html">add.js</a>
+        </li>
+        <li><a href="/code/addRemoteResource.js.html">addRemoteResource.js</a>
+        </li>
+        <li><a href="/code/basicAuth.js.html">basicAuth.js</a>
+        </li>
+        <li><a href="/code/delete.js.html">delete.js</a>
+        </li>
+        <li><a href="/code/deleteByRange.js.html">deleteByRange.js</a>
+        </li>
+        <li><a href="/code/deleteByQuery.js.html">deleteByQuery.js</a>
+        </li>
+        <li><a href="/code/deleteByID.js.html">deleteByID.js</a>
+        </li>
+        <li><a href="/code/optimize.js.html">optimize.js</a>
+        </li>
+        <li><a href="/code/ping.js.html">ping.js</a>
+        </li>
+        <li><a href="/code/search.js.html">search.js</a>
+        </li>
+        <li><a href="/code/commit.js.html">commit.js</a>
         </li>
       </ul>
     </nav>
     <header>
       <h1>Solr client for node.js
       </h1>
-      <div class="description">A solr client to <b>index</b>, <b>add</b>, <b>delete</b>,<b>commit</b>,<b>optimize</b> and <b>search</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
+      <div class="description">A solr client for <b>indexing</b>, <b>adding</b>, <b>deleting</b>,<b>committing</b> and <b>searching</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
       </div>
       <div class="gh">
-        <h4>Latest Update to Github
+        <h4>Latest Update from Github
         </h4>
         <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
         </div>
@@ -77,7 +105,7 @@
     </header>
     <section id="content">
       <div id="code">
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Load dependencies</p>
           </div>
           <div class="ctx">
@@ -86,7 +114,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>var querystring = require('querystring'),
@@ -94,7 +122,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Expose <code>Query</code></p>
           </div>
           <div class="ctx">
@@ -103,14 +131,14 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>module.exports = exports = Query;</code>
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Create a new <code>Query</code></p>
           </div>
           <div class="ctx">
@@ -125,17 +153,16 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>function Query(){
    this.parameters = [];
-   this.query = '';
 }</code>
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set a new parameter<br />Since all possibilities provided by Solr are not available in the <code>Query</code> object, <code>set()</code> is there to fit this gap.</p>
           </div>
           <div class="ctx">
@@ -152,7 +179,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.set = function(parameter){
@@ -163,7 +190,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the query parser to use with this request.</p>
           </div>
           <div class="ctx">
@@ -180,7 +207,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.defType = function(type){
@@ -192,7 +219,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Use the DisMax query parser </p>
           </div>
           <div class="ctx">
@@ -207,7 +234,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.dismax = function(){
@@ -218,7 +245,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the main query</p>
           </div>
           <div class="ctx">
@@ -235,7 +262,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.q = function(q){
@@ -252,7 +279,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the offset where the set of returned documents should begin.</p>
           </div>
           <div class="ctx">
@@ -269,7 +296,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.start = function(start){
@@ -281,7 +308,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the maximun number of documents returned</p>
           </div>
           <div class="ctx">
@@ -298,7 +325,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.rows = function(rows){
@@ -310,7 +337,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the "boosts" to associate with each fields </p>
           </div>
           <div class="ctx">
@@ -327,7 +354,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.qf = function(options){
@@ -340,7 +367,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the minimum number or percent of clauses that must match.</p>
           </div>
           <div class="ctx">
@@ -357,7 +384,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.mm = function(minimum){
@@ -369,7 +396,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the Phrase Fields parameter.<br />Once the list of matching documents has been identified using the "fq" and "qf" params, the "pf" param can be used to "boost" the score of documents in cases where all of the terms <br />in the "q" param appear in close proximity.</p>
           </div>
           <div class="ctx">
@@ -386,7 +413,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.pf = function(options){
@@ -399,7 +426,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the Boost Query parameter.<br />A raw query string (in the SolrQuerySyntax) that will be included with the user's query to influence the score. If this is a BooleanQuery with a default boost (1.0f) then the individual clauses will be added directly to the main query. Otherwise, the query will be included as is.</p>
           </div>
           <div class="ctx">
@@ -416,7 +443,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.bq = function(options){
@@ -429,7 +456,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Sort a result in descending or ascending order based on one or more fields.</p>
           </div>
           <div class="ctx">
@@ -446,7 +473,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.sort = function(options){
@@ -459,7 +486,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Filter the set of documents found before to return the result with the given range determined by <code>field</code>, <code>start</code> and <code>stop</code>.</p>
           </div>
           <div class="ctx">
@@ -482,7 +509,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.rangeFilter = function(options){
@@ -509,7 +536,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Filter the set of documents found before to return the result with the given <code>field</code> and <code>value</code>.</p>
           </div>
           <div class="ctx">
@@ -528,7 +555,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.matchFilter = function(field,value){
@@ -542,7 +569,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Specify a set of fields to return.</p>
           </div>
           <div class="ctx">
@@ -559,7 +586,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.fl = 
@@ -577,7 +604,7 @@ Query.prototype.restrict = function(fields){
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Set the time allowed for a search to finish.<br />Partial results may be returned (if there are any).</p>
           </div>
           <div class="ctx">
@@ -594,7 +621,7 @@ Query.prototype.restrict = function(fields){
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.timeout = function(time){
@@ -606,7 +633,7 @@ Query.prototype.restrict = function(fields){
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Group documents with the given <code>field</code></p>
           </div>
           <div class="ctx">
@@ -623,7 +650,7 @@ Query.prototype.restrict = function(fields){
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.groupBy = function(field){
@@ -636,7 +663,7 @@ Query.prototype.restrict = function(fields){
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Group documents using field collapsing or result grouping feature.<br />Field Collapsing collapses a group of results with the same field value down to a single (or fixed number) of entries.<br />Result Grouping groups documents with a common field value into groups, returning the top documents per group, and the top groups based on what documents are in the groups.</p>
           </div>
           <div class="ctx">
@@ -673,7 +700,7 @@ Query.prototype.restrict = function(fields){
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.group = function(options){
@@ -715,7 +742,7 @@ Query.prototype.restrict = function(fields){
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Create a facet</p>
           </div>
           <div class="ctx">
@@ -752,7 +779,7 @@ Query.prototype.restrict = function(fields){
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.facet = function(options){
@@ -794,7 +821,7 @@ Query.prototype.restrict = function(fields){
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Create a MoreLikeThis. MoreLikeThis constructs a lucene query based on terms within a document.</p>
           </div>
           <div class="ctx">
@@ -833,7 +860,7 @@ Query.prototype.restrict = function(fields){
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.mlt = function(options){
@@ -893,7 +920,7 @@ Query.prototype.bf = function(){}</code>
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Build a querystring with the array of <code>this.parameters</code>.</p>
           </div>
           <div class="ctx">
@@ -908,7 +935,7 @@ Query.prototype.bf = function(){}</code>
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Query.prototype.build = function(){

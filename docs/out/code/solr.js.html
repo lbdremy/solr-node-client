@@ -35,23 +35,51 @@
       <ul class="code">
         <li class="header"><a href="/code/">Code Documentation</a>
         </li>
-        <li><a href="/code/solr.js.html">lib/solr.js</a>
-        </li>
-        <li><a href="/code/query.js.html">query.js</a>
+        <li><a href="/code/query.js.html">lib/query.js</a>
         </li>
         <li><a href="/code/format.js.html">lib/utils/format.js</a>
         </li>
         <li><a href="/code/solr-error.js.html">lib/error/solr-error.js</a>
+        </li>
+        <li><a href="/code/solr.js.html">lib/solr.js</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li style="font-family:&quot;Lato&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;color:#666;font-size:14px" class="header">examples
+        </li>
+        <li><a href="/code/rollback.js.html">rollback.js</a>
+        </li>
+        <li><a href="/code/add.js.html">add.js</a>
+        </li>
+        <li><a href="/code/addRemoteResource.js.html">addRemoteResource.js</a>
+        </li>
+        <li><a href="/code/basicAuth.js.html">basicAuth.js</a>
+        </li>
+        <li><a href="/code/delete.js.html">delete.js</a>
+        </li>
+        <li><a href="/code/deleteByRange.js.html">deleteByRange.js</a>
+        </li>
+        <li><a href="/code/deleteByQuery.js.html">deleteByQuery.js</a>
+        </li>
+        <li><a href="/code/deleteByID.js.html">deleteByID.js</a>
+        </li>
+        <li><a href="/code/optimize.js.html">optimize.js</a>
+        </li>
+        <li><a href="/code/ping.js.html">ping.js</a>
+        </li>
+        <li><a href="/code/search.js.html">search.js</a>
+        </li>
+        <li><a href="/code/commit.js.html">commit.js</a>
         </li>
       </ul>
     </nav>
     <header>
       <h1>Solr client for node.js
       </h1>
-      <div class="description">A solr client to <b>index</b>, <b>add</b>, <b>delete</b>,<b>commit</b>,<b>optimize</b> and <b>search</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
+      <div class="description">A solr client for <b>indexing</b>, <b>adding</b>, <b>deleting</b>,<b>committing</b> and <b>searching</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
       </div>
       <div class="gh">
-        <h4>Latest Update to Github
+        <h4>Latest Update from Github
         </h4>
         <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
         </div>
@@ -77,7 +105,7 @@
     </header>
     <section id="content">
       <div id="code">
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Load dependencies</p>
           </div>
           <div class="ctx">
@@ -86,17 +114,18 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>var http = require('http'),
    Query = require('./query'),
+   querystring = require('querystring'),
    format = require('./utils/format'),
    SolrError = require('./error/solr-error');</code>
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Expose <code>createClient()</code>.</p>
           </div>
           <div class="ctx">
@@ -105,14 +134,14 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>exports.createClient = createClient;</code>
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Create an instance of <code>Client</code></p>
           </div>
           <div class="ctx">
@@ -135,7 +164,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>function createClient(host, port, core, path){
@@ -150,7 +179,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Create a new <code>Client</code></p>
           </div>
           <div class="ctx">
@@ -175,7 +204,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>var Client = function(options){
@@ -193,7 +222,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Create credential using the basic access authentication method</p>
           </div>
           <div class="ctx">
@@ -212,7 +241,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.basicAuth = function(username,password){
@@ -223,7 +252,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Remove authorization header</p>
           </div>
           <div class="ctx">
@@ -238,7 +267,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.unauth = function(){
@@ -249,7 +278,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Add a document or a list of documents</p>
           </div>
           <div class="ctx">
@@ -259,11 +288,11 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object | Array &#125;</span><span class="name">doc</span><span class="desc">- document or list of documents to add into the Solr database</span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -272,7 +301,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.add = function(doc,callback){
@@ -288,19 +317,29 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
-          <div class="header"><p>Flush all documents still kept in <code>this.adds</code> array into the Solr database. Useful when you change the value of <code>this.updateEach</code>, call this function to be sure that every documents previously <code>add()</code> are now in the Solr database.</p>
+        <article class="codeblock">
+          <div class="header"><p>Add the remote resource located at the given path <code>options.path</code> into the Solr database.</p>
           </div>
           <div class="ctx">
-            <h3>Client.prototype.flushAdd()
+            <h3>Client.prototype.addRemoteResource()
             </h3>
           </div>
           <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">-</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.path</span><span class="desc">- path of the file. HTTP URL, the full path or a path relative to the CWD of the running solr server must be used.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.format='xml']</span><span class="desc">- format of the resource. XML, CSV or JSON formats must be used.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.contentType='text/plain;charset=utf-8']</span><span class="desc">- content type of the resource</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">[options.parameters]</span><span class="desc">- set of extras parameters pass along in the query. </span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr servers</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -309,7 +348,55 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Client.prototype.addRemoteResource = function(options,callback){
+   var self = this;
+   options.parameters = options.parameters || {};
+   options.format = (options.format === 'xml' ? '' : options.format || ''); // reason: the default route of the XmlUpdateRequestHandle is /update and not /update/xml.
+   options.parameters.commit = (options.parameters.commit === undefined ? this.autoCommit : options.parameters.commit);
+   options.parameters['stream.contentType'] = options.contentType || 'text/plain;charset=utf-8';
+   if(options.path.match(/^https?:\/\//)){
+      options.parameters['stream.url'] = options.path;
+   }else{
+      options.parameters['stream.file'] = options.path;
+   }
+   var path = 'update/' + options.format.toLowerCase()  + '?' + querystring.stringify(options.parameters) + '&amp;wt=json';
+   this.options.fullPath = [this.options.path, this.options.core, path]
+                              .filter(function(element){
+                                 if(element) return true;
+                                 return false;    
+                              })
+                              .join('/');
+   queryRequest(this.options,callback);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Flush all documents still kept in <code>this.adds</code> array into the Solr database. Useful when you change the value of <code>this.updateEach</code>, call this function to be sure that every documents previously <code>add()</code> are now in the Solr database.</p>
+          </div>
+          <div class="ctx">
+            <h3>Client.prototype.flushAdd()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.flushAdd = function(callback){
@@ -327,7 +414,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Commit last added and removed documents, that means your documents are now indexed.</p>
           </div>
           <div class="ctx">
@@ -337,11 +424,11 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -350,7 +437,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.commit = function(options,callback){
@@ -374,7 +461,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Delete documents based on the given <code>field</code> and <code>text</code>.</p>
           </div>
           <div class="ctx">
@@ -386,11 +473,11 @@
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">text</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -399,7 +486,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.delete = function(field,text,callback) {
@@ -413,7 +500,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Delete a range of documents based on the given <code>field</code>, <code>start</code> and <code>stop</code> arguments.</p>
           </div>
           <div class="ctx">
@@ -427,11 +514,11 @@
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Date &#125;</span><span class="name">stop</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -440,7 +527,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.deleteByRange = function(field,start,stop,callback){
@@ -455,7 +542,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Delete the document with the given <code>id</code></p>
           </div>
           <div class="ctx">
@@ -465,11 +552,11 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number &#125;</span><span class="name">id</span><span class="desc">- id of the document you want to delete</span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -478,7 +565,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.deleteByID = function(id,callback){
@@ -491,7 +578,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Delete documents matching the given <code>query</code></p>
           </div>
           <div class="ctx">
@@ -501,11 +588,11 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">query</span><span class="desc">- </span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -514,7 +601,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.deleteByQuery = function(query,callback){
@@ -527,7 +614,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Optimize the index</p>
           </div>
           <div class="ctx">
@@ -537,11 +624,11 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">- </span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -550,7 +637,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.optimize = function(options,callback){
@@ -573,7 +660,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Rollback all add/delete commands made since the last commit.</p>
           </div>
           <div class="ctx">
@@ -581,11 +668,11 @@
             </h3>
           </div>
           <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -594,7 +681,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.rollback = function(callback){
@@ -605,7 +692,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Send an update command to the Solr server with the given <code>data</code> stringified in the body.</p>
           </div>
           <div class="ctx">
@@ -615,11 +702,11 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">data</span><span class="desc">- data sent to the Solr server</span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -628,7 +715,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.update = function(data,callback){
@@ -646,7 +733,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Search documents matching the <code>query</code></p>
           </div>
           <div class="ctx">
@@ -656,11 +743,11 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Query | String &#125;</span><span class="name">query</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -669,7 +756,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.search = function(query,callback){
@@ -688,7 +775,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Create an instance of <code>Query</code></p>
           </div>
           <div class="ctx">
@@ -703,7 +790,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.createQuery = function(){
@@ -712,7 +799,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>Ping the Solr server</p>
           </div>
           <div class="ctx">
@@ -720,11 +807,11 @@
             </h3>
           </div>
           <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span>
             </div>
@@ -733,7 +820,7 @@
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.ping = function(callback){
@@ -750,7 +837,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>HTTP POST request. Send update commands to the Solr server (commit, add, delete, optimize)</p>
           </div>
           <div class="ctx">
@@ -772,18 +859,18 @@
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.json</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span>
             </div>
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>var updateRequest = function(params,callback){
@@ -837,7 +924,7 @@
             </pre>
           </div>
         </article>
-        <article id="undefined-section" class="codeblock">
+        <article class="codeblock">
           <div class="header"><p>HTTP GET request.  Send a query command to the Solr server (query)</p>
           </div>
           <div class="ctx">
@@ -857,18 +944,18 @@
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.fullPath</span><span class="desc">- full path of the request, contains query parameters</span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,json)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span>
             </div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span>
             </div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">callback().json</span><span class="desc">- JSON response sent by the Solr server</span>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span>
             </div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span>
             </div>
           </div>
           <div class="description">
           </div>
-          <div class="view-source">View Source
+          <div class="view-source">Hide Source
           </div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>var queryRequest = function(params,callback){

@@ -1,12 +1,21 @@
+/**
+ * Delete set of documents 
+ */
+
+// Use `var solr = require('solr-client')` in your code 
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
-var callback = function(err,res){
-   if(err) console.log(err);
-   if(res) console.log(res);
-}
 
-//client.deleteByID(455,callback);
-client.delete('id','*',callback); //Delete every single row
+var field = 'id';
+var query = '*'; // Everything !Dangerous!
 
-//client.commit();
+// Delete every documents
+client.delete('id','*',function(err,obj){
+   if(err){
+   	console.log(err);
+   }else{
+   	console.log(obj);	
+   }
+}); 
+

@@ -17,9 +17,17 @@ block nav
         - if (page.template == 'code-index')
           li.header: a(href=site.ghbaseurl + page.href)= page.title
       for page in files.code
-        - if (page.template == 'code')
+        - if (page.template == 'code' && !page.title.match(/examples/))
           li: a(href=site.ghbaseurl + page.href)= page.title
-
+  - if (files.code)
+    - var count = 0;
+    ul.code
+      for page in files.code
+        - if (page.template == 'code' && page.title.match(/examples/))
+            - count++;
+            - if(count === 1)
+              li.header(style='font-family:"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;color:#666;font-size:14px') examples
+            li: a(href=site.ghbaseurl + page.href)= page.name
 block content
   article!= file.prepared
     if (files.home)

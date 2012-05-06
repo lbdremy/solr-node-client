@@ -1,37 +1,31 @@
 /**
- * Load dependency
+ * Add documents into the Solr index.
  */
- 
-var solr = require('./../lib/solr');
+
+// Use `var solr = require('solr-client')` in your code 
+var solr = require('./../lib/solr'); 
 
 // Create a client
 var client = solr.createClient();
 
-// function executed when the Solr server responds
-var callback = function(err,json){
-   if(err){
-      console.log(err);
-   }else{
-      console.log('JSON response:' + json);
-   }
-}
-
-// Auto commit document added.
+// Switch on "auto commit", by default `client.autoCommit = false`
 client.autoCommit = true;
-
-// Send a request every time there are 4 or more documents added with the function add()
-client.updateEach = 4;
 
 var docs = [];
 for(var i = 0; i <= 10 ; i++){
    var doc = {
-       id : 82893 + i,
-       title : "Title "+ i,
-       description : "Text"+ i + "Alice"
+       id : 12345 + i,
+       title_t : "Title "+ i,
+       description_t : "Text"+ i + "Alice"
    }
    docs.push(doc);
 }
 
-// Add documents and flush added documents
-client.add(docs,callback);
-client.flushAdd(callback);
+// Add documents
+client.add(docs,function(err,obj){
+   if(err){
+      console.log(err);
+   }else{
+      console.log(obj);
+   }
+});

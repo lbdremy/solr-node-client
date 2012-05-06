@@ -3,7 +3,7 @@
   <head>
     <title>Home - Solr client for node.js
     </title>
-    <meta name="description" content="&lt;p&gt;A solr client to index, add, delete, commit, optimize and search documents within an Apache Solr installation (version&gt;=3.2).&lt;/p&gt;
+    <meta name="description" content="&lt;p&gt;A solr client for indexing, adding, deleting, committing and searching documents within an Apache Solr installation (version&gt;=3.2).&lt;/p&gt;
 ">
     <meta name="keywords" content="solr,client,javascript,node.js,module,search,add,commit,documents">
     <script type="text/javascript">var ghuser = 'lbdremy'
@@ -36,23 +36,51 @@
       <ul class="code">
         <li class="header"><a href="/code/">Code Documentation</a>
         </li>
-        <li><a href="/code/solr.js.html">lib/solr.js</a>
-        </li>
-        <li><a href="/code/query.js.html">query.js</a>
+        <li><a href="/code/query.js.html">lib/query.js</a>
         </li>
         <li><a href="/code/format.js.html">lib/utils/format.js</a>
         </li>
         <li><a href="/code/solr-error.js.html">lib/error/solr-error.js</a>
+        </li>
+        <li><a href="/code/solr.js.html">lib/solr.js</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li style="font-family:&quot;Lato&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;color:#666;font-size:14px" class="header">examples
+        </li>
+        <li><a href="/code/rollback.js.html">rollback.js</a>
+        </li>
+        <li><a href="/code/add.js.html">add.js</a>
+        </li>
+        <li><a href="/code/addRemoteResource.js.html">addRemoteResource.js</a>
+        </li>
+        <li><a href="/code/basicAuth.js.html">basicAuth.js</a>
+        </li>
+        <li><a href="/code/delete.js.html">delete.js</a>
+        </li>
+        <li><a href="/code/deleteByRange.js.html">deleteByRange.js</a>
+        </li>
+        <li><a href="/code/deleteByQuery.js.html">deleteByQuery.js</a>
+        </li>
+        <li><a href="/code/deleteByID.js.html">deleteByID.js</a>
+        </li>
+        <li><a href="/code/optimize.js.html">optimize.js</a>
+        </li>
+        <li><a href="/code/ping.js.html">ping.js</a>
+        </li>
+        <li><a href="/code/search.js.html">search.js</a>
+        </li>
+        <li><a href="/code/commit.js.html">commit.js</a>
         </li>
       </ul>
     </nav>
     <header>
       <h1>Solr client for node.js
       </h1>
-      <div class="description">A solr client to <b>index</b>, <b>add</b>, <b>delete</b>,<b>commit</b>,<b>optimize</b> and <b>search</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
+      <div class="description">A solr client for <b>indexing</b>, <b>adding</b>, <b>deleting</b>,<b>committing</b> and <b>searching</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
       </div>
       <div class="gh">
-        <h4>Latest Update to Github
+        <h4>Latest Update from Github
         </h4>
         <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
         </div>
@@ -82,7 +110,6 @@
         </h1>
         <section><ul>
 <li>Commands supported: search(select), index, delete, update, commit, rollback, optimize, ping</li>
-<li>Custom commands: Extends this solr client as much as you want if you had created your own RequestHandler in the solrconfig.xml.</li>
 <li>Lucene query / DisMax query</li>
 <li>Grouping / Field Collapsing. (Apache Solr version must be &gt;= 3.3)</li>
 <li>Convenients methods for querying with Facet, MoreLikeThis</li>

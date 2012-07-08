@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Home - Solr client for node.js
+    </title>
+    <meta name="description" content="&lt;p&gt;A solr client for indexing, adding, deleting, committing and searching documents within an Apache Solr installation (version&gt;=3.2).&lt;/p&gt;
+">
+    <meta name="keywords" content="solr,client,javascript,node.js,module,search,add,commit,documents">
+    <script type="text/javascript">var ghuser = 'lbdremy'
+  , ghproject = 'solr-node-client';
+
+</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="/solr-node-client/public/js/jq-mousewheel.js"></script>
+    <script src="/solr-node-client/public/js/antiscroll.js"></script>
+    <script src="/solr-node-client/public/js/prettify.js"></script>
+    <script src="/solr-node-client/public/js/main.js"></script>
+    <link rel="stylesheet" href="/solr-node-client/public/css/antiscroll.css" type="text/css" media="all">
+    <link rel="stylesheet" href="/solr-node-client/public/css/main.css" type="text/css" media="all">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300|Quicksand" rel="stylesheet" type="text/css">
+  </head>
+  <body><a href="https://github.com/lbdremy/solr-node-client" alt="fork the solr client for node.js on github" target="_blank"><img id="githubfork" src="/solr-node-client/public/img/github_fork.png"></a>
+    <nav>
+      <ul class="sections">
+        <li><a href="#features" class="scroll">Features</a>
+        </li>
+        <li><a href="#installation" class="scroll">Installation</a>
+        </li>
+        <li><a href="#contributors" class="scroll">Contributors</a>
+        </li>
+        <li><a href="#getting-help" class="scroll">Getting Help</a>
+        </li>
+        <li><a href="#licence" class="scroll">Licence</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li class="header"><a href="/solr-node-client/code/">Code Documentation</a>
+        </li>
+        <li><a href="/solr-node-client/code/query.js.html">lib/query.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/format.js.html">lib/utils/format.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/solr-error.js.html">lib/error/solr-error.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/solr.js.html">lib/solr.js</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li style="font-family:&quot;Lato&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;color:#666;font-size:14px" class="header">examples
+        </li>
+        <li><a href="/solr-node-client/code/rollback.js.html">rollback.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/add.js.html">add.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/addRemoteResource.js.html">addRemoteResource.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/basicAuth.js.html">basicAuth.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/delete.js.html">delete.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/deleteByRange.js.html">deleteByRange.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/deleteByQuery.js.html">deleteByQuery.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/deleteByID.js.html">deleteByID.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/optimize.js.html">optimize.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/ping.js.html">ping.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/search.js.html">search.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/commit.js.html">commit.js</a>
+        </li>
+      </ul>
+    </nav>
+    <header>
+      <h1>Solr client for node.js
+      </h1>
+      <div class="description">A solr client for <b>indexing</b>, <b>adding</b>, <b>deleting</b>,<b>committing</b> and <b>searching</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
+      </div>
+      <div class="gh">
+        <h4>Latest Update from Github
+        </h4>
+        <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
+        </div>
+        <div id="latestCommitMessage">Loading...
+        </div>
+        <div id="buttons">
+          <div class="btn">
+            <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=lbdremy&amp;repo=solr-node-client&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px">
+            </iframe>
+          </div>
+          <div class="btn">
+            <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=lbdremy&amp;repo=solr-node-client&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px">
+            </iframe>
+          </div>
+          <div class="btn"><a href="htts://twitter.com/share" data-via="lbdremy" data-url="http://lbdremy.github.com/solr-node-client" data-related="lbdremy" class="twitter-share-button">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+</script>
+          </div>
+        </div>
+        <div id="links"><a id="repoIssues" href="https://github.com/lbdremy/solr-node-client/issues">GitHub Issues</a>
+        </div>
+      </div>
+    </header>
+    <section id="content">
+      <article>
+        <h1 id="features-section"><a name="features">Features</a>
+        </h1>
+        <section><ul>
+<li>Commands supported: search(select), index, delete, update, commit, rollback, optimize, ping</li>
+<li>Lucene query / DisMax query</li>
+<li>Grouping / Field Collapsing. (Apache Solr version must be &gt;= 3.3)</li>
+<li>Convenients methods for querying with Facet, MoreLikeThis</li>
+<li>HTTP Basic Access Authentication</li>
+</ul>
+
+        </section>
+        <h1 id="installation-section"><a name="installation">Installation</a>
+        </h1>
+        <section><p>Install with <a href="http://search.npmjs.org/#/solr-client">npm</a>.
+
+</p>
+<pre><code>npm install solr-client</code></pre>
+
+        </section>
+        <h1 id="contributors-section"><a name="contributors">Contributors</a>
+        </h1>
+        <section><pre><code>active : 27 days
+files  : 25
+authors: 
+   79    Remy Loubradou          98%
+   1    Jos Shepherd            1.0%
+   1    Wayne Larsen            1.0%</code></pre>
+
+        </section>
+        <h1 id="getting-help-section"><a name="getting-help">Getting Help</a>
+        </h1>
+        <section><p>If you have questions or issues, please use <a href="https://github.com/lbdremy/solr-node-client/issues?sort=created&amp;direction=desc&amp;state=open">Github Issues</a>.
+</p>
+
+        </section>
+        <h1 id="licence-section"><a name="licence">Licence</a>
+        </h1>
+        <section><p>(The MIT License)
+
+</p>
+<p>Copyright 2011-2012 HipSnip Limited
+
+</p>
+<p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+</p>
+<p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+</p>
+<p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+</p>
+
+        </section>
+      </article>
+    </section>
+    <footer>
+      <div class="branding">Solr client for node.js&nbsp;. site generated by
+<a href="http://codexjs.com">codex.</a>
+      </div>
+    </footer>
+  </body>
+</html>

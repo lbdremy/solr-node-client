@@ -149,8 +149,13 @@ nock('http://127.0.0.1:8983')
   .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":1,\"params\":{\"start\":\"0\",\"q\":\"laptop\",\"qf\":\"title^2 description^3\",\"wt\":\"json\",\"fq\":\"last_update:[2012-05-05T21:50:08.783Z TO 2012-05-06T21:50:08.783Z] price:[10 TO 100]\",\"defType\":\"dismax\",\"rows\":\"10\"}},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
   'content-type': 'application/json; charset=UTF-8',
   connection: 'close',
-  server: 'Jetty(7.5.3.v20111011)' });
+  server: 'Jetty(7.5.3.v20111011)' })
 
+  .get('/solr/select?q=title:laptop&qt=custom&start=0&rows=10&wt=json')
+  .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":7},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 08 Jul 2012 16:54:37 GMT',
+  'content-type': 'application/json; charset=UTF-8',
+  'transfer-encoding': 'chunked',
+  server: 'Jetty(7.5.3.v20111011)' });
 
 }
 

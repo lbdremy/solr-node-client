@@ -11,9 +11,10 @@ var nock = require('nock'),
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
 
 if(config.mocked){
-   //nock.recorder.rec();
    mocks.core(nock);
 }
+//nock.recorder.rec();
+
 // Suite Test
 
 var suite = vows.describe('Solr Client API Core');
@@ -292,6 +293,15 @@ suite.addBatch({
             client.search(query,this.callback);
          },
          'should be possible' : function(err,res) {
+            assertCorrectResponse(err,res);
+         }
+      },
+      'that will be handle by the RequestHandler given in parameter' : {
+         topic : function(client){
+            var query = client.createQuery().q({title : 'laptop'}).requestHandler('custom').start(0).rows(10);
+            client.search(query,this.callback);
+         },
+         'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
          }
       },

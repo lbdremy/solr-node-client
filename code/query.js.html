@@ -1,0 +1,981 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Code Documentation for lib/query.js - Solr client for node.js
+    </title>
+    <script type="text/javascript">var ghuser = 'lbdremy'
+  , ghproject = 'solr-node-client';
+
+</script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js"></script>
+    <script src="/solr-node-client/public/js/jq-mousewheel.js"></script>
+    <script src="/solr-node-client/public/js/antiscroll.js"></script>
+    <script src="/solr-node-client/public/js/prettify.js"></script>
+    <script src="/solr-node-client/public/js/main.js"></script>
+    <link rel="stylesheet" href="/solr-node-client/public/css/antiscroll.css" type="text/css" media="all">
+    <link rel="stylesheet" href="/solr-node-client/public/css/main.css" type="text/css" media="all">
+    <link href="http://fonts.googleapis.com/css?family=Lato:300|Quicksand" rel="stylesheet" type="text/css">
+  </head>
+  <body><a href="https://github.com/lbdremy/solr-node-client" alt="fork the solr client for node.js on github" target="_blank"><img id="githubfork" src="/solr-node-client/public/img/github_fork.png"></a>
+    <nav>
+      <div class="box-wrap antiscroll-wrap">
+        <div class="box">
+          <div class="antiscroll-inner">
+            <div class="box-inner">
+              <ul class="sections">
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+      <ul class="pages">
+        <li><a href="/solr-node-client">Home</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li class="header"><a href="/solr-node-client/code/">Code Documentation</a>
+        </li>
+        <li><a href="/solr-node-client/code/query.js.html">lib/query.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/format.js.html">lib/utils/format.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/solr-error.js.html">lib/error/solr-error.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/solr.js.html">lib/solr.js</a>
+        </li>
+      </ul>
+      <ul class="code">
+        <li style="font-family:&quot;Lato&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;color:#666;font-size:14px" class="header">examples
+        </li>
+        <li><a href="/solr-node-client/code/rollback.js.html">rollback.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/add.js.html">add.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/addRemoteResource.js.html">addRemoteResource.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/basicAuth.js.html">basicAuth.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/delete.js.html">delete.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/deleteByRange.js.html">deleteByRange.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/deleteByQuery.js.html">deleteByQuery.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/deleteByID.js.html">deleteByID.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/optimize.js.html">optimize.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/ping.js.html">ping.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/search.js.html">search.js</a>
+        </li>
+        <li><a href="/solr-node-client/code/commit.js.html">commit.js</a>
+        </li>
+      </ul>
+    </nav>
+    <header>
+      <h1>Solr client for node.js
+      </h1>
+      <div class="description">A solr client for <b>indexing</b>, <b>adding</b>, <b>deleting</b>,<b>committing</b> and <b>searching</b> documents within an <a href="http://lucene.apache.org/solr/">Apache Solr</a> installation (version>=3.2).
+      </div>
+      <div class="gh">
+        <h4>Latest Update from Github
+        </h4>
+        <div id="commit"><span id="latestCommitTime">Loading...</span><a id="latestCommitURL"></a>
+        </div>
+        <div id="latestCommitMessage">Loading...
+        </div>
+        <div id="buttons">
+          <div class="btn">
+            <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=lbdremy&amp;repo=solr-node-client&amp;type=watch&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px">
+            </iframe>
+          </div>
+          <div class="btn">
+            <iframe src="http://markdotto.github.com/github-buttons/github-btn.html?user=lbdremy&amp;repo=solr-node-client&amp;type=fork&amp;count=true" allowtransparency="true" frameborder="0" scrolling="0" width="110px" height="20px">
+            </iframe>
+          </div>
+          <div class="btn"><a href="htts://twitter.com/share" data-via="lbdremy" data-url="http://lbdremy.github.com/solr-node-client" data-related="lbdremy" class="twitter-share-button">Tweet</a>
+            <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+</script>
+          </div>
+        </div>
+        <div id="links"><a id="repoIssues" href="https://github.com/lbdremy/solr-node-client/issues">GitHub Issues</a>
+        </div>
+      </div>
+    </header>
+    <section id="content">
+      <div id="code">
+        <article class="codeblock">
+          <div class="header"><p>Load dependencies</p>
+          </div>
+          <div class="ctx">
+            <h3>querystring
+            </h3>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>var querystring = require('querystring'),
+    format = require('./utils/format');</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Expose <code>Query</code></p>
+          </div>
+          <div class="ctx">
+            <h3>module.exports
+            </h3>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>module.exports = exports = Query;</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Create a new <code>Query</code></p>
+          </div>
+          <div class="ctx">
+            <h3>Query()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function Query(){
+   this.parameters = [];
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set a new parameter<br />Since all possibilities provided by Solr are not available in the <code>Query</code> object, <code>set()</code> is there to fit this gap.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.set()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">parameter</span><span class="desc">- string, special characters have to be correctly encoded or the request will fail.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.set = function(parameter){
+   var self = this;
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the query parser to use with this request.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.defType()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">type</span><span class="desc">- name of the query parser e.g: 'dismax'</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.defType = function(type){
+   var self = this;
+   var parameter = 'defType=' + type;
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Use the DisMax query parser </p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.dismax()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.dismax = function(){
+   var self = this;
+   this.defType('dismax');
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the Request Handler used to process the request based on its <code>name</code>.<br />Works only if no Request Handler has been configured with <code>/select</code> as its name in solrconfig.xml. </p>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">name</span><span class="desc">- name of the Request Handler</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.requestHandler =
+Query.prototype.qt = function(name){
+  var self = this;
+  var parameter = 'qt=' + name;
+  this.parameters.push(parameter);
+  return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the main query</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.q()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Object &#125;</span><span class="name">q</span><span class="desc">-</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.q = function(q){
+   var self = this;
+   var parameter ='q=';
+   if ( typeof(q) === 'string' ){
+      parameter += encodeURIComponent(q);
+   }else{
+      parameter += querystring.stringify(q, '%20',':');
+   }
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the offset where the set of returned documents should begin.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.start()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">start</span><span class="desc">- the offset where the set of returned documents should begin.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.start = function(start){
+   var self = this;
+   var parameter = 'start=' + start ;
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the maximun number of documents returned</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.rows()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">rows</span><span class="desc">- number of documents</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.rows = function(rows){
+   var self = this;
+   var parameter = 'rows=' + rows ;
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the "boosts" to associate with each fields </p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.qf()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">-</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.qf = function(options){
+   var self = this;
+   var parameter = 'qf=' ;
+   parameter += querystring.stringify(options, '%20' , '^');
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the minimum number or percent of clauses that must match.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.mm()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number &#125;</span><span class="name">minimum</span><span class="desc">- number or percent of clauses that must match</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.mm = function(minimum){
+   var self = this;
+   var parameter = 'mm=' + minimum;
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the Phrase Fields parameter.<br />Once the list of matching documents has been identified using the "fq" and "qf" params, the "pf" param can be used to "boost" the score of documents in cases where all of the terms <br />in the "q" param appear in close proximity.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.pf()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">-</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.pf = function(options){
+   var self = this;
+   var parameter = 'pf=' ;
+   parameter += querystring.stringify(options, '%20' , '^');
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the Boost Query parameter.<br />A raw query string (in the SolrQuerySyntax) that will be included with the user's query to influence the score. If this is a BooleanQuery with a default boost (1.0f) then the individual clauses will be added directly to the main query. Otherwise, the query will be included as is.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.bq()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">-</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.bq = function(options){
+   var self = this;
+   var parameter = 'bq=' ;
+   parameter += querystring.stringify(options, '%20' , '^');
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Sort a result in descending or ascending order based on one or more fields.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.sort()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">- </span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.sort = function(options){
+   var self = this;
+   var parameter = 'sort=';
+   parameter += querystring.stringify(options, ',' , '%20');
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Filter the set of documents found before to return the result with the given range determined by <code>field</code>, <code>start</code> and <code>stop</code>.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.rangeFilter()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Array | Object &#125;</span><span class="name">options</span><span class="desc">-</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.field</span><span class="desc">- the name of the field where the range is applied</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number | Date &#125;</span><span class="name">options.start</span><span class="desc">- the offset where the range starts</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number | Date &#125;</span><span class="name">options.end</span><span class="desc">- the offset where the range ends</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.rangeFilter = function(options){
+   var self = this;
+   options = format.dateISOify(options);
+   var parameter = 'fq=';
+   if(Array.isArray(options)){
+      var filters = options.map(function(option){
+         var key = option.field;
+         var filter = {};
+         filter[key] = '[' + encodeURIComponent(option.start) + '%20TO%20' + encodeURIComponent(option.end) + ']';
+         return format.stringify(filter, '',':');
+      });
+      parameter += filters.join('%20'); 
+   }else{
+      var key = options.field;
+      var filter = {};
+      filter[key] = '[' + encodeURIComponent(options.start) + '%20TO%20' + encodeURIComponent(options.end) + ']';
+      parameter += format.stringify(filter, '',':');
+   }
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Filter the set of documents found before to return the result with the given <code>field</code> and <code>value</code>.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.matchFilter()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">field</span><span class="desc">- name of field</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number | Date &#125;</span><span class="name">value</span><span class="desc">- value of the field that must match</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.matchFilter = function(field,value){
+   var self = this;
+   value = format.dateISOify(value);
+   var parameter = 'fq=';
+   parameter += field + ':' + encodeURIComponent(value);
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Specify a set of fields to return.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototypefl
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">field</span><span class="desc">- field name </span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.fl = 
+Query.prototype.restrict = function(fields){
+   var self = this;
+   var parameter = 'fl=';
+   if(typeof(fields) === 'string'){
+      parameter += fields;
+   }else{
+      parameter += fields.join(',');
+   }
+   this.parameters.push(parameter);
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the time allowed for a search to finish.<br />Partial results may be returned (if there are any).</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.timeout()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number &#125;</span><span class="name">time</span><span class="desc">- time is in milliseconds. Values &lt;= 0 mean no time restriction. </span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.timeout = function(time){
+   var self = this;
+   var parameter = 'timeAllowed=' + time;
+   this.parameters.push(parameter); 
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Group documents with the given <code>field</code></p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.groupBy()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">field</span><span class="desc">- field name</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.groupBy = function(field){
+   var self = this;
+   this.group({
+      'field': field
+   });
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Group documents using field collapsing or result grouping feature.<br />Field Collapsing collapses a group of results with the same field value down to a single (or fixed number) of entries.<br />Result Grouping groups documents with a common field value into groups, returning the top documents per group, and the top groups based on what documents are in the groups.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.group()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc"></span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.on=true]</span><span class="desc">- if false, turn off result grouping, otherwise turn on.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.field</span><span class="desc">- Group based on the unique values of a field. </span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.limit=1]</span><span class="desc">- The number of results (documents) to return for each group. Solr's default value is 1.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">options.offset</span><span class="desc">- The offset into the document list of each group.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.sort=&quot;score</span><span class="desc">desc&quot;] - How to sort documents within a single group. Defaults to the same value as the sort parameter.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.format</span><span class="desc">- if simple, the grouped documents are presented in a single flat list. The start and rows parameters refer to numbers of documents instead of numbers of groups.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">options.main</span><span class="desc">- If true, the result of the last field grouping command is used as the main result list in the response, using group.format=simple.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.ngroups=false]</span><span class="desc">- If true, includes the number of groups that have matched the query. Default is false.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">options.truncate</span><span class="desc">- If true, facet counts are based on the most relevant document of each group matching the query. Same applies for StatsComponent. Default is false.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.cache=0]</span><span class="desc">- If &gt; 0 enables grouping cache. Grouping is executed actual two searches. This option caches the second search. A value of 0 disables grouping caching. Default is 0.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.group = function(options){
+   var self = this;
+   if(options.on === false){
+      this.parameters.push('group=false');
+   }else{
+      this.parameters.push('group=true');
+   }
+   if( options.field ){
+      this.parameters.push('group.field=' + options.field);
+   }
+   if( options.limit !== undefined){
+      this.parameters.push('group.limit=' + options.limit);
+   }
+   if( options.offset !== undefined){
+      this.parameters.push('group.offset=' + options.offset);
+   }
+   if( options.sort ){
+      this.parameters.push('group.sort=' + encodeURIComponent(options.sort));
+   }
+   if( options.format ){
+      this.parameters.push('group.format=' + encodeURIComponent(options.format));
+   }
+   if( options.main !== undefined){
+      this.parameters.push('group.main=' + options.main);
+   }
+   if( options.ngroups !== undefined){
+      this.parameters.push('group.ngroups=' + options.ngroups);
+   }
+   if( options.truncate !== undefined){
+      this.parameters.push('group.truncate=' + options.truncate);
+   }
+   if( options.cache !== undefined){
+      this.parameters.push('group.cache.percent=' + options.cache);
+   }
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Create a facet</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.facet()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">- set of options to create a facet</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.on=true]</span><span class="desc">- Turn on or off facet</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.query]</span><span class="desc">- This parameter allows you to specify an arbitrary query in the Lucene default syntax to generate a facet count. By default, faceting returns a count of the unique terms for a &quot;field&quot;, while facet.query allows you to determine counts for arbitrary terms or expressions.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.field</span><span class="desc">- This parameter allows you to specify a field which should be treated as a facet. It will iterate over each Term in the field and generate a facet count using that Term as the constraint.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.prefix]</span><span class="desc">- Limits the terms on which to facet to those starting with the given string prefix.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.sort]</span><span class="desc">- This param determines the ordering of the facet field constraints.count</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.limit=100]</span><span class="desc">- This parameter indicates the maximum number of constraint counts that should be returned for the facet fields. A negative value means unlimited.The solr's default value is 100.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.offset=0]</span><span class="desc">- This param indicates an offset into the list of constraints to allow paging.The solr's default value is 0.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.mincount=0]</span><span class="desc">- This parameter indicates the minimum counts for facet fields should be included in the response. The solr's default value is 0.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.missing=false]</span><span class="desc">- Set to `true` this param indicates that in addition to the Term based constraints of a facet field, a count of all matching results which have no value for the field should be computed. The solr's default value is false.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.method=&quot;fc&quot;]</span><span class="desc">- This parameter indicates what type of algorithm/method to use when faceting a field.The solr's default value is fc (except for BoolField).</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.facet = function(options){
+   var self = this;
+   if(options.on === false){
+      this.parameters.push('facet=false');
+   }else{
+      this.parameters.push('facet=true');
+   }
+   if(options.query){
+      this.parameters.push('facet.query=' + encodeURIComponent(options.query))
+   }
+   if(options.field){
+      this.parameters.push('facet.field=' + options.field)
+   }
+   if(options.prefix){
+      this.parameters.push('facet.prefix=' + encodeURIComponent(options.prefix))
+   }
+   if(options.sort){
+      this.parameters.push('facet.sort=' + encodeURIComponent(options.sort))
+   }
+   if(options.limit !== undefined){
+      this.parameters.push('facet.limit=' + options.limit);
+   }
+   if(options.offset !== undefined){
+      this.parameters.push('facet.offset=' + options.offset);
+   }
+   if(options.mincount !== undefined){
+      this.parameters.push('facet.mincount=' + options.mincount);
+   }
+   if(options.missing !== undefined){
+      this.parameters.push('facet.missing=' + options.missing);
+   }
+   if(options.method){
+      this.parameters.push('facet.method=' + options.method);
+   }
+   return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Create a MoreLikeThis. MoreLikeThis constructs a lucene query based on terms within a document.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.mlt()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">- set of options to create a morelikethis</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.on=true]</span><span class="desc">- Turn on or off morelikethis</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">[options.fl]</span><span class="desc">- The fields to use for similarity. NOTE: if possible, these should have a stored TermVector</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.count]</span><span class="desc">- The number of similar documents to return for each result.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.mintf]</span><span class="desc">- Minimum Term Frequency - the frequency below which terms will be ignored in the source doc.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.mindf]</span><span class="desc">- Minimum Document Frequency - the frequency at which words will be ignored which do not occur in at least this many docs.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.minwl]</span><span class="desc">- minimum word length below which words will be ignored.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.maxwl]</span><span class="desc">- maximum word length above which words will be ignored.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.maxqt]</span><span class="desc">- maximum number of query terms that will be included in any generated query.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.maxntp]</span><span class="desc">- maximum number of tokens to parse in each example doc field that is not stored with TermVector support.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.boost]</span><span class="desc">- set if the query will be boosted by the interesting term relevance.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Object &#125;</span><span class="name">[options.qf]</span><span class="desc">- Query fields and their boosts using the same format as that used in DisMaxQParserPlugin. These fields must also be specified in mlt.fl.</span>
+            </div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.mlt = function(options){
+  var self = this;
+  if(options.on === false){
+    this.parameters.push('mlt=false');
+  }else{
+    this.parameters.push('mlt=true');
+  }
+  if(options.fl){
+    if(options.fl instanceof Array) options.fl = options.fl.join(',');
+    this.parameters.push('mlt.fl=' + encodeURIComponent(options.fl))
+  }
+  if(options.count !== undefined){
+    this.parameters.push('mlt.count=' + options.count)
+  }
+  if(options.mintf !== undefined){
+    this.parameters.push('mlt.mintf=' + options.mintf)
+  }
+  if(options.mindf !== undefined){
+    this.parameters.push('mlt.mindf=' + options.mindf);
+  }
+  if(options.minwl !== undefined){
+    this.parameters.push('mlt.minwl=' + options.minwl)
+  }
+  if(options.maxwl !== undefined ){
+    this.parameters.push('mlt.maxwl=' + options.maxwl)
+  }
+  if(options.maxqt !== undefined){
+    this.parameters.push('mlt.maxqt=' + options.maxqt)
+  }
+  if(options.maxntp !== undefined){
+    this.parameters.push('mlt.maxntp=' + options.maxntp);
+  }
+  if(options.boost !== undefined){
+    this.parameters.push('mlt.boost=' + options.boost);
+  }
+  if(options.qf){
+    if( typeof options.qf === 'object'){
+      var parameter = querystring.stringify(options.qf, '%20' , '^');;
+    }else{
+      var parameter = encodeURIComponent(options.qf);
+    }
+    this.parameters.push('mlt.qf=' + parameter);
+  }
+  return self;
+}
+
+//TODO
+Query.prototype.ps = function(){}
+
+Query.prototype.qs = function(){}
+
+Query.prototype.tie = function(){}
+
+Query.prototype.bf = function(){}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Build a querystring with the array of <code>this.parameters</code>.</p>
+          </div>
+          <div class="ctx">
+            <h3>Query.prototype.build()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">String</span>
+            </div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span>
+            </div>
+          </div>
+          <div class="description">
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.build = function(){
+   return this.parameters.join('&amp;');
+}</code>
+            </pre>
+          </div>
+        </article>
+      </div>
+    </section>
+    <footer>
+      <div class="branding">Solr client for node.js&nbsp;. site generated by
+<a href="http://codexjs.com">codex.</a>
+      </div>
+    </footer>
+  </body>
+</html>

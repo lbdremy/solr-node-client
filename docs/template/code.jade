@@ -1,0 +1,81 @@
+extends layout
+
+block title
+  title Code Documentation for #{file.title} - #{site.title}
+
+block nav
+  .box-wrap.antiscroll-wrap
+    .box
+      .antiscroll-inner
+        .box-inner
+          ul.sections
+            for comment in file.prepared
+              unless comment.ignore
+                for tag in comment.tags
+                  - if (tag.type == 'name')
+                    - comment.anchor = tag.string
+                    li.keepcase: a.scroll(href='#' + tag.string)= tag.string
+  ul.pages
+    li: a(href= (site.ghbaseurl) ? site.ghbaseurl : '/') Home
+    - if (files.support)
+      for page in files.support
+        li: a(href=site.ghbaseurl + page.href)= page.title
+  - if (files.code)
+    ul.code
+      for page in files.code
+        - if (page.template == 'code-index')
+          li.header: a(href=site.ghbaseurl + page.href)= page.title
+      for page in files.code
+        - if (page.template == 'code' && !page.title.match(/examples/))
+          li: a(href=site.ghbaseurl + page.href)= page.title
+  - if (files.code)
+    - var count = 0;
+    ul.code
+      for page in files.code
+        - if (page.template == 'code' && page.title.match(/examples/))
+            - count++;
+            - if(count === 1)
+              li.header(style='font-family:"Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;color:#666;font-size:14px') examples
+            li: a(href=site.ghbaseurl + page.href)= page.name
+
+block content
+  #code
+    for comment in file.prepared
+      unless comment.ignore
+        article.codeblock
+          .header!= comment.description.summary
+          - if (comment.ctx && comment.ctx.string)
+            .ctx
+              h3= comment.ctx.string
+          - if (comment.tags.length)
+            .tags
+              each tag in comment.tags
+                - if (tag.type == 'api')
+                  .tag
+                    span.type &#64;#{tag.type}
+                    span.visibility #{tag.visibility}
+                - else if (tag.type == 'param')
+                  -var types = tag.types.join(' | ')
+                  .tag
+                    span.type &#64;#{tag.type}
+                    span.types &#123; #{types} &#125;
+                    span.name #{tag.name}
+                    span.desc #{tag.description}
+                - else if (tag.type == 'see')
+                  .tag
+                    span.type &#64;#{tag.type}
+                    span.name #{tag.local}
+                - else if (tag.type == 'name')
+                  // ignroing this
+                - else if (tag.type == 'return')
+                  .tag
+                    span.type &#64;#{tag.type}
+                    span.desc #{tag.types}
+                  - console.log('unknown tag in file: ' + file.title)
+                  - console.log(tag)
+          .description!= comment.description.body
+          - if (comment.code)
+            .view-source Hide Source
+            .code-wrap
+              pre.source.prettyprint
+                code= comment.code

@@ -104,23 +104,6 @@ suite.addBatch({
             assertSolrError(err,res);
          }
       },
-      'several documents to the Solr DB' : {
-         topic : function(client){
-            client.updateEach = 4;
-            for(var i = 0; i < 5; i++){
-               var doc = { 
-                  id : 1234567891 + i,
-                  title_t : 'Test title ' + i,
-                  description_t : 'Test Description' + i 
-               };
-               client.add(doc,this.callback);
-            }
-            client.flushAdd(this.callback);
-         },
-         'should be possible' : function(err,res){
-            assertCorrectResponse(err,res);
-         }
-      },
       'a list of documents' : {
          topic : function(client){
             client.updateEach = 1; // default value when a client is created
@@ -381,7 +364,6 @@ suite.addBatch({
 
 function assertClient(client){
     assert.isFunction(client.add);
-    assert.isFunction(client.flushAdd);
     assert.isFunction(client.commit);
     assert.isFunction(client.delete);
     assert.isFunction(client.deleteByID);

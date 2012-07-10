@@ -41,19 +41,19 @@ suite.addBatch({
          topic : function(){
             var client = solr.createClient();
             client.autoCommit = true;
-            client.updateEach = 20;
             var date = today;
+            var docs = new Array(20);
             for( var i = 0; i < 20 ; i++){
                if( i >= 10){
                   date = beforeYesterday;
                }
-               var data = {
+               docs[i] = {
                   id : i,
                   title_t : 'test',
                   last_update_dt : date
                }
-               client.add(data,this.callback);
             }
+            client.add(docs,this.callback);
          },
          'should works' : function(err,res){
             assertCorrectResponse(err,res);

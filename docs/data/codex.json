@@ -1,7 +1,7 @@
 {
     "locals": {
         "title": "Solr client for node.js",
-        "googleanalytics": "",
+        "googleanalytics": "UA-30298936-1",
         "ghuser": "lbdremy",
         "ghbaseurl": "/solr-node-client",
         "ghproject": "solr-node-client",

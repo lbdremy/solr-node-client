@@ -97,7 +97,7 @@ nock('http://127.0.0.1:8983')
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' })
 
-  .get('/solr/select?q=laptop&defType=dismax&qf=title^2%20description^3&start=0&rows=10&fq=price:[10%20TO%20100]%20delievery_t:[10%20TO%20100]&wt=json')
+  .get('/solr/select?q=laptop&defType=dismax&qf=title^2%20description^3&start=0&rows=10&fq=(price:[10%20TO%20100]%20AND%20delievery_t:[10%20TO%20100])&wt=json')
   .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":5,\"params\":{\"start\":\"0\",\"q\":\"laptop\",\"qf\":\"title^2 description^3\",\"wt\":\"json\",\"fq\":\"price:[10 TO 100] delievery_t:[10 TO 100]\",\"defType\":\"dismax\",\"rows\":\"10\"}},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
   'content-type': 'application/json; charset=UTF-8',
   connection: 'close',
@@ -145,7 +145,7 @@ nock('http://127.0.0.1:8983')
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' })
 
-  .get('/solr/select?q=laptop&defType=dismax&qf=title^2%20description^3&start=0&rows=10&fq=last_update:[2012-05-05T21%3A50%3A08.783Z%20TO%202012-05-06T21%3A50%3A08.783Z]%20price:[10%20TO%20100]&wt=json')
+  .get('/solr/select?q=laptop&defType=dismax&qf=title^2%20description^3&start=0&rows=10&fq=(last_update:[2012-05-05T21%3A50%3A08.783Z%20TO%202012-05-06T21%3A50%3A08.783Z]%20AND%20price:[10%20TO%20100])&wt=json')
   .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":1,\"params\":{\"start\":\"0\",\"q\":\"laptop\",\"qf\":\"title^2 description^3\",\"wt\":\"json\",\"fq\":\"last_update:[2012-05-05T21:50:08.783Z TO 2012-05-06T21:50:08.783Z] price:[10 TO 100]\",\"defType\":\"dismax\",\"rows\":\"10\"}},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
   'content-type': 'application/json; charset=UTF-8',
   connection: 'close',

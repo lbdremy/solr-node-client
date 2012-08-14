@@ -306,7 +306,7 @@ Query.prototype.qt = function(name){
    if ( typeof(q) === 'string' ){
       parameter += encodeURIComponent(q);
    }else{
-      parameter += querystring.stringify(q, '%20',':');
+      parameter += querystring.stringify(q, '%20AND%20',':');
    }
    this.parameters.push(parameter);
    return self;
@@ -552,13 +552,15 @@ Query.prototype.qt = function(name){
    options = format.dateISOify(options);
    var parameter = 'fq=';
    if(Array.isArray(options)){
+     parameter += &quot;(&quot;;
       var filters = options.map(function(option){
          var key = option.field;
          var filter = {};
          filter[key] = '[' + encodeURIComponent(option.start) + '%20TO%20' + encodeURIComponent(option.end) + ']';
          return format.stringify(filter, '',':');
       });
-      parameter += filters.join('%20'); 
+      parameter += filters.join('%20AND%20'); 
+      parameter += &quot;)&quot;;
    }else{
       var key = options.field;
       var filter = {};

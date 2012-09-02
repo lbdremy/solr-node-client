@@ -15,7 +15,11 @@
     "engines": {
       "node": ">= 0.4.7"
     },
-    "dependencies": {},
+    "dependencies": {
+      "JSONStream" : "0.3.x",
+      "duplexer" : "0.0.2",
+      "request" : "2.11.0"
+    },
     "devDependencies": {
       "vows": "0.6.x",
       "nock": "0.12.x"

@@ -130,7 +130,10 @@ _gaq.push(['_trackPageview']);
    Query = require('./query'),
    querystring = require('querystring'),
    format = require('./utils/format'),
-   SolrError = require('./error/solr-error');</code>
+   SolrError = require('./error/solr-error'),
+   JSONStream = require('JSONStream'),
+   duplexer = require('duplexer'),
+   request = require('request');</code>
             </pre>
           </div>
         </article>
@@ -375,6 +378,50 @@ _gaq.push(['_trackPageview']);
                               .join('/');
    queryRequest(this.options,callback);
    return self;
+}</code>
+            </pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Create a writable/readable <code>Stream</code> to add documents into the Solr database</p>
+          </div>
+          <div class="ctx">
+            <h3>Client.prototype.createAddStream()
+            </h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span>
+            </div>
+          </div>
+          <div class="description"><p>return {Stream}</p>
+          </div>
+          <div class="view-source">Hide Source
+          </div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Client.prototype.createAddStream = function(){
+   var path = [this.options.path,this.options.core,'update/json?commit='+ this.autoCommit +'&amp;wt=json']
+      .filter(function(element){
+         if(element) return true;
+         return false;    
+      })
+      .join('/');
+   var headers = {
+      'content-type' : 'application/json',
+      'charset' : 'utf-8'
+   };
+   if(this.options.authorization){ 
+      headers['authorization'] = this.options.authorization;
+   }
+   var optionsRequest = {
+      url : 'http://' + this.options.host +':' + this.options.port + path ,
+      method : 'POST',
+      headers : headers
+   };
+   var jsonStreamStringify = JSONStream.stringify();
+   var postRequest = request(optionsRequest);
+   jsonStreamStringify.pipe(postRequest);
+   var duplex = duplexer(jsonStreamStringify,postRequest);
+   return duplex ;
 }</code>
             </pre>
           </div>

@@ -24,7 +24,7 @@ suite.addBatch({
          topic : function(){
             var client = solr.createClient();
             var query = client.createQuery()
-                           .q({'*' : '*'})
+                           .q('*:*')
                            .rows(0)
                            .facet({
                               field : 'title',
@@ -36,7 +36,7 @@ suite.addBatch({
                               mincount : 0,
                               missing : false,
                               method : 'fc' ,
-                           }); 
+                           });
             client.search(query,this.callback);
          },
          'should return a correct response without error' :function(err,res) {

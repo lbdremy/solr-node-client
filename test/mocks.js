@@ -145,10 +145,18 @@ nock('http://127.0.0.1:8983')
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' })
 
+  /*
   .get('/solr/select?q=laptop&defType=dismax&qf=title^2%20description^3&start=0&rows=10&fq=(last_update:[2012-05-05T21%3A50%3A08.783Z%20TO%202012-05-06T21%3A50%3A08.783Z]%20AND%20price:[10%20TO%20100])&wt=json')
   .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":1,\"params\":{\"start\":\"0\",\"q\":\"laptop\",\"qf\":\"title^2 description^3\",\"wt\":\"json\",\"fq\":\"last_update:[2012-05-05T21:50:08.783Z TO 2012-05-06T21:50:08.783Z] price:[10 TO 100]\",\"defType\":\"dismax\",\"rows\":\"10\"}},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
   'content-type': 'application/json; charset=UTF-8',
   connection: 'close',
+  server: 'Jetty(7.5.3.v20111011)' })
+  */
+
+  .get('/solr/select?q=laptop&defType=dismax&qf=title^2%20description^3&start=0&rows=10&fq=(last_update:[2012%5C-05%5C-05T21%5C%3A50%5C%3A08.783Z%20TO%202012%5C-05%5C-06T21%5C%3A50%5C%3A08.783Z]%20AND%20price:[10%20TO%20100])&wt=json')
+  .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":31,\"params\":{\"start\":\"0\",\"q\":\"laptop\",\"qf\":\"title^2 description^3\",\"wt\":\"json\",\"fq\":\"(last_update:[2012\\\\-05\\\\-05T21\\\\:50\\\\:08.783Z TO 2012\\\\-05\\\\-06T21\\\\:50\\\\:08.783Z] AND price:[10 TO 100])\",\"defType\":\"dismax\",\"rows\":\"10\"}},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 30 Sep 2012 23:21:29 GMT',
+  'content-type': 'application/json; charset=UTF-8',
+  'transfer-encoding': 'chunked',
   server: 'Jetty(7.5.3.v20111011)' })
 
   .get('/solr/select?q=title:laptop&qt=custom&start=0&rows=10&wt=json')
@@ -189,7 +197,7 @@ nock('http://127.0.0.1:8983')
 
 exports.facet = function(nock){
 	nock('http://127.0.0.1:8983')
-	.get('/solr/select?q=*:*&rows=0&facet=true&facet.query=title%3AIpad&facet.field=title&facet.prefix=Ipa&facet.sort=count&facet.limit=20&facet.offset=0&facet.mincount=0&facet.missing=false&facet.method=fc&wt=json')
+	.get('/solr/select?q=*%3A*&rows=0&facet=true&facet.query=title%3AIpad&facet.field=title&facet.prefix=Ipa&facet.sort=count&facet.limit=20&facet.offset=0&facet.mincount=0&facet.missing=false&facet.method=fc&wt=json')
   .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":12,\"params\":{\"facet.missing\":\"false\",\"facet\":\"true\",\"facet.mincount\":\"0\",\"facet.offset\":\"0\",\"facet.limit\":\"20\",\"wt\":\"json\",\"facet.method\":\"fc\",\"rows\":\"0\",\"facet.sort\":\"count\",\"facet.query\":\"title:Ipad\",\"q\":\"*:*\",\"facet.prefix\":\"Ipa\",\"facet.field\":\"title\"}},\"response\":{\"numFound\":10,\"start\":0,\"docs\":[]},\"facet_counts\":{\"facet_queries\":{\"title:Ipad\":0},\"facet_fields\":{\"title\":[]},\"facet_dates\":{},\"facet_ranges\":{}}}", { date: 'Sun, 06 May 2012 22:11:56 GMT',
   'content-type': 'application/json; charset=UTF-8',
   connection: 'close',

@@ -336,7 +336,7 @@ suite.addBatch({
          topic : function(client){
             var start = new Date('2012-05-05T21:50:08.783Z');
             var stop = new Date('2012-05-06T21:50:08.783Z');
-            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'last_update', start : start,end : stop },{field: 'price', start : '10',end : '100' } ]);
+            var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).rangeFilter([{field: 'last_update_dt', start : start,end : stop },{field: 'price', start : '10',end : '100' } ]);
             client.search(query,this.callback);
          },
          'should be possible' : function(err,res){

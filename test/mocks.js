@@ -63,7 +63,7 @@ nock('http://127.0.0.1:8983')
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' })
 
-  .post('/solr/update/json?commit=false&wt=json', "{\"optimize\":{\"waitFlush\":true,\"waitSearcher\":true}}")
+  .post('/solr/update/json?commit=false&wt=json', "{\"optimize\":{\"waitSearcher\":true}}")
   .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":446}}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
   'content-type': 'application/json; charset=UTF-8',
   connection: 'close',

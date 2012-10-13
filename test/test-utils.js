@@ -10,11 +10,11 @@ var suite = vows.describe('Support escaping special characters');
 suite.addBatch({
    'All special characters that are part of the query syntax' : {
       topic : function() {
-      	var string = '+ - && || ! ( ) { } [ ] ^ " ~ * ? : \\';
+      	var string = '+-&&||!(){}[]^"~*?:\\ ';
         return format.escapeSpecialChars(string);
       },
       'should be escape properly' : function(string){
-        assert.equal(string,'\\+ \\- \\&\\& \\|\\| \\! \\( \\) \\{ \\} \\[ \\] \\^ \\" \\~ \\* \\? \\: \\\\');
+        assert.equal(string,'\\+\\-\\&\\&\\|\\|\\!\\(\\)\\{\\}\\[\\]\\^\\"\\~\\*\\?\\:\\\\\\ ');
       }
    }
 }).export(module);

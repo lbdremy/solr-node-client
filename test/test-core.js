@@ -168,7 +168,7 @@ suite.addBatch({
       },
       'documents matching a query' : {
          topic : function(client){
-            var query = 'title_t:Test title';
+            var query = 'title_t:"Test title"';
             client.deleteByQuery(query,this.callback);
          },
          'should be possible' : function(err,res){
@@ -179,7 +179,7 @@ suite.addBatch({
          topic : function(client){
             var start = new Date('2012-05-01T21:50:08.309Z');
             var stop = new Date('2012-05-02T21:50:08.310Z');
-            client.deleteByRange('last_update',start,stop,this.callback);
+            client.deleteByRange('last_update_dt',start,stop,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);

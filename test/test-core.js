@@ -195,7 +195,6 @@ suite.addBatch({
       'the Solr Database' : {
          topic : function(client){
             var options = {
-               waitFlush: true ,
                waitSearcher: true
             };
             client.optimize(options,this.callback);

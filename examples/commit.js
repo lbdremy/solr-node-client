@@ -13,9 +13,8 @@ client.commit(function(err,res){
    if(res) console.log(res);
 });
 
-// Commit your changes with `waitFlush` and `waitSearcher` options.
+// Commit your changes with `waitSearcher` options.
 var options = {
-   waitFlush: false ,
    waitSearcher: false
 };
 client.commit(options,function(err,obj){
@@ -24,4 +23,4 @@ client.commit(options,function(err,obj){
    }else{
    	console.log(obj);	
    }
-};
+});

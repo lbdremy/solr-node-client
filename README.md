@@ -38,17 +38,17 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 ```
 ##Roadmap
 
-* v0.3.x
+###v0.3.x
 
 - Test suite with mocha and chai instead of vows
 - Implement all features available in Solr 4 (SolrCloud API in particular)
 - Provide all low-level commands
 - Complete documentation
 
-* v1.0.x
+###v1.0.x
 
 - First stable version
-- the API is frozen until v2.0.x, only new features can be introduced 
+- the API is frozen until v2.0.x, only new features and bug fixes can be introduced 
 
 ##Test
 

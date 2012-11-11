@@ -305,6 +305,8 @@ header .gh #clone .fork {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ababab), color-stop(1, #9d9d9d));
   background: -webkit-linear-gradient(top, #ababab 0%, #9d9d9d 100%);
   background: -moz-linear-gradient(top, #ababab 0%, #9d9d9d 100%);
+  background: -o-linear-gradient(top, #ababab 0%, #9d9d9d 100%);
+  background: -ms-linear-gradient(top, #ababab 0%, #9d9d9d 100%);
   background: linear-gradient(top, #ababab 0%, #9d9d9d 100%);
   border: 1px solid #838383;
   font: 11px/normal helvetica, arial, freesans, clean, sans-serif;
@@ -323,6 +325,8 @@ header .gh #clone .fork:hover {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #eb3b00), color-stop(1, #c30));
   background: -webkit-linear-gradient(top, #eb3b00 0%, #c30 100%);
   background: -moz-linear-gradient(top, #eb3b00 0%, #c30 100%);
+  background: -o-linear-gradient(top, #eb3b00 0%, #c30 100%);
+  background: -ms-linear-gradient(top, #eb3b00 0%, #c30 100%);
   background: linear-gradient(top, #eb3b00 0%, #c30 100%);
   color: #fff;
   text-shadow: -1px -1px 0px #992600;
@@ -526,6 +530,8 @@ pre.source {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #ea8022), color-stop(1, #e07516));
   background: -webkit-linear-gradient(top, #ea8022 0%, #e07516 100%);
   background: -moz-linear-gradient(top, #ea8022 0%, #e07516 100%);
+  background: -o-linear-gradient(top, #ea8022 0%, #e07516 100%);
+  background: -ms-linear-gradient(top, #ea8022 0%, #e07516 100%);
   background: linear-gradient(top, #ea8022 0%, #e07516 100%);
   border: 1px solid #bb6212;
   font: 11px/normal helvetica, arial, freesans, clean, sans-serif;
@@ -545,6 +551,8 @@ pre.source {
   background: -webkit-gradient(linear, left top, left bottom, color-stop(0, #fcf49e), color-stop(1, #fcf393));
   background: -webkit-linear-gradient(top, #fcf49e 0%, #fcf393 100%);
   background: -moz-linear-gradient(top, #fcf49e 0%, #fcf393 100%);
+  background: -o-linear-gradient(top, #fcf49e 0%, #fcf393 100%);
+  background: -ms-linear-gradient(top, #fcf49e 0%, #fcf393 100%);
   background: linear-gradient(top, #fcf49e 0%, #fcf393 100%);
   color: #fff;
   text-shadow: -1px -1px 0px #f9e832;

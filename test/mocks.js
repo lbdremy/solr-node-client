@@ -115,6 +115,12 @@ nock('http://127.0.0.1:8983')
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' })
 
+  .get('/solr/select?q=laptop&defType=edismax&qf=title^0.2%20description^3.3&mm=2&start=0&rows=10&wt=json')
+  .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":11,\"params\":{\"mm\":\"2\",\"start\":\"0\",\"q\":\"laptop\",\"qf\":\"title^0.2 description^3.3\",\"wt\":\"json\",\"defType\":\"dismax\",\"rows\":\"10\"}},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
+  'content-type': 'application/json; charset=UTF-8',
+  connection: 'close',
+  server: 'Jetty(7.5.3.v20111011)' })
+
   .get('/solr/select?q=laptop&defType=dismax&qf=title^2%20description^3&start=0&rows=10&timeAllowed=1000&wt=json')
   .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":0,\"params\":{\"start\":\"0\",\"q\":\"laptop\",\"qf\":\"title^2 description^3\",\"timeAllowed\":\"1000\",\"wt\":\"json\",\"defType\":\"dismax\",\"rows\":\"10\"}},\"response\":{\"numFound\":0,\"start\":0,\"docs\":[]}}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
   'content-type': 'application/json; charset=UTF-8',
@@ -211,7 +217,7 @@ exports.group = function(nock){
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' });
 
-}	
+}
 
 exports.mlt = function(nock){
 	nock('http://127.0.0.1:8983')

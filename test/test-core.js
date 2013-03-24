@@ -1,5 +1,5 @@
-// Dependencies 
-var nock = require('nock'), 
+// Dependencies
+var nock = require('nock'),
    solr = require('./../main'),
    vows = require('vows'),
    assert = require('assert'),
@@ -81,12 +81,12 @@ suite.addBatch({
       },
       'one document to the Solr DB': {
          topic : function(client){
-            var doc = { 
+            var doc = {
                id : 1234567890,
                title_t : 'Test title',
-               description_t : 'Test Description' 
+               description_t : 'Test Description'
             };
-            client.add(doc,this.callback);  
+            client.add(doc,this.callback);
          },
          'should be possible.' : function(err,res){
             assertCorrectResponse(err,res);
@@ -94,11 +94,11 @@ suite.addBatch({
       },
       'one document using unknown fields' : {
          topic : function(client){
-            var doc = { 
+            var doc = {
                id : 1234567810,
                unknownfield1 : 'Test title',
             };
-            client.add(doc,this.callback); 
+            client.add(doc,this.callback);
          },
          'should return an SolrError' : function(err,res){
             assertSolrError(err,res);
@@ -219,7 +219,7 @@ suite.addBatch({
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
          }
-      } 
+      }
    }
 }).addBatch({
    'Rolling back' : {
@@ -264,6 +264,15 @@ suite.addBatch({
       'that will be handle by DisMaxParserPlugin' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 0.2 , description : 3.3}).mm(2).start(0).rows(10);
+            client.search(query,this.callback);
+         },
+         'should be possible' : function(err,res){
+            assertCorrectResponse(err,res);
+         }
+      },
+      'that will be handle by EDisMaxParserPlugin' : {
+         topic : function(client){
+            var query = client.createQuery().q('laptop').edismax().qf({title : 0.2 , description : 3.3}).mm(2).start(0).rows(10);
             client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
@@ -327,7 +336,7 @@ suite.addBatch({
       'that return a result within an expected timeout' : {
          topic : function(client){
             var query = client.createQuery().q('laptop').dismax().qf({title : 2 , description : 3}).start(0).rows(10).timeout(1000);
-            client.search(query,this.callback); 
+            client.search(query,this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);

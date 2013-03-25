@@ -93,7 +93,7 @@
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>// Use `var solr = require('solr-client')` in your code 
+            <pre class="source prettyprint"><code>// Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
@@ -110,7 +110,7 @@ client.search(query,function(err,obj){
    if(err){
    	console.log(err);
    }else{
-   	console.log(obj);	
+   	console.log(obj);
    }
 });
 
@@ -123,7 +123,72 @@ client.search(query2,function(err,obj){
    if(err){
    	console.log(err);
    }else{
-   	console.log(obj);	
+   	console.log(obj);
+   }
+});</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>EdisMax Query</p>
+</div>
+          <div class="ctx">
+            <h3>query3</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;see</span><span class="name"></span></div>
+          </div>
+          <div class="description"><p>You can use edismax query parser
+It will set the <code>defType</code> as <code>edismax</code></p>
+</div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>var query3 = client.createQuery()
+              .q('laptop')
+              .edismax()
+              .qf({title_t : 0.2 , description_t : 3.3})
+              .mm(2)
+              .start(0)
+              .rows(10);
+
+client.search(query3, function (err,obj) {
+   if(err) {
+      console.log(err);
+   } else {
+      console.log(obj);
+   }
+});</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>boost()</p>
+</div>
+          <div class="ctx">
+            <h3>query4</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;see</span><span class="name"></span></div>
+          </div>
+          <div class="description"><p>You can use <code>boost()</code> query
+in order to manipulate solr score
+<code>boost()</code> is the multiplicative version of <code>bf()</code> which is additive
+To use <code>boost()</code> do not forget <code>edismax()</code></p>
+</div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>var query4 = client.createQuery()
+              .q('laptop')
+              .edismax()
+              .qf({title_t : 0.2 , description_t : 3.3})
+              .boost('3') // you can also use `solr` functions, like `.boost('product(score_title, 3)')`
+              .mm(2)
+              .start(0)
+              .rows(10);
+
+client.search(query4, function (err,obj) {
+   if(err) {
+      console.log(err);
+   } else {
+      console.log(obj);
    }
 });</code></pre>
           </div>

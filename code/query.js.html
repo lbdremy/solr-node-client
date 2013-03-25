@@ -132,8 +132,7 @@
         </article>
         <article class="codeblock">
           <div class="header"><p>Set a new parameter
-Since all possibilities provided by Solr are not available in the <code>Query</code> object, <code>set()</code> is there to fit this gap.
-</p>
+Since all possibilities provided by Solr are not available in the <code>Query</code> object, <code>set()</code> is there to fit this gap.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.set()</h3>
@@ -154,8 +153,7 @@ Since all possibilities provided by Solr are not available in the <code>Query</c
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the query parser to use with this request.
-</p>
+          <div class="header"><p>Set the query parser to use with this request.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.defType()</h3>
@@ -178,8 +176,7 @@ Since all possibilities provided by Solr are not available in the <code>Query</c
         </article>
         <article class="codeblock">
           <div class="header"><p>Set the Request Handler used to process the request based on its <code>name</code>.
-Works only if no Request Handler has been configured with <code>/select</code> as its name in solrconfig.xml. 
-</p>
+Works only if no Request Handler has been configured with <code>/select</code> as its name in solrconfig.xml.</p>
 </div>
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">name</span><span class="desc">- name of the Request Handler</span></div>
@@ -199,8 +196,7 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the main query
-</p>
+          <div class="header"><p>Set the main query</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.q()</h3>
@@ -227,8 +223,7 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the offset where the set of returned documents should begin.
-</p>
+          <div class="header"><p>Set the offset where the set of returned documents should begin.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.start()</h3>
@@ -250,8 +245,7 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the maximum number of documents returned
-</p>
+          <div class="header"><p>Set the maximum number of documents returned</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.rows()</h3>
@@ -273,14 +267,13 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Sort a result in descending or ascending order based on one or more fields.
-</p>
+          <div class="header"><p>Sort a result in descending or ascending order based on one or more fields.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.sort()</h3>
           </div>
           <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">- </span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">-</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
           </div>
@@ -297,8 +290,7 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Filter the set of documents found before to return the result with the given range determined by <code>field</code>, <code>start</code> and <code>end</code>.
-</p>
+          <div class="header"><p>Filter the set of documents found before to return the result with the given range determined by <code>field</code>, <code>start</code> and <code>end</code>.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.rangeFilter()</h3>
@@ -326,7 +318,7 @@ Query.prototype.qt = function(name){
          filter[key] = '[' + encodeURIComponent(option.start) + '%20TO%20' + encodeURIComponent(option.end) + ']';
          return format.stringify(filter, '',':');
       });
-      parameter += filters.join('%20AND%20'); 
+      parameter += filters.join('%20AND%20');
       parameter += &quot;)&quot;;
    }else{
       var key = options.field;
@@ -340,8 +332,7 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Filter the set of documents found before to return the result with the given <code>field</code> and <code>value</code>.
-</p>
+          <div class="header"><p>Filter the set of documents found before to return the result with the given <code>field</code> and <code>value</code>.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.matchFilter()</h3>
@@ -366,21 +357,17 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Specify a set of fields to return.
-</p>
+          <div class="header"><p>Specify a set of fields to return.</p>
 </div>
-          <div class="ctx">
-            <h3>Query.prototypefl</h3>
-          </div>
           <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">field</span><span class="desc">- field name </span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">field</span><span class="desc">- field name</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
           </div>
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>Query.prototype.fl = 
+            <pre class="source prettyprint"><code>Query.prototype.fl =
 Query.prototype.restrict = function(fields){
    var self = this;
    var parameter = 'fl=';
@@ -396,14 +383,13 @@ Query.prototype.restrict = function(fields){
         </article>
         <article class="codeblock">
           <div class="header"><p>Set the time allowed for a search to finish.
-Partial results may be returned (if there are any).
-</p>
+Partial results may be returned (if there are any).</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.timeout()</h3>
           </div>
           <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number &#125;</span><span class="name">time</span><span class="desc">- time is in milliseconds. Values &lt;= 0 mean no time restriction. </span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Number &#125;</span><span class="name">time</span><span class="desc">- time is in milliseconds. Values &lt;= 0 mean no time restriction.</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
           </div>
@@ -413,14 +399,13 @@ Partial results may be returned (if there are any).
             <pre class="source prettyprint"><code>Query.prototype.timeout = function(time){
    var self = this;
    var parameter = 'timeAllowed=' + time;
-   this.parameters.push(parameter); 
+   this.parameters.push(parameter);
    return self;
 }</code></pre>
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Group documents with the given <code>field</code>
-</p>
+          <div class="header"><p>Group documents with the given <code>field</code></p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.groupBy()</h3>
@@ -445,8 +430,7 @@ Partial results may be returned (if there are any).
         <article class="codeblock">
           <div class="header"><p>Group documents using field collapsing or result grouping feature.
 Field Collapsing collapses a group of results with the same field value down to a single (or fixed number) of entries.
-Result Grouping groups documents with a common field value into groups, returning the top documents per group, and the top groups based on what documents are in the groups.
-</p>
+Result Grouping groups documents with a common field value into groups, returning the top documents per group, and the top groups based on what documents are in the groups.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.group()</h3>
@@ -454,7 +438,7 @@ Result Grouping groups documents with a common field value into groups, returnin
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc"></span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.on=true]</span><span class="desc">- if false, turn off result grouping, otherwise turn on.</span></div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.field</span><span class="desc">- Group based on the unique values of a field. </span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.field</span><span class="desc">- Group based on the unique values of a field.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.limit=1]</span><span class="desc">- The number of results (documents) to return for each group. Solr's default value is 1.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">options.offset</span><span class="desc">- The offset into the document list of each group.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.sort=&quot;score</span><span class="desc">desc&quot;] - How to sort documents within a single group. Defaults to the same value as the sort parameter.</span></div>
@@ -508,8 +492,7 @@ Result Grouping groups documents with a common field value into groups, returnin
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Create a facet
-</p>
+          <div class="header"><p>Create a facet</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.facet()</h3>
@@ -571,8 +554,7 @@ Result Grouping groups documents with a common field value into groups, returnin
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Create a MoreLikeThis. MoreLikeThis constructs a lucene query based on terms within a document.
-</p>
+          <div class="header"><p>Create a MoreLikeThis. MoreLikeThis constructs a lucene query based on terms within a document.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.mlt()</h3>
@@ -650,8 +632,7 @@ do not forget to use <code>.dismax()</code> when using these parameters</p>
           <div class="description"></div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Use the DisMax query parser 
-</p>
+          <div class="header"><p>Use the DisMax query parser</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.dismax()</h3>
@@ -671,8 +652,33 @@ do not forget to use <code>.dismax()</code> when using these parameters</p>
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the &quot;boosts&quot; to associate with each fields 
-</p>
+          <div class="header"><p>EDisMax parameters
+do not forget to use <code>.edismax()</code> when using these parameters</p>
+</div>
+          <div class="description"></div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Use the EDisMax query parser</p>
+</div>
+          <div class="ctx">
+            <h3>Query.prototype.edismax()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.edismax = function(){
+   var self = this;
+   this.defType('edismax');
+   return self;
+}</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Set the &quot;boosts&quot; to associate with each fields</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.qf()</h3>
@@ -695,8 +701,7 @@ do not forget to use <code>.dismax()</code> when using these parameters</p>
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the minimum number or percent of clauses that must match.
-</p>
+          <div class="header"><p>Set the minimum number or percent of clauses that must match.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.mm()</h3>
@@ -719,9 +724,8 @@ do not forget to use <code>.dismax()</code> when using these parameters</p>
         </article>
         <article class="codeblock">
           <div class="header"><p>Set the Phrase Fields parameter.
-Once the list of matching documents has been identified using the &quot;fq&quot; and &quot;qf&quot; params, the &quot;pf&quot; param can be used to &quot;boost&quot; the score of documents in cases where all of the terms 
-in the &quot;q&quot; param appear in close proximity.
-</p>
+Once the list of matching documents has been identified using the &quot;fq&quot; and &quot;qf&quot; params, the &quot;pf&quot; param can be used to &quot;boost&quot; the score of documents in cases where all of the terms
+in the &quot;q&quot; param appear in close proximity.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.pf()</h3>
@@ -744,8 +748,7 @@ in the &quot;q&quot; param appear in close proximity.
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the phrase slop allowed in a query.
-</p>
+          <div class="header"><p>Set the phrase slop allowed in a query.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.ps()</h3>
@@ -767,8 +770,7 @@ in the &quot;q&quot; param appear in close proximity.
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the query slop allowed in a query.
-</p>
+          <div class="header"><p>Set the query slop allowed in a query.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.qs()</h3>
@@ -790,8 +792,7 @@ in the &quot;q&quot; param appear in close proximity.
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Set the tiebreaker in DisjunctionMaxQueries (should be something much less than 1)
-</p>
+          <div class="header"><p>Set the tiebreaker in DisjunctionMaxQueries (should be something much less than 1)</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.tie()</h3>
@@ -814,8 +815,7 @@ in the &quot;q&quot; param appear in close proximity.
         </article>
         <article class="codeblock">
           <div class="header"><p>Set the Boost Query parameter.
-A raw query string (in the SolrQuerySyntax) that will be included with the user&#39;s query to influence the score. If this is a BooleanQuery with a default boost (1.0f) then the individual clauses will be added directly to the main query. Otherwise, the query will be included as is.
-</p>
+A raw query string (in the SolrQuerySyntax) that will be included with the user&#39;s query to influence the score. If this is a BooleanQuery with a default boost (1.0f) then the individual clauses will be added directly to the main query. Otherwise, the query will be included as is.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.bq()</h3>
@@ -860,8 +860,29 @@ A raw query string (in the SolrQuerySyntax) that will be included with the user&
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Build a querystring with the array of <code>this.parameters</code>.
-</p>
+          <div class="header"><p>Set the Functions (with optional boosts) that will be included in the user&#39;s query to influence the score.</p>
+</div>
+          <div class="ctx">
+            <h3>Query.prototype.boost()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">functions</span><span class="desc">- e.g.: `recip(rord(myfield),1,2,3)^1.5`</span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.boost = function(functions){
+   var self = this;
+   var parameter = 'boost=' + encodeURIComponent(functions);
+   this.parameters.push(parameter);
+   return self;
+}</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Build a querystring with the array of <code>this.parameters</code>.</p>
 </div>
           <div class="ctx">
             <h3>Query.prototype.build()</h3>

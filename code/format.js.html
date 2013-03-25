@@ -88,7 +88,7 @@
     <section id="content">
       <div id="code">
         <article class="codeblock">
-          <div class="header"><p>Expose <code>dateISOify()</code></p>
+          <div class="header"><p>Expose <code>dateISOify()</code> and <code>toISOString()</code></p>
 </div>
           <div class="ctx">
             <h3>exports.dateISOify</h3>
@@ -96,12 +96,12 @@
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>exports.dateISOify = dateISOify;</code></pre>
+            <pre class="source prettyprint"><code>exports.dateISOify = dateISOify;
+exports.toISOString = toISOString;</code></pre>
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>ISOify <code>Date</code> objects
-</p>
+          <div class="header"><p>ISOify <code>Date</code> objects (possibly in collections)</p>
 </div>
           <div class="ctx">
             <h3>dateISOify()</h3>
@@ -117,22 +117,36 @@
             <pre class="source prettyprint"><code>function dateISOify(obj){
    if( obj instanceof Array ){
       for(var i = 0; i &lt; obj.length; i++){
-         if(obj[i] instanceof Object &amp;&amp; !(obj[i] instanceof Date) ){
-            for(var key in obj[i]){
-               if( obj[i][key] instanceof Date ) obj[i][key] = obj[i][key].toISOString();   
-            }
-         }else{
-            if( obj[i] instanceof Date ) obj[i] = obj[i].toISOString();
-         }
+         obj[i] = dateISOify(obj[i]);
       }
    }else if(obj instanceof Object &amp;&amp; !(obj instanceof Date) ){
       for(var key in obj){
-         if( obj[key] instanceof Date ) obj[key] = obj[key].toISOString();   
+         if( obj[key] instanceof Date ) obj[key] = toISOString(obj[key]);
       }
    }else{
-      if( obj instanceof Date ) obj = obj.toISOString();
+      if( obj instanceof Date ) obj = toISOString(obj);
    }
    return obj;
+};</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>ISOify a single <code>Date</code> object
+Sidesteps <code>Invalid Date</code> objects by returning <code>null</code> instead</p>
+</div>
+          <div class="ctx">
+            <h3>toISOString()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Date &#125;</span><span class="name"></span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">null,String</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function toISOString(date) {
+   return (date &amp;&amp; !isNaN(date.getTime())) ? date.toISOString() : null;
 };</code></pre>
           </div>
         </article>
@@ -149,8 +163,7 @@
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Serialize an object to a string. Optionally override the default separator (&#39;&amp;&#39;) and assignment (&#39;=&#39;) characters.
-</p>
+          <div class="header"><p>Serialize an object to a string. Optionally override the default separator (&#39;&amp;&#39;) and assignment (&#39;=&#39;) characters.</p>
 </div>
           <div class="ctx">
             <h3>stringify()</h3>
@@ -196,14 +209,13 @@
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>Stringify a primitive
-</p>
+          <div class="header"><p>Stringify a primitive</p>
 </div>
           <div class="ctx">
             <h3>stringifyPrimitive()</h3>
           </div>
           <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Boolean | Number &#125;</span><span class="name">v</span><span class="desc">- primitive value </span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Boolean | Number &#125;</span><span class="name">v</span><span class="desc">- primitive value</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">String</span></div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span></div>
           </div>

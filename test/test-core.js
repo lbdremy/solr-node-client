@@ -302,12 +302,12 @@ suite.addBatch ( {
           assertCorrectResponse ( err, res );
         }
       },
-      'that will be handle by custom handler1234': {
+      'that will be handle by custom handler': {
         topic: function ( client ) {
-          client.options.handler = 'custom';
+          client.options.handler = 'custom'; // set custom handler
           var query = client.createQuery ().q ( {title: 'laptop'} ).start ( 0 ).rows ( 10 );
           client.search ( query, this.callback );
-          client.options.handler = 'select';
+          client.options.handler = 'select'; // reset to default search handler
 
         },
         'should be possible': function ( err, res ) {

@@ -44,6 +44,31 @@ suite.addBatch({
          }
       }
    },
+   'Create a facet with field param': {
+      'with the following options: `field`, `prefix`, `query`, `limit`, `offset`, `sort`, `limit`, `mincount`, `missing`, `method`': {
+         topic: function() {
+            var client = solr.createClient();
+            var query = client.createQuery()
+               .q({'*': '*'})
+               .rows(0)
+               .facetWithFieldParam({
+               field: 'title',
+               prefix: 'Ipa',
+               query: 'title:Ipad',
+               limit: 20,
+               offset: 0,
+               sort: 'count',
+               mincount: 0,
+               missing: false,
+               method: 'fc'
+            });
+            client.search(query, this.callback);
+         },
+         'should return a correct response without error': function(err, res) {
+            assertCorrectResponse(err, res)
+         }
+      }
+   },
    'Create a range facet': {
       'with the following options: `field`, `on`, `start`, `end`, `gap`': {
          topic: function() {

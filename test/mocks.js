@@ -207,6 +207,12 @@ exports.facet = function (nock) {
       connection: 'close',
       server: 'Jetty(7.5.3.v20111011)' })
 
+      .get ('/solr/select?q=*:*&rows=0&facet=true&facet.field=title&facet.query=title%3AIpad&f.title.facet.prefix=Ipa&f.title.facet.sort=count&f.title.facet.limit=20&f.title.facet.offset=0&f.title.facet.mincount=0&f.title.facet.missing=false&f.title.facet.method=fc&wt=json')
+      .reply (200, "{\"responseHeader\":{\"status\":0,\"QTime\":12,\"params\":{\"facet.missing\":\"false\",\"facet\":\"true\",\"facet.mincount\":\"0\",\"facet.offset\":\"0\",\"facet.limit\":\"20\",\"wt\":\"json\",\"facet.method\":\"fc\",\"rows\":\"0\",\"facet.sort\":\"count\",\"facet.query\":\"title:Ipad\",\"q\":\"*:*\",\"facet.prefix\":\"Ipa\",\"facet.field\":\"title\"}},\"response\":{\"numFound\":10,\"start\":0,\"docs\":[]},\"facet_counts\":{\"facet_queries\":{\"title:Ipad\":0},\"facet_fields\":{\"title\":[]},\"facet_dates\":{},\"facet_ranges\":{}}}", { date: 'Sun, 06 May 2012 22:11:56 GMT',
+      'content-type': 'application/json; charset=UTF-8',
+      connection: 'close',
+      server: 'Jetty(7.5.3.v20111011)' })
+
       .get ('/solr/select?q=*:*&rows=0&facet=true&facet.range=price&f.price.facet.range.start=0&f.price.facet.range.end=100&f.price.facet.range.gap=10&f.price.facet.range.hardend=false&wt=json')
       .reply (200, "{\"responseHeader\":{\"status\":0,\"QTime\":12,\"params\":{\"facet.missing\":\"false\",\"facet\":\"true\",\"facet.mincount\":\"0\",\"facet.offset\":\"0\",\"facet.limit\":\"20\",\"wt\":\"json\",\"facet.method\":\"fc\",\"rows\":\"0\",\"facet.sort\":\"count\",\"facet.query\":\"title:Ipad\",\"q\":\"*:*\",\"facet.prefix\":\"Ipa\",\"facet.field\":\"title\"}},\"response\":{\"numFound\":10,\"start\":0,\"docs\":[]},\"facet_counts\":{\"facet_queries\":{\"title:Ipad\":0},\"facet_fields\":{\"title\":[]},\"facet_dates\":{},\"facet_ranges\":{}}}", { date: 'Sun, 06 May 2012 22:11:56 GMT',
       'content-type': 'application/json; charset=UTF-8',

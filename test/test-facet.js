@@ -1,5 +1,5 @@
 // Dependencies 
-var nock = require('nock'), 
+var nock = require('nock'),
    solr = require('./../main'),
    vows = require('vows'),
    assert = require('assert'),
@@ -9,7 +9,7 @@ var nock = require('nock'),
 // Load configuration file
 var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
 
-if(config.mocked){
+if(config.mocked) {
    //nock.recorder.rec();
    mocks.facet(nock);
 }
@@ -19,28 +19,100 @@ if(config.mocked){
 var suite = vows.describe('Solr Client API: facet');
 
 suite.addBatch({
-   'Create a facet' : {
-      'with the following options: `field`, `prefix`, `query`, `limit`, `offset`, `sort`, `limit`, `mincount`, `missing`, `method`' : {
-         topic : function(){
+   'Create a facet': {
+      'with the following options: `field`, `prefix`, `query`, `limit`, `offset`, `sort`, `limit`, `mincount`, `missing`, `method`': {
+         topic: function() {
             var client = solr.createClient();
             var query = client.createQuery()
-                           .q({'*' : '*'})
-                           .rows(0)
-                           .facet({
-                              field : 'title',
-                              prefix : 'Ipa',
-                              query : 'title:Ipad',
-                              limit : 20,
-                              offset : 0,
-                              sort : 'count',
-                              mincount : 0,
-                              missing : false,
-                              method : 'fc' ,
-                           }); 
-            client.search(query,this.callback);
+               .q({'*': '*'})
+               .rows(0)
+               .facet({
+               field: 'title',
+               prefix: 'Ipa',
+               query: 'title:Ipad',
+               limit: 20,
+               offset: 0,
+               sort: 'count',
+               mincount: 0,
+               missing: false,
+               method: 'fc'
+            });
+            client.search(query, this.callback);
          },
-         'should return a correct response without error' :function(err,res) {
-            assertCorrectResponse(err,res)
+         'should return a correct response without error': function(err, res) {
+            assertCorrectResponse(err, res)
+         }
+      }
+   },
+   'Create a facet with field param': {
+      'with the following options: `field`, `prefix`, `query`, `limit`, `offset`, `sort`, `limit`, `mincount`, `missing`, `method`': {
+         topic: function() {
+            var client = solr.createClient();
+            var query = client.createQuery()
+               .q({'*': '*'})
+               .rows(0)
+               .facetWithFieldParam({
+               field: 'title',
+               prefix: 'Ipa',
+               query: 'title:Ipad',
+               limit: 20,
+               offset: 0,
+               sort: 'count',
+               mincount: 0,
+               missing: false,
+               method: 'fc'
+            });
+            client.search(query, this.callback);
+         },
+         'should return a correct response without error': function(err, res) {
+            assertCorrectResponse(err, res)
+         }
+      }
+   },
+   'Create a range facet': {
+      'with the following options: `field`, `on`, `start`, `end`, `gap`': {
+         topic: function() {
+            var client = solr.createClient();
+            var query = client.createQuery()
+               .q({'*': '*'})
+               .rows(0)
+               .facetByRange('price', {
+               on: true,
+               start: '0',
+               end: '100',
+               gap: '10'
+            });
+            client.search(query, this.callback);
+         },
+         'should return a correct response without error': function(err, res) {
+            assertCorrectResponse(err, res)
+         }
+      }
+   },
+   'Create a range facets': {
+      'with the following options: `field`, `on`, `start`, `end`, `gap`': {
+         topic: function() {
+            var client = solr.createClient();
+            var query = client.createQuery()
+               .q({'*': '*'})
+               .rows(0)
+               .facetByRange('price', {
+               on: true,
+               start: '0',
+               end: '100',
+               gap: '10'
+            })
+               .facetByRange('screensize', {
+               on: true,
+               start: '0',
+               end: '55',
+               gap: '5'
+            });
+
+            client.search(query, this.callback);
+         },
+         'should return a correct response without error': function(err, res) {
+            assertCorrectResponse(err, res)
          }
       }
    }
@@ -48,8 +120,8 @@ suite.addBatch({
 
 // Macro
 
-function assertCorrectResponse(err,data){
+function assertCorrectResponse(err, data) {
    assert.isNull(err);
    assert.isObject(data);
-   assert.equal(data.responseHeader.status,0);  
+   assert.equal(data.responseHeader.status, 0);
 }

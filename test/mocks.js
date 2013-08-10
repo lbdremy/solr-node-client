@@ -203,6 +203,16 @@ exports.facet = function(nock){
 
 }
 
+exports.facetMultiple = function(nock){
+	nock('http://127.0.0.1:8983')
+	.get('/solr/select?q=*:*&rows=0&facet=true&facet.query=title%3AIpad&facet.field=title&facet.field=description&facet.prefix=Ipa&facet.sort=count&facet.limit=20&facet.offset=0&facet.mincount=0&facet.missing=false&facet.method=fc&wt=json')
+  .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":12,\"params\":{\"facet.missing\":\"false\",\"facet\":\"true\",\"facet.mincount\":\"0\",\"facet.offset\":\"0\",\"facet.limit\":\"20\",\"wt\":\"json\",\"facet.method\":\"fc\",\"rows\":\"0\",\"facet.sort\":\"count\",\"facet.query\":\"title:Ipad\",\"q\":\"*:*\",\"facet.prefix\":\"Ipa\",\"facet.field\":\"title\"}},\"response\":{\"numFound\":10,\"start\":0,\"docs\":[]},\"facet_counts\":{\"facet_queries\":{\"title:Ipad\":0},\"facet_fields\":{\"title\":[],\"description\":[]},\"facet_dates\":{},\"facet_ranges\":{}}}", { date: 'Sun, 06 May 2012 22:11:56 GMT',
+  'content-type': 'application/json; charset=UTF-8',
+  connection: 'close',
+  server: 'Jetty(7.5.3.v20111011)' });
+
+}
+
 exports.group = function(nock){
 	nock('http://127.0.0.1:8983')
 	.get('/solr/select?q=description:laptop&group=true&group.field=title&group.limit=20&group.offset=0&group.sort=score%20asc&group.format=grouped&group.main=false&group.ngroups=true&group.truncate=false&group.cache.percent=0&wt=json')

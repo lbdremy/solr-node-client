@@ -2,7 +2,7 @@
 var nock = require('nock'), 
    solr = require('./../main'),
    vows = require('vows'),
-   assert = require('assert');
+   assert = require('assert'),
    mocks = require('./mocks'),
    fs = require('fs');
 

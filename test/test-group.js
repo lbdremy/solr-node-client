@@ -2,7 +2,7 @@
 var nock = require('nock'), 
    solr = require('./../main'),
    vows = require('vows'),
-   assert = require('assert');
+   assert = require('assert'),
    mocks = require('./mocks'),
    fs = require('fs');
 
@@ -12,6 +12,7 @@ var config = JSON.parse(fs.readFileSync(__dirname + '/config.json'));
 if(config.mocked){
    //nock.recorder.rec();
    mocks.group(nock);
+   mocks.groupMultiple(nock);
 }
 
 // Suite Test
@@ -48,6 +49,26 @@ suite.addBatch({
          },
          'should be possible' :function(err,res) {
             assertCorrectResponse(err,res)
+         }
+      },
+      'with the same options and multiple fields' : {
+         topic : function(){
+            var client = solr.createClient();
+            var query = client.createQuery().q({description : 'laptop'}).group({
+               field : ['title', 'cat'],
+               limit : 20,
+               offset : 0,
+               sort : 'score asc',
+               format : 'grouped',
+               main : false,
+               ngroups : true,
+               truncate : false,
+               cache : 0
+            });
+            client.search(query,this.callback);
+         },
+         'should be possible' :function(err,res) {
+            assertCorrectResponse(err,res);
          }
       }
    }

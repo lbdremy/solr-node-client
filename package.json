@@ -22,7 +22,8 @@
   },
   "devDependencies": {
     "vows": "~0.7.0",
-    "nock": "~0.22.1"
+    "nock": "~0.22.1",
+    "csv-stream": "~0.1.3"
   },
   "scripts": {
     "test": "vows --spec test/test-*"

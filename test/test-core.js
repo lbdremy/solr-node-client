@@ -160,7 +160,7 @@ suite.addBatch({
       },
       'a document where a field matchs a value' : {
          topic : function(client){
-            client.delete('title_t' , 'Test title', this.callback);
+            client.delete('title_t' , '"Test title"', this.callback);
          },
          'should be possible' : function(err,res){
             assertCorrectResponse(err,res);
@@ -168,7 +168,7 @@ suite.addBatch({
       },
       'documents matching a query' : {
          topic : function(client){
-            var query = 'title_t:Test title';
+            var query = 'title_t:"Test title"';
             client.deleteByQuery(query,this.callback);
          },
          'should be possible' : function(err,res){
@@ -195,7 +195,6 @@ suite.addBatch({
       'the Solr Database' : {
          topic : function(client){
             var options = {
-               waitFlush: true ,
                waitSearcher: true
             };
             client.optimize(options,this.callback);

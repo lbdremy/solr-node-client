@@ -1,5 +1,5 @@
-// Dependencies 
-var nock = require('nock'), 
+// Dependencies
+var nock = require('nock'),
    solr = require('./../main'),
    vows = require('vows'),
    assert = require('assert'),
@@ -44,7 +44,7 @@ suite.addBatch({
                ngroups : true,
                truncate : false,
                cache : 0
-            }); 
+            });
             client.search(query,this.callback);
          },
          'should be possible' :function(err,res) {
@@ -55,7 +55,7 @@ suite.addBatch({
          topic : function(){
             var client = solr.createClient();
             var query = client.createQuery().q({description : 'laptop'}).group({
-               field : ['title', 'cat'],
+               field : ['title', 'description'],
                limit : 20,
                offset : 0,
                sort : 'score asc',
@@ -68,6 +68,7 @@ suite.addBatch({
             client.search(query,this.callback);
          },
          'should be possible' :function(err,res) {
+            console.log(JSON.stringify(res));
             assertCorrectResponse(err,res);
          }
       }
@@ -79,5 +80,5 @@ suite.addBatch({
 function assertCorrectResponse(err,data){
    assert.isNull(err);
    assert.isObject(data);
-   assert.equal(data.responseHeader.status,0);  
+   assert.equal(data.responseHeader.status,0);
 }

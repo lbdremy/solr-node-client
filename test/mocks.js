@@ -215,8 +215,8 @@ exports.facetMultiple = function(nock){
 
 exports.groupMultiple = function(nock){
 	nock('http://127.0.0.1:8983')
-	.get('/solr/select?q=description:laptop&group=true&group.field=title&group.field=cat&group.limit=20&group.offset=0&group.sort=score%20asc&group.format=grouped&group.main=false&group.ngroups=true&group.truncate=false&group.cache.percent=0&wt=json')
-  .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":0,\"params\":{\"group.format\":\"grouped\",\"group.ngroups\":\"true\",\"group.limit\":\"20\",\"group.main\":\"false\",\"group.cache.percent\":\"0\",\"wt\":\"json\",\"q\":\"description:laptop\",\"group.truncate\":\"false\",\"group.field\":[\"title\", \"cat\"],\"group\":\"true\",\"group.sort\":\"score asc\",\"group.offset\":\"0\"}},\"grouped\":{\"title\":{\"matches\":0,\"ngroups\":0,\"groups\":[]},\"cat\":{\"matches\":0,\"ngroups\":0,\"groups\":[]}}}", { date: 'Sun, 06 May 2012 22:11:56 GMT',
+	.get('/solr/select?q=description:laptop&group=true&group.field=title&group.field=description&group.limit=20&group.offset=0&group.sort=score%20asc&group.format=grouped&group.main=false&group.ngroups=true&group.truncate=false&group.cache.percent=0&wt=json')
+  .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":2,\"params\":{\"group.format\":\"grouped\",\"group.ngroups\":\"true\",\"group.limit\":\"20\",\"group.main\":\"false\",\"group.cache.percent\":\"0\",\"wt\":\"json\",\"q\":\"description:laptop\",\"group.truncate\":\"false\",\"group.field\":[\"title\",\"description\"],\"group\":\"true\",\"group.sort\":\"score asc\",\"group.offset\":\"0\"}},\"grouped\":{\"title\":{\"matches\":0,\"ngroups\":0,\"groups\":[]},\"description\":{\"matches\":0,\"ngroups\":0,\"groups\":[]}}}", { date: 'Sun, 06 May 2012 22:11:56 GMT',
   'content-type': 'application/json; charset=UTF-8',
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' });

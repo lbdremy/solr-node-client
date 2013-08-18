@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Code Documentation for examples/commit.js - Solr client for node.js</title>
+    <title>Code Documentation for examples/createAddStream.js - Solr client for node.js</title>
     <script type="text/javascript">
       var ghuser = 'lbdremy'
         , ghproject = 'solr-node-client';
@@ -89,34 +89,40 @@
     <section id="content">
       <div id="code">
         <article class="codeblock">
-          <div class="header"><p>Commit your changes in the index with or without options.</p>
+          <div class="header"><p>Create a stream to add documents into the database</p>
 </div>
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>// Use `var solr = require('solr-client')` in your code 
+            <pre class="source prettyprint"><code>// Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
+var csv = require('csv-stream');
+var fs = require('fs');
 
+// Create a client
 var client = solr.createClient();
 
-// Commit your changes without options
-client.commit(function(err,res){
-   if(err) console.log(err);
-   if(res) console.log(res);
-});
+// Switch on &quot;auto commit&quot;, by default `client.autoCommit = false`
+client.autoCommit = true;
 
-// Commit your changes with `waitFlush` and `waitSearcher` options.
-var options = {
-   waitFlush: false ,
-   waitSearcher: false
-};
-client.commit(options,function(err,obj){
-   if(err){
-   	console.log(err);
-   }else{
-   	console.log(obj);	
-   }
-};</code></pre>
+// Save all the products in the csv file into the database
+fs.createReadStream(__dirname + '/materials/products.csv')
+    .on('error',onerror)
+    .pipe(csv.createStream({
+        escapeChar : '&quot;', // default is an empty string
+        enclosedChar : '&quot;' // default is an empty string
+    }))
+    .on('error',onerror)
+    .pipe(client.createAddStream())
+    .on('error',onerror)
+    .on('end',function(){
+        console.log('all products are in the database now.');
+    });
+
+// Error handler
+function onerror(err){
+    console.error(err);
+}</code></pre>
           </div>
         </article>
       </div>

@@ -67,8 +67,7 @@ suite.addBatch({
             });
             client.search(query,this.callback);
          },
-         'should be possible' :function(err,res) {
-            console.log(JSON.stringify(res));
+         'should be possible' :function(err,res){
             assertCorrectResponse(err,res);
          }
       }

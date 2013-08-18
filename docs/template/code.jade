@@ -4,17 +4,6 @@ block title
   title Code Documentation for #{file.title} - #{site.title}
 
 block nav
-  .box-wrap.antiscroll-wrap
-    .box
-      .antiscroll-inner
-        .box-inner
-          ul.sections
-            for comment in file.prepared
-              unless comment.ignore
-                for tag in comment.tags
-                  - if (tag.type == 'name')
-                    - comment.anchor = tag.string
-                    li.keepcase: a.scroll(href='#' + tag.string)= tag.string
   ul.pages
     li: a(href= (site.ghbaseurl) ? site.ghbaseurl : '/') Home
     - if (files.support)

@@ -18,7 +18,7 @@
   "dependencies": {
     "JSONStream": "~0.6.4",
     "duplexer": "~0.1.1",
-    "request": "~2.26.0"
+    "request": "~2.27.0"
   },
   "devDependencies": {
     "vows": "~0.7.0",

@@ -1,20 +1,5 @@
 $(function () {
 
-  $.ajax({
-    url: "https://api.github.com/repos/" + ghuser + "/" + ghproject + "/commits",
-    dataType: 'jsonp',
-    success: function(json) {
-      var latest = json[0],
-          stamp = new Date(latest.committer.date),
-          stampString = month[stamp.getMonth()] + ' ' + stamp.getDate() + ', ' + stamp.getFullYear();
-
-      $('#latestCommitMessage').text(latest.commit.message);
-      $('#latestCommitTime').text(stampString);
-      $('#latestCommitURL').html(' - commit ' + latest.sha.substring(0, 6));
-      $('#latestCommitURL').attr('href', "https://github.com" + latest.commit.tree.url);
-    }
-  });
-
   var month = new Array(12);
       month[0] = "Jan";
       month[1] = "Feb";
@@ -28,6 +13,17 @@ $(function () {
       month[9] = "Oct";
       month[10] = "Nov";
       month[11] = "Dec";
+
+  $.getJSON("https://api.github.com/repos/" + ghuser + "/" + ghproject + "/commits",function(data){
+    var latest = data[0],
+        stamp = new Date(latest.commit.committer.date),
+        stampString = month[stamp.getMonth()] + ' ' + stamp.getDate() + ', ' + stamp.getFullYear();
+    console.log(latest);
+    $('#latestCommitMessage').text(latest.commit.message);
+    $('#latestCommitTime').text(stampString);
+    $('#latestCommitURL').html(' - commit ' + latest.sha.substring(0, 6));
+    $('#latestCommitURL').attr('href', "https://github.com/" + ghuser + "/" + ghproject + "/commit/" + latest.sha);
+  });
 
 
   $(function () {

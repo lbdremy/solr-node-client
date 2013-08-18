@@ -8,7 +8,7 @@ html(lang='en')
     script(type='text/javascript')
       var ghuser = '#{site.ghuser}'
         , ghproject = '#{site.ghproject}';
-    script(src='https://ajax.googleapis.com/ajax/libs/jquery/1.7/jquery.min.js')
+    script(src='//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js')
     script(src=site.ghbaseurl + '/public/js/jq-mousewheel.js')
     script(src=site.ghbaseurl + '/public/js/antiscroll.js')
     script(src=site.ghbaseurl + '/public/js/prettify.js')
@@ -80,7 +80,7 @@ html(lang='en')
               .btn
                 a(href="https://twitter.com/" + site.twitterfollow, class="twitter-follow-button", data-show-count="false") Follow @#{site.twitterfollow
                 script
-                  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs"); 
+                  !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0];if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src="//platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
           #links
             a#repoIssues(href='https://github.com/' + site.ghuser + '/' + site.ghproject + '/issues') GitHub Issues
             - if (site.hasdownloads)

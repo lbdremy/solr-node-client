@@ -5,18 +5,20 @@
 ---
 
 ```
-repo age : 1 year, 8 months
- active   : 49 days
- commits  : 157
- files    : 33
- authors  :
-   129	Remy Loubradou          82.2%
-    17	lbdremy                 10.8%
-     4	Tolga Akyüz            2.5%
-     2	Chris Leishman          1.3%
-     1	David Kelly             0.6%
-     1	Dominic Barnes          0.6%
-     1	Jos Shepherd            0.6%
-     1	Wayne Larsen            0.6%
-     1	patison                 0.6%
+repo age : 2 years, 1 month
+active   : 56 days
+commits  : 173
+files    : 35
+authors  :
+ 143  Remy Loubradou          82.7%
+  17  lbdremy                 9.8%
+   4  Tolga Akyüz            2.3%
+   2  Chris Leishman          1.2%
+   1  David Kelly             0.6%
+   1  Dominic Barnes          0.6%
+   1  Jos Shepherd            0.6%
+   1  Thorsten Scherler       0.6%
+   1  Wayne Larsen            0.6%
+   1  amercader               0.6%
+   1  patison                 0.6%
 ```

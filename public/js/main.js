@@ -1,17 +1,17 @@
 $(function () {
 
   $.ajax({
-    url: "http://github.com/api/v2/json/commits/list/" + ghuser + "/" + ghproject + "/master",
+    url: "https://api.github.com/repos/" + ghuser + "/" + ghproject + "/commits",
     dataType: 'jsonp',
     success: function(json) {
-      var latest = json.commits[0],
-          stamp = new Date(latest.committed_date),
+      var latest = json[0],
+          stamp = new Date(latest.committer.date),
           stampString = month[stamp.getMonth()] + ' ' + stamp.getDate() + ', ' + stamp.getFullYear();
 
-      $('#latestCommitMessage').text(latest.message);
+      $('#latestCommitMessage').text(latest.commit.message);
       $('#latestCommitTime').text(stampString);
-      $('#latestCommitURL').html(' - commit ' + latest.id.substring(0, 6));
-      $('#latestCommitURL').attr('href', "https://github.com" + latest.url);
+      $('#latestCommitURL').html(' - commit ' + latest.sha.substring(0, 6));
+      $('#latestCommitURL').attr('href', "https://github.com" + latest.commit.tree.url);
     }
   });
 
@@ -51,7 +51,7 @@ $(function () {
   $('.view-source').click(function(){
     var $obj = $(this).next('.code-wrap')
       , will = ($obj.css('display') == 'none') ? true : false;
-    
+
     if(will){
       $('.view-source').text('Hide source');
     }else{

@@ -438,7 +438,7 @@ Result Grouping groups documents with a common field value into groups, returnin
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc"></span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.on=true]</span><span class="desc">- if false, turn off result grouping, otherwise turn on.</span></div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.field</span><span class="desc">- Group based on the unique values of a field.</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">options.field</span><span class="desc">- Group based on the unique values of a field.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.limit=1]</span><span class="desc">- The number of results (documents) to return for each group. Solr's default value is 1.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">options.offset</span><span class="desc">- The offset into the document list of each group.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.sort=&quot;score</span><span class="desc">desc&quot;] - How to sort documents within a single group. Defaults to the same value as the sort parameter.</span></div>
@@ -461,7 +461,12 @@ Result Grouping groups documents with a common field value into groups, returnin
       this.parameters.push('group=true');
    }
    if( options.field ){
-      this.parameters.push('group.field=' + options.field);
+      if(!Array.isArray(options.field)){
+        options.field = [options.field];
+      }
+      options.field.forEach(function(field){
+        self.parameters.push('group.field=' + field);
+      });
    }
    if( options.limit !== undefined){
       this.parameters.push('group.limit=' + options.limit);
@@ -501,7 +506,7 @@ Result Grouping groups documents with a common field value into groups, returnin
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">options</span><span class="desc">- set of options to create a facet</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.on=true]</span><span class="desc">- Turn on or off facet</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.query]</span><span class="desc">- This parameter allows you to specify an arbitrary query in the Lucene default syntax to generate a facet count. By default, faceting returns a count of the unique terms for a &quot;field&quot;, while facet.query allows you to determine counts for arbitrary terms or expressions.</span></div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.field</span><span class="desc">- This parameter allows you to specify a field which should be treated as a facet. It will iterate over each Term in the field and generate a facet count using that Term as the constraint.</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String | Array &#125;</span><span class="name">options.field</span><span class="desc">- This parameter allows you to specify a field which should be treated as a facet. It will iterate over each Term in the field and generate a facet count using that Term as the constraint. Multiple fields can be defined providing an array instead of a string.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.prefix]</span><span class="desc">- Limits the terms on which to facet to those starting with the given string prefix.</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[options.sort]</span><span class="desc">- This param determines the ordering of the facet field constraints.count</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number &#125;</span><span class="name">[options.limit=100]</span><span class="desc">- This parameter indicates the maximum number of constraint counts that should be returned for the facet fields. A negative value means unlimited.The solr's default value is 100.</span></div>
@@ -526,7 +531,12 @@ Result Grouping groups documents with a common field value into groups, returnin
       this.parameters.push('facet.query=' + encodeURIComponent(options.query))
    }
    if(options.field){
-      this.parameters.push('facet.field=' + options.field)
+      if(!Array.isArray(options.field)){
+         options.field = [options.field];
+      }
+      for (var i = 0; i &lt; options.field.length; i++) {
+         this.parameters.push('facet.field=' + options.field[i])
+      }
    }
    if(options.prefix){
       this.parameters.push('facet.prefix=' + encodeURIComponent(options.prefix))

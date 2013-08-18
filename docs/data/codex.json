@@ -60,12 +60,6 @@
                     "description" : ""
                 },
                 {
-                    "name" : "createAddStream.js",
-                    "title" : "examples/createAddStream.js",
-                    "file" : "../../examples/createAddStream.js",
-                    "description" : ""
-                },
-                {
                     "name" : "basicAuth.js",
                     "title" : "examples/basicAuth.js",
                     "file" : "../../examples/basicAuth.js",

@@ -36,7 +36,8 @@ suite.addBatch({
                 host: 'localhost',
                 port: 8983,
                 core: '',
-                path: '/solr'
+                path: '/solr',
+                debug: true
             });
             return client;
          },
@@ -46,6 +47,7 @@ suite.addBatch({
             assert.equal(client.options.port,8983);
             assert.equal(client.options.core,'');
             assert.equal(client.options.path,'/solr');
+            assert.equal(client.options.debug,true);
          }
       },
       'with custom host' : {
@@ -71,6 +73,21 @@ suite.addBatch({
          'should return a `Client`' : function(client){
             assertClient(client);
          }
+      }
+   }
+}).addBatch({
+   'Debugging' : {
+      topic : function(){
+         var client = solr.createClient({
+            debug: function(debugInfo){
+               this.callback(null, debugInfo);
+            }.bind(this)
+         });
+         client.ping();
+      },
+      'should be returned' : function(debugInfo){
+         assertDebugInfo(debugInfo);
+         assert.equal(debugInfo.requestedUrl, '//127.0.0.1:8983/solr/admin/ping%3Fwt=json');
       }
    }
 }).addBatch({
@@ -392,4 +409,11 @@ function assertSolrError(err,res){
    assert.equal(err.name,'SolrError');
    assert.match(err.message,/^HTTP status [0-9]{3}\.Reason:[\s\S]+/)
    assert.isNull(res);
+}
+
+function assertDebugInfo(debugInfo) {
+   assert.instanceOf(debugInfo, Object);
+   assert.instanceOf(debugInfo.startDate, Date);
+   assert.instanceOf(debugInfo.endDate, Date);
+   assert.equal(debugInfo.responseTime, debugInfo.endDate - debugInfo.startDate);
 }

@@ -87,6 +87,12 @@ nock('http://127.0.0.1:8983')
   connection: 'close',
   server: 'Jetty(7.5.3.v20111011)' })
 
+  .get('/solr/admin/ping?wt=json')
+  .reply(200, "{\"responseHeader\":{\"status\":0,\"QTime\":2,\"params\":{\"echoParams\":\"all\",\"rows\":\"10\",\"echoParams\":\"all\",\"q\":\"solrpingquery\",\"qt\":\"search\",\"wt\":\"json\"}},\"status\":\"OK\"}", { date: 'Sun, 06 May 2012 21:50:08 GMT',
+  'content-type': 'application/json; charset=UTF-8',
+  connection: 'close',
+  server: 'Jetty(7.5.3.v20111011)' })
+
   .get('/solr/select?q=titl:laptop&start=0&rows=10&wt=json')
   .reply(400, "<html>\n<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"/>\n<title>Error 400 undefined field titl</title>\n</head>\n<body><h2>HTTP ERROR 400</h2>\n<p>Problem accessing /solr/select. Reason:\n<pre>    undefined field titl</pre></p><hr /><i><small>Powered by Jetty://</small></i><br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n<br/>                                                \n\n</body>\n</html>\n", { date: 'Sun, 06 May 2012 21:50:08 GMT',
   pragma: 'no-cache',

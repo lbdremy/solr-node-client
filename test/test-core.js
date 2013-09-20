@@ -87,7 +87,7 @@ suite.addBatch({
       },
       'should be returned' : function(debugInfo){
          assertDebugInfo(debugInfo);
-         assert.equal(debugInfo.requestedUrl, '//127.0.0.1:8983/solr/admin/ping%3Fwt=json');
+         assert.equal(debugInfo.requestedUrl, 'http://127.0.0.1:8983/solr/admin/ping?wt=json');
       }
    }
 }).addBatch({

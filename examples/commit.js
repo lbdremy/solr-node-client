@@ -24,4 +24,4 @@ client.commit(options,function(err,obj){
    }else{
    	console.log(obj);	
    }
-};
+});

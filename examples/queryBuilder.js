@@ -4,10 +4,11 @@
 
 // Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
+var QueryBuilder = require('./../lib/query-builder');
 
 
 function search(opt) {
-  var qb = new SolrQueryBuilder();
+  var qb = new QueryBuilder();
 
   if (opt.city) qb.where('city').in(opt.city);
   if (opt.status) qb.where('status', opt.status);

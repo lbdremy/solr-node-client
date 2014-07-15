@@ -58,6 +58,16 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 npm test
 ```
 
+## Test coverage
+
+Before to be able to run the command below, you will need to install jscoverage available here https://github.com/visionmedia/node-jscoverage.
+
+```js
+npm run-script test-cov
+```
+
+This command will generate a file named `coverage.html`, use your browser to visualize it.
+
 ##Licence
 (The MIT License)
 Copyright 2011-2012 HipSnip Limited

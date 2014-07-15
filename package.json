@@ -26,6 +26,7 @@
     "mocha": "^1.20.1"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js"
+    "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js",
+    "test-cov" : "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov"
   }
 }

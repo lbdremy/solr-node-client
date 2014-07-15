@@ -1,4 +1,4 @@
-before_script: curl https://raw.github.com/moliware/travis-solr/master/travis-solr.sh | SOLR_VERSION=4.0.0 bash
+before_script: curl https://raw.githubusercontent.com/moliware/travis-solr/master/travis-solr.sh | SOLR_VERSION=4.5.0 bash
 language: node_js
 node_js:
   - 0.8

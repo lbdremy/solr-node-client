@@ -50,15 +50,15 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 ###v1.0.x
 
 - First stable version
-- the API is frozen until v2.0.x, only new features and bug fixes can be introduced 
+- the API is frozen until v2.0.x, only new features and bug fixes can be introduced
 
 ##Test
 
 ```js
 npm test
 ```
-HTTP requests and responses expected are mocked thanks to __nock__. To disable the mocking go to `test/config.json` and set `mocked` to `false`.
 
 ##Licence
 (The MIT License)
 Copyright 2011-2012 HipSnip Limited
+Copyright 2013-2014 Rémy Loubradou

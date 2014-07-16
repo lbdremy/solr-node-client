@@ -10,14 +10,16 @@ var mocha = require('mocha'),
 	sassert = require('./sassert');
 
 // Test suite
-var client = solr.createClient();
+var config = require('./config.json') || { client: {path: '/solr'}};
+var client = solr.createClient(config.client);
+var basePath = [config.client.path, config.client.core].join('/') ;
 
 describe('Client',function(){
 	describe('#softCommit(callback)',function(){
 		it('should do a soft commit',function(done){
 			var request = client.softCommit(function(err,data){
 				sassert.ok(err,data);
-				assert.equal(request.path,'/solr/update/json?softCommit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?softCommit=true&wt=json');
 				done();
 			});
 		});

@@ -10,7 +10,9 @@ var mocha = require('mocha'),
 	sassert = require('./sassert');
 
 // Test suite
-var client = solr.createClient();
+var config = require('./config.json') || { client: {path: '/solr'}};
+var client = solr.createClient(config.client);
+var basePath = [config.client.path, config.client.core].join('/') ;
 
 describe('Client#createQuery()',function(){
 	describe('.dismax().q("test")',function(){

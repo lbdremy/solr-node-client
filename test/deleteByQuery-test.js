@@ -10,7 +10,9 @@ var mocha = require('mocha'),
 	sassert = require('./sassert');
 
 // Test suite
-var client = solr.createClient();
+var config = require('./config.json') || { client: {path: '/solr'}};
+var client = solr.createClient(config.client);
+var basePath = [config.client.path, config.client.core].join('/') ;
 
 describe('Client',function(){
 	describe('#deleteByQuery("title_t:*",callback)',function(){
@@ -24,7 +26,7 @@ describe('Client',function(){
 	describe('#deleteByQuery("title_t:*",{softCommit : true },callback)',function(){
 		it('should delete all documents having the field title_t with the soft commit option enabled',function(done){
 			var request =  client.deleteByQuery('title_t:*',{softCommit : true},function(err,data){
-				assert.equal(request.path,'/solr/update/json?softCommit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?softCommit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -33,7 +35,7 @@ describe('Client',function(){
 	describe('#deleteByQuery("title_t:*",{commitWithin : 10000},callback)',function(){
 		it('should delete all documents having the field title_t and commit changes within 10s',function(done){
 			var request = client.deleteByQuery('title_t:*',{commitWithin : 10000},function(err,data){
-				assert.equal(request.path,'/solr/update/json?commitWithin=10000&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commitWithin=10000&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -42,7 +44,7 @@ describe('Client',function(){
 	describe('#deleteByQuery("title_t:*",{commit : true},callback)',function(){
 		it('should delete all documents having the field title_t and hard commit changes',function(done){
 			var request = client.deleteByQuery('title_t:*',{commit : true},function(err,data){
-				assert.equal(request.path,'/solr/update/json?commit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});

@@ -11,7 +11,9 @@ var mocha = require('mocha'),
 	Stream = require('stream');
 
 // Test suite
-var client = solr.createClient();
+var config = require('./config.json') || { client: {path: '/solr'}};
+var client = solr.createClient(config.client);
+var basePath = [config.client.path, config.client.core].join('/') ;
 
 describe('Client',function(){
 	describe('#createAddStream()',function(){
@@ -21,7 +23,6 @@ describe('Client',function(){
 		});
 		describe('#write() to the `Stream` returned',function(){
 			it('should add documents',function(done){
-				var client = solr.createClient();
 				var addStream = client.createAddStream();
 				var data = '';
 				addStream

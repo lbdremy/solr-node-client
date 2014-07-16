@@ -9,7 +9,9 @@ var mocha = require('mocha'),
 	sassert = require('./sassert');
 
 // Test suite
-var client = solr.createClient();
+var config = require('./config.json') || { client: {path: '/solr'}};
+var client = solr.createClient(config.client);
+var basePath = [config.client.path, config.client.core].join('/') ;
 
 describe('Client',function(){
 	describe('#add({ id : 1, title_t : "title"},callback)',function(){
@@ -58,7 +60,7 @@ describe('Client',function(){
 				softCommit : true
 			};
 			var request = client.add(docs,options,function(err,data){
-				assert.equal(request.path,'/solr/update/json?softCommit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?softCommit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -80,7 +82,7 @@ describe('Client',function(){
 				commit : true
 			};
 			var request = client.add(docs,options,function(err,data){
-				assert.equal(request.path,'/solr/update/json?commit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -102,7 +104,7 @@ describe('Client',function(){
 				commitWithin : 10000
 			};
 			var request = client.add(docs,options,function(err,data){
-				assert.equal(request.path,'/solr/update/json?commitWithin=10000&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commitWithin=10000&wt=json');
 				sassert.ok(err,data);
 				done();
 			});

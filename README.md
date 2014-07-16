@@ -1,6 +1,8 @@
 #solr-client - a node.js solr client
 
-[![](https://secure.travis-ci.org/lbdremy/solr-node-client.png)](http://travis-ci.org/#!/lbdremy/solr-node-client)
+[![](https://secure.travis-ci.org/lbdremy/solr-node-client.png)](http://travis-ci.org/#!/lbdremy/solr-node-client) [![Dependency Status](https://gemnasium.com/lbdremy/solr-node-client.png)](https://gemnasium.com/lbdremy/solr-node-client)
+
+[![NPM](https://nodei.co/npm/solr-client.png?downloads=true&stars=true)](https://nodei.co/npm/solr-client/)
 
 ##Install
 
@@ -48,15 +50,25 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 ###v1.0.x
 
 - First stable version
-- the API is frozen until v2.0.x, only new features and bug fixes can be introduced 
+- the API is frozen until v2.0.x, only new features and bug fixes can be introduced
 
 ##Test
 
 ```js
 npm test
 ```
-HTTP requests and responses expected are mocked thanks to __nock__. To disable the mocking go to `test/config.json` and set `mocked` to `false`.
+
+## Test coverage
+
+Before to be able to run the command below, you will need to install jscoverage available here https://github.com/visionmedia/node-jscoverage.
+
+```js
+npm run-script test-cov
+```
+
+This command will generate a file named `coverage.html`, use your browser to visualize it.
 
 ##Licence
 (The MIT License)
 Copyright 2011-2012 HipSnip Limited
+Copyright 2013-2014 Rémy Loubradou

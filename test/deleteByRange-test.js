@@ -3,7 +3,7 @@
  */
 
 var mocha = require('mocha'),
-  figc = require('figc'),
+	figc = require('figc'),
 	assert = require('chai').assert,
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
 	solr = require( libPath + '/solr'),

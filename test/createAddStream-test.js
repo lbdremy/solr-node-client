@@ -3,6 +3,7 @@
  */
 
 var mocha = require('mocha'),
+  figc = require('figc'),
 	assert = require('chai').assert,
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
 	solr = require( libPath + '/solr'),
@@ -11,9 +12,9 @@ var mocha = require('mocha'),
 	Stream = require('stream');
 
 // Test suite
-var config = require('./config.json') || { client: {path: '/solr'}};
+var config = figc(__dirname + '/config.json');
 var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core].join('/') ;
+var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
 
 describe('Client',function(){
 	describe('#createAddStream()',function(){

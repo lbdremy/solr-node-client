@@ -17,12 +17,45 @@ var mocha = require('mocha'),
 var client = solr.createClient();
 
 describe('Client#createQuery()',function(){
-	describe('.facet({field : "category_t"}).q({title_t : "test"})',function(){
-		it('should create a facet on the field "category_t"',function(done){
+	describe('.facet(options)',function(){
+		it('should create a facet for multiple date/range fields',function(done){
+			var date = new Date().getTime();
+			var facetOptions = {
+									"on": true
+								,	"query": "query"
+								,	"field": "field"
+								,	"prefix": "prefix"
+								,	"sort": "field desc"
+								,	"limit": 100
+								,	"offset": 5
+								,	"mincount": 10
+								,	"missing": true
+								,	"method": "fc"
+								,	"date": [{
+											"field": "date_field"
+										,	"start": date
+										,	"end": date
+										,	"gap": "+1DAY"
+										,	"hardened": true
+										,	"other": "all"
+										,	"include": "all"
+										}]
+								,	"range": [{
+											"field": "range_field"
+										,	"start": 0.0
+										,	"end": "1000"	
+										,	"gap": "+1DAY"
+										,	"hardened": true
+										,	"other": "all"
+										,	"include": "all"
+										}]
+								,	"pivot": {
+											"fields": ["cat", "popularity"]
+										,	"mincount": 10	
+										}
+								}
 			var query = client.createQuery()
-				.facet({
-					field : 'category_t'
-				})
+				.facet(facetOptions)
 				.q({ title_t : 'test'})
 				.debugQuery();
 			client.search(query,function(err,data){
@@ -33,7 +66,65 @@ describe('Client#createQuery()',function(){
 						wt: 'json',
 						debugQuery: 'true',
 						q: 'title_t:test',
-						'facet.field': 'category_t' 
+						'facet.field': 'field' 
+						/* Other response params here */
+					}
+        		);
+				assert.equal(data.debug.QParser,'LuceneQParser');
+				done();
+			});
+		});
+
+		it('should create a facet for single date/range fields',function(done){
+			var date = new Date().getTime();
+			var facetOptions = {
+									"on": true
+								,	"query": "query"
+								,	"field": "field"
+								,	"prefix": "prefix"
+								,	"sort": "field desc"
+								,	"limit": 100
+								,	"offset": 5
+								,	"mincount": 10
+								,	"missing": true
+								,	"method": "fc"
+								,	"date": {
+											"field": "date_field"
+										,	"start": date
+										,	"end": date
+										,	"gap": "+1DAY"
+										,	"hardened": true
+										,	"other": "all"
+										,	"include": "all"
+										}
+								,	"range": {
+											"field": "range_field"
+										,	"start": 0.0
+										,	"end": "1000"	
+										,	"gap": "+1DAY"
+										,	"hardened": true
+										,	"other": "all"
+										,	"include": "all"
+										}
+								,	"pivot": {
+											"fields": "cat"
+										,	"mincount": 10	
+										}
+								}
+			var query = client.createQuery()
+				.facet(facetOptions)
+				.q({ title_t : 'test'})
+				.debugQuery();
+			client.search(query,function(err,data){
+				sassert.ok(err,data);
+				assert.deepEqual(data.responseHeader.params,
+					{
+						facet: 'true',
+						wt: 'json',
+						debugQuery: 'true',
+						q: 'title_t:test',
+						'facet.field': 'field' 
+						/* Other response params here */
 					}
         		);
 				assert.equal(data.debug.QParser,'LuceneQParser');

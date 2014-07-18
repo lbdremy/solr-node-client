@@ -52,7 +52,9 @@ describe('Client#createQuery',function(){
 					        'mlt.maxqt': '1500',
 					        wt: 'json',
 					        'mlt.mindf': '0',
-					        'mlt.count': '15' 
+					        'mlt.count': '15',
+ 					        "debugQuery": "true",
+					        q: "title_t:test"
 					    });
 				done();
 			});

@@ -55,7 +55,6 @@ describe('Client#createQuery',function(){
 				.group(options);
 
 			client.search(query, function(err, data){
-				console.log(JSON.stringify(data.responseHeader.params)+'\n');
 				sassert.ok(err, data);
 				assert.deepEqual(data.responseHeader.params, 
 						{'group.format':'simple','group.ngroups':'true','group.limit':'15','group.truncate':'true',

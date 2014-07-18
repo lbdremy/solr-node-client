@@ -60,8 +60,7 @@ describe('Client#createQuery',function(){
 				assert.deepEqual(data.responseHeader.params, 
 						{'group.format':'simple','group.ngroups':'true','group.limit':'15','group.truncate':'true',
 						'group.field':'title_t','group.main':'true',group:'true','group.sort':'score desc',
-						'group.cache.percent':'50','group.offset':'8',wt:'json', 'group.func': 'test', rows: '11',
-						'start': '1', 'group.facet': 'true'});
+						'group.cache.percent':'50','group.offset':'8',wt:'json'});
 				done();
 			});
 		});

@@ -3,6 +3,7 @@
  */
 
 var mocha = require('mocha'),
+	figc = require('figc'),
 	assert = require('chai').assert,
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
 	solr = require( libPath + '/solr'),
@@ -10,7 +11,9 @@ var mocha = require('mocha'),
 	sassert = require('./sassert');
 
 // Test suite
-var client = solr.createClient();
+var config = figc(__dirname + '/config.json');
+var client = solr.createClient(config.client);
+var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
 
 describe('Client',function(){
 	describe('#delete("title_t","test",callback)',function(){
@@ -24,7 +27,7 @@ describe('Client',function(){
 	describe('#delete("title_t","test",{ commit : true},callback)',function(){
 		it('should delete all documents where the field "title_t" is "test" and hard commit all changes',function(done){
 			var request = client.delete('title_t','test',{commit : true},function(err,data){
-				assert.equal(request.path,'/solr/update/json?commit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -33,7 +36,7 @@ describe('Client',function(){
 	describe('#delete("title_t","test",{ softCommit : true},callback)',function(){
 		it('should delete all documents where the field "title_t" is "test" and soft commit all changes',function(done){
 			var request = client.delete('title_t','test',{softCommit : true},function(err,data){
-				assert.equal(request.path,'/solr/update/json?softCommit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?softCommit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -42,7 +45,7 @@ describe('Client',function(){
 	describe('#delete("title_t","test",{ commitWithin : 10000},callback)',function(){
 		it('should delete all documents where the field "title_t" is "test" and commit within 10s all changes',function(done){
 			var request = client.delete('title_t','test',{commitWithin : 10000},function(err,data){
-				assert.equal(request.path,'/solr/update/json?commitWithin=10000&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commitWithin=10000&wt=json');
 				sassert.ok(err,data);
 				done();
 			});

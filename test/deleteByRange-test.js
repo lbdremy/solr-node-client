@@ -3,6 +3,7 @@
  */
 
 var mocha = require('mocha'),
+	figc = require('figc'),
 	assert = require('chai').assert,
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
 	solr = require( libPath + '/solr'),
@@ -10,7 +11,9 @@ var mocha = require('mocha'),
 	sassert = require('./sassert');
 
 // Test suite
-var client = solr.createClient();
+var config = figc(__dirname + '/config.json');
+var client = solr.createClient(config.client);
+var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
 
 describe('Client',function(){
 	describe('#deleteByRange(field,start,stop,callback)',function(){
@@ -32,7 +35,7 @@ describe('Client',function(){
 			var stop = new Date();
 			stop.setDate(stop.getDate() - 1);
 			var request =  client.deleteByRange(field,start,stop,{softCommit : true},function(err,data){
-				assert.equal(request.path,'/solr/update/json?softCommit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?softCommit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -45,7 +48,7 @@ describe('Client',function(){
 			var stop = new Date();
 			stop.setDate(stop.getDate() - 1);
 			var request = client.deleteByRange(field,start,stop,{commitWithin : 10000},function(err,data){
-				assert.equal(request.path,'/solr/update/json?commitWithin=10000&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commitWithin=10000&wt=json');
 				sassert.ok(err,data);
 				done();
 			});
@@ -58,7 +61,7 @@ describe('Client',function(){
 			var stop = new Date();
 			stop.setDate(stop.getDate() - 1);
 			var request = client.deleteByRange(field,start,stop,{commit : true},function(err,data){
-				assert.equal(request.path,'/solr/update/json?commit=true&wt=json');
+				assert.equal(request.path, basePath + '/update/json?commit=true&wt=json');
 				sassert.ok(err,data);
 				done();
 			});

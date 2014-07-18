@@ -62,7 +62,6 @@ describe('Client#createQuery()',function(){
 				.q({ title_t : 'test'})
 				.debugQuery();
 			client.search(query,function(err,data){
-        console.log("\n\n--> client response\n  err=%s\n  data=%j\n", err, data);
 				sassert.ok(err,data);
 				assert.deepEqual(data.responseHeader.params,
 					{

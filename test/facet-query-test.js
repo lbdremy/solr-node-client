@@ -26,7 +26,7 @@ describe('Client#createQuery()',function(){
 			var facetOptions = {
 									"on": true
 								,	"query": "query"
-								,	"field": "field"
+								,	"field": "author"
 								,	"prefix": "prefix"
 								,	"sort": "field desc"
 								,	"limit": 100
@@ -62,6 +62,7 @@ describe('Client#createQuery()',function(){
 				.q({ title_t : 'test'})
 				.debugQuery();
 			client.search(query,function(err,data){
+        console.log("\n\n--> client response\n  err=%s\n  data=%j\n", err, data);
 				sassert.ok(err,data);
 				assert.deepEqual(data.responseHeader.params,
 					{
@@ -69,8 +70,15 @@ describe('Client#createQuery()',function(){
 						wt: 'json',
 						debugQuery: 'true',
 						q: 'title_t:test',
-						'facet.field': 'field' 
-						/* Other response params here */
+						"facet.field": 'author',
+ 						"facet.limit": "100",
+						"facet.method": "fc",
+						"facet.mincount": "10",
+						"facet.missing": "true",
+						"facet.offset": "5",
+						"facet.prefix": "prefix",
+						"facet.query": "query",
+						"facet.sort": "field\\ desc"
 					}
         		);
 				assert.equal(data.debug.QParser,'LuceneQParser');
@@ -83,7 +91,7 @@ describe('Client#createQuery()',function(){
 			var facetOptions = {
 									"on": true
 								,	"query": "query"
-								,	"field": "field"
+								,	"field": "author"
 								,	"prefix": "prefix"
 								,	"sort": "field desc"
 								,	"limit": 100
@@ -126,8 +134,15 @@ describe('Client#createQuery()',function(){
 						wt: 'json',
 						debugQuery: 'true',
 						q: 'title_t:test',
-						'facet.field': 'field' 
-						/* Other response params here */
+						"facet.field": 'author',
+ 						"facet.limit": "100",
+						"facet.method": "fc",
+						"facet.mincount": "10",
+						"facet.missing": "true",
+						"facet.offset": "5",
+						"facet.prefix": "prefix",
+						"facet.query": "query",
+						"facet.sort": "field\\ desc"
 					}
         		);
 				assert.equal(data.debug.QParser,'LuceneQParser');

@@ -47,7 +47,6 @@ describe('Client',function(){
 				sassert.ok(err,data);
         assert.equal(data.response.numFound, 1, "Added document should be retrieved in real-time get.");
         var retrieved = data.response.docs[0];
-        console.log("\nretrieved ==> %j\n", retrieved);
         assert.equal(retrieved.id, id, "Didn't retrieve the expected document.");
         assert.equal(retrieved.title_t, title, "Didn't retrieve the expected document.");
 				done();

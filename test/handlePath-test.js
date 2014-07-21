@@ -17,14 +17,15 @@ var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,
 
 describe('Client',function(){
 	describe('Arbitrary HandlePath Support',function(){
+		var idpfx = Math.floor(Math.random() * 1000000);
 		it('should add documents over the arbitrary handlePost',function(done){
 			var docs = [
 				{
-					id : 4,
+					id : idpfx + "-1",
 					title_t : 'title4'
 				},
 				{
-					id : 5,
+					id : idpfx + "-2",
 					title_t : 'title5'
 				}
 			];
@@ -43,5 +44,15 @@ describe('Client',function(){
 				done();
 			});
 		});
+    
+		it('should delete all documents over the generic handlePost',function(done){
+			var cmd = { "delete": {"query": "*:*"}};
+			var request = client.handlePost(client.UPDATE_HANDLER,cmd,function(err,data){
+				assert.equal(request.path, basePath + '/update?&wt=json');
+				sassert.ok(err,data);
+				done();
+			});
+		});
+    
   });
 });

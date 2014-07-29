@@ -43,7 +43,7 @@ describe('Client',function(){
 
 		it('should be able to get that specific document',function(done){
       // note that by default the /get handler will have omitHeader=true configured on the server!
-			client.get(id,{omitHeader: false}, function(err,data){
+			client.realTimeGet(id,{omitHeader: false}, function(err,data){
 				sassert.ok(err,data);
         assert.equal(data.response.numFound, 1, "Added document should be retrieved in real-time get.");
         var retrieved = data.response.docs[0];
@@ -61,7 +61,7 @@ describe('Client',function(){
 		});
 
 		it('should no longer be able to get that specific document',function(done){
-			client.get(id,{omitHeader: false}, function(err,data){
+			client.realTimeGet(id,{omitHeader: false}, function(err,data){
 				sassert.ok(err,data);
         assert.equal(data.response.numFound, 0, "Deleted document should no longer be retrievable in real-time get.");
 				done();

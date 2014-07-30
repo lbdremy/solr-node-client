@@ -19,6 +19,7 @@ describe('Client',function(){
 		it('should ping',function(done){
 			client.ping(function(err,data){
 				sassert.ok(err,data);
+				assert.equal(data.status, 'OK');
 				done();
 			})
 		});

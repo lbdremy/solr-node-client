@@ -28,6 +28,7 @@
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js",
-    "test-cov" : "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov"
+    "test-cov" : "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
+    "report" : "rm -rf report && mkdir report && plato -r -d report main.js lib/*"
   }
 }

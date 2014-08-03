@@ -18,7 +18,7 @@
   "dependencies": {
     "JSONStream": "~0.7.1",
     "duplexer": "~0.1.1",
-    "httperror": "^0.2.1",
+    "httperror": "~0.2.1",
     "request": "~2.33.0"
   },
   "devDependencies": {

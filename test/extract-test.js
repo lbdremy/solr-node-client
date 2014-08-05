@@ -24,10 +24,11 @@ describe('Client',function(){
         var files = fs.readdirSync(contentPath);
         
         files.forEach(function(file, i) {
-            it('should load & extract this test-document',function(done){
+            it('should load & extract test-document ' + file,function(done){
                 var fields = {};
-                fields.id = "TEST-EXTRACT-" + file
-                client.addFileContents(contentPath + '/' + file, fields, options, function(err,data){
+                fields.id = "TEST-EXTRACT-" + file;
+                fields.path = contentPath + '/' + file;
+                client.extractFileContents(fields.path,fields,options,function(err,data){
                     sassert.ok(err,data);
                     done();
                 });

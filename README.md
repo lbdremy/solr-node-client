@@ -58,19 +58,28 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 npm test
 ```
 ### v0.3.x
+
 Tests are executed against a running SOLR instance, so you might want to:
 - install the schema.xml and solrconfig.xml expected by the tests. You find these in test/materials
 - make sure your solr instance is running
 - specifiy non-default connection params to your server in test/config.json You can inject these also on the command line through:
+
 ```
 mocha test/*-test.js --client.core=test-node-client --client.port=8080
 ```
+
 ## Test coverage
 
 Before to be able to run the command below, you will need to install jscoverage available here https://github.com/visionmedia/node-jscoverage.
 
-```js
+```
 npm run-script test-cov
+```
+
+## Static analysis and complexity report
+
+```
+npm run-script report
 ```
 
 This command will generate a file named `coverage.html`, use your browser to visualize it.

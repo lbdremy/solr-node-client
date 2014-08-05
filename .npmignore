@@ -5,3 +5,4 @@ jshint
 output.txt
 coverage.html
 lib-cov
+report

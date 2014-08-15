@@ -18,11 +18,7 @@ describe('Client',function(){
 	describe('#ping(callback)',function(){
 		it('should ping',function(done){
 			client.ping(function(err,data){
-				//ping is introducing omitting headers since ping-headers from solr contains duplicate key violation according to json-big
-				//thus avoiding the sassert scheme which requires the headers to work
-				//sassert.ok(err,data);
-				assert.isNull(err);
-				assert.ok(data);
+				sassert.ok(err,data);
 				assert.equal(data.status, 'OK');
 				done();
 			})

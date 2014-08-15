@@ -17,12 +17,8 @@ var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,
 describe('Client',function(){
 	describe('#get("admin/ping",callback)',function(){
 		it('should ping',function(done){
-			client.get('admin/ping',{"omitHeader":"true"},function(err,data){
-				//omitting headers since ping-headers from solr contains duplicate key violation according to json-big
-				//thus avoiding the sassert scheme which requires the headers to work
-				//sassert.ok(err,data);
-				assert.isNull(err);
-				assert.ok(data);
+			client.get('admin/ping',function(err,data){
+				sassert.ok(err,data);
 				assert.equal(data.status, 'OK');
 				done();
 			})

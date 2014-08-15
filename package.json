@@ -20,7 +20,7 @@
     "duplexer": "~0.1.1",
     "form-data": "~0.1.4",
     "httperror": "~0.2.2",
-    "json-bigint": "0.0.3",
+    "json-bigint": "~0.1.1",
     "request": "~2.33.0"
   },
   "devDependencies": {

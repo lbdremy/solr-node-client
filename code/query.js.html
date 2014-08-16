@@ -214,6 +214,29 @@ Query.prototype.qt = function(name){
           </div>
         </article>
         <article class="codeblock">
+          <div class="header"><p>Set the default query operator</p>
+</div>
+          <div class="ctx">
+            <h3>Query.prototype.qop()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">op</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.qop = function(op){
+    var self = this;
+    var parameter ='q.op=';
+    parameter += op;
+    this.parameters.push(parameter);
+    return self;
+};</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
           <div class="header"><p>Set the offset where the set of returned documents should begin.</p>
 </div>
           <div class="ctx">
@@ -252,6 +275,30 @@ Query.prototype.qt = function(name){
             <pre class="source prettyprint"><code>Query.prototype.rows = function(rows){
    var self = this;
    var parameter = 'rows=' + rows ;
+   this.parameters.push(parameter);
+   return self;
+}</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Request to use cursorMarks for deep-paging as explained in <a href="http://heliosearch.org/solr/paging-and-deep-paging/">http://heliosearch.org/solr/paging-and-deep-paging/</a>
+Note that usage of a cursor requires a sort containing a uniqueKey field tie breaker</p>
+</div>
+          <div class="ctx">
+            <h3>Query.prototype.cursorMark()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">mark</span><span class="desc">- The mark to use, defaults to &quot;*&quot; to request a new cursor in the first request</span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.cursorMark = function(mark){
+   var self = this;
+   mark = mark || &quot;*&quot;;
+   var parameter = 'cursorMark=' + mark ;
    this.parameters.push(parameter);
    return self;
 }</code></pre>
@@ -306,7 +353,7 @@ Query.prototype.qt = function(name){
       var filters = options.map(function(option){
          var key = option.field;
          var filter = {};
-         filter[key] = '[' + encodeURIComponent(option.start) + '%20TO%20' + encodeURIComponent(option.end) + ']';
+         filter[key] = '[' + format.escapeAndEncode(option.start) + '%20TO%20' + format.escapeAndEncode(option.end) + ']';
          return format.stringify(filter, '',':');
       });
       parameter += filters.join('%20AND%20');
@@ -314,7 +361,7 @@ Query.prototype.qt = function(name){
    }else{
       var key = options.field;
       var filter = {};
-      filter[key] = '[' + encodeURIComponent(options.start) + '%20TO%20' + encodeURIComponent(options.end) + ']';
+      filter[key] = '[' + format.escapeAndEncode(options.start) + '%20TO%20' + format.escapeAndEncode(options.end) + ']';
       parameter += format.stringify(filter, '',':');
    }
    this.parameters.push(parameter);
@@ -341,7 +388,7 @@ Query.prototype.qt = function(name){
    var self = this;
    value = format.dateISOify(value);
    var parameter = 'fq=';
-   parameter += field + ':' + encodeURIComponent(value);
+   parameter += field + ':' + format.escapeAndEncode(value);
    this.parameters.push(parameter);
    return self;
 }</code></pre>
@@ -469,7 +516,7 @@ Result Grouping groups documents with a common field value into groups, returnin
       this.parameters.push('group.sort=' + encodeURIComponent(options.sort));
    }
    if( options.format ){
-      this.parameters.push('group.format=' + encodeURIComponent(options.format));
+      this.parameters.push('group.format=' + format.escapeAndEncode(options.format));
    }
    if( options.main !== undefined){
       this.parameters.push('group.main=' + options.main);
@@ -530,10 +577,10 @@ Result Grouping groups documents with a common field value into groups, returnin
       }
    }
    if(options.prefix){
-      this.parameters.push('facet.prefix=' + encodeURIComponent(options.prefix))
+      this.parameters.push('facet.prefix=' + format.escapeAndEncode(options.prefix))
    }
    if(options.sort){
-      this.parameters.push('facet.sort=' + encodeURIComponent(options.sort))
+      this.parameters.push('facet.sort=' + format.escapeAndEncode(options.sort))
    }
    if(options.limit !== undefined){
       this.parameters.push('facet.limit=' + options.limit);
@@ -588,7 +635,7 @@ Result Grouping groups documents with a common field value into groups, returnin
   }
   if(options.fl){
     if(options.fl instanceof Array) options.fl = options.fl.join(',');
-    this.parameters.push('mlt.fl=' + encodeURIComponent(options.fl))
+    this.parameters.push('mlt.fl=' + format.escapeAndEncode(options.fl))
   }
   if(options.count !== undefined){
     this.parameters.push('mlt.count=' + options.count)
@@ -618,19 +665,13 @@ Result Grouping groups documents with a common field value into groups, returnin
     if( typeof options.qf === 'object'){
       var parameter = querystring.stringify(options.qf, '%20' , '^');;
     }else{
-      var parameter = encodeURIComponent(options.qf);
+      var parameter = format.escapeAndEncode(options.qf);
     }
     this.parameters.push('mlt.qf=' + parameter);
   }
   return self;
 }</code></pre>
           </div>
-        </article>
-        <article class="codeblock">
-          <div class="header"><p>DisMax parameters
-do not forget to use <code>.dismax()</code> when using these parameters</p>
-</div>
-          <div class="description"></div>
         </article>
         <article class="codeblock">
           <div class="header"><p>Use the DisMax query parser</p>
@@ -653,12 +694,6 @@ do not forget to use <code>.dismax()</code> when using these parameters</p>
           </div>
         </article>
         <article class="codeblock">
-          <div class="header"><p>EDisMax parameters
-do not forget to use <code>.edismax()</code> when using these parameters</p>
-</div>
-          <div class="description"></div>
-        </article>
-        <article class="codeblock">
           <div class="header"><p>Use the EDisMax query parser</p>
 </div>
           <div class="ctx">
@@ -676,6 +711,30 @@ do not forget to use <code>.edismax()</code> when using these parameters</p>
    this.defType('edismax');
    return self;
 }</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Add the parameter debugQuery.
+Additional debugging informations will be available in the response.</p>
+</div>
+          <div class="ctx">
+            <h3>Query.prototype.debugQuery()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Query.prototype.debugQuery = function(){
+   var self = this;
+   this.parameters.push('debugQuery=true');
+   return self;
+}
+
+//TODO
+Query.prototype.ps = function(){}</code></pre>
           </div>
         </article>
         <article class="codeblock">

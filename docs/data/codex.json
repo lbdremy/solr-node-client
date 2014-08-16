@@ -118,6 +118,36 @@
                     "title" : "examples/rollback.js",
                     "file" : "../../examples/rollback.js",
                     "description" : ""
+                },
+                {
+                    "name" : "spell.js",
+                    "title" : "examples/spell.js",
+                    "file" : "../../examples/spell.js",
+                    "description" : ""
+                },
+                {
+                    "name" : "realTimeGet.js",
+                    "title" : "examples/realTimeGet.js",
+                    "file" : "../../examples/realTimeGet.js",
+                    "description" : ""
+                },
+                {
+                    "name" : "prepareCommit.js",
+                    "title" : "examples/prepareCommit.js",
+                    "file" : "../../examples/prepareCommit.js",
+                    "description" : ""
+                },
+                {
+                    "name" : "softCommit.js",
+                    "title" : "examples/softCommit.js",
+                    "file" : "../../examples/softCommit.js",
+                    "description" : ""
+                },
+                {
+                    "name" : "get.js",
+                    "title" : "examples/get.js",
+                    "file" : "../../examples/get.js",
+                    "description" : ""
                 }
             ]
         }

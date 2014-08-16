@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>Code Documentation for examples/basicAuth.js - Solr client for node.js</title>
+    <title>Code Documentation for examples/softCommit.js - Solr client for node.js</title>
     <script type="text/javascript">
       var ghuser = 'lbdremy'
         , ghproject = 'solr-node-client';
@@ -84,27 +84,21 @@
     <section id="content">
       <div id="code">
         <article class="codeblock">
-          <div class="header"><p>Use Basic HTTP Authentication to communicate with the Solr server.</p>
+          <div class="header"><p>Soft commit</p>
 </div>
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>// Use `var solr = require('solr-client')` in your code 
+            <pre class="source prettyprint"><code>// Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
-client.basicAuth('admin','passtest');
 
-// Use `client.unauth` if you want to remove credentials previously set.
-//client.unauth();
-
-// You can now search documents using your credentials
-var query = client.createQuery().q('laptop').dismax().qf({title_t : 0.2 , description_t : 3.3}).mm(2).start(0).rows(10);
-client.search(query,function(err,obj){
+client.softCommit(function(err,res){
    if(err){
    	console.log(err);
    }else{
-   	console.log(obj);	
+   	console.log(res);
    }
 });</code></pre>
           </div>

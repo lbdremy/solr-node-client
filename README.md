@@ -41,6 +41,42 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
    }
 });
 ```
+
+##Migration between 0.2.x and 0.3.x
+
+The only breaking change introduced in `v0.3.0` is about method chaining of the solr `Client`.
+Method chaining as simply been removed because we were actually hidding something really interesting and useful
+the `http.ClientRequest` instance.
+
+So, before you could have done this:
+
+```js
+var client = solr.createClient();
+
+client
+	.search('q=hello', function(err, obj){
+		console.log(err, obj);
+	})
+	.search('q=world', function(err, obj){
+		console.log(err, obj);
+	});
+```
+
+Now it won't work, but you have now access to the `http.ClientRequest` instead created by `Client#search`:
+
+```js
+var client = solr.createClient();
+
+var request = client.search('q=hello', function(err, obj){
+	console.log(err, obj);
+});
+request.setTimeout(200, function(){
+	console.log('search timeout');
+});
+```
+
+Post an issue if you have troubles migrating to v0.3.0.
+
 ##Roadmap
 
 ###v0.3.x

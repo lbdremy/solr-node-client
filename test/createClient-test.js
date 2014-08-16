@@ -42,5 +42,14 @@ describe('solr',function(){
             assert.equal(client.options.core,'core1');
             assert.equal(client.options.path,'/solr4');
 		});
-	})
+	});
+	describe('.createClient({ secure : true })', function(){
+		it('should create a `Client` instance with secure set to true', function(){
+			var options = {
+				secure : true
+			};
+			var client = solr.createClient(options);
+			assert.isTrue(client.options.secure);
+		});
+	});
 });

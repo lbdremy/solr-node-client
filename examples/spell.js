@@ -1,16 +1,17 @@
 /**
- * Soft commit
+ * Search documents matching the `query` with Spellcheck enabled.
  */
 
 // Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
-
-client.softCommit(function(err,res){
+var query = client.createQuery()
+				  .q('laptop');
+client.spell(query,function(err,obj){
    if(err){
    	console.log(err);
    }else{
-   	console.log(res);
+   	console.log(obj);
    }
 });

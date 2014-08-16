@@ -1,4 +1,4 @@
-// Use `var solr = require('solr-client')` in your code 
+// Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
@@ -21,6 +21,6 @@ client.search(query,function(err,obj){
    if(err){
       console.log(err);
    }else{
-      console.log(obj); 
+      console.log(obj);
    }
 });

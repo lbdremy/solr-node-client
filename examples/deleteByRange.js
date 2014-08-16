@@ -1,8 +1,8 @@
 /**
- * Delete set of documents based on a range 
+ * Delete set of documents based on a range
  */
 
-// Use `var solr = require('solr-client')` in your code 
+// Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
@@ -14,8 +14,10 @@ client.deleteByRange('last_update',startOffset,stopOffset,function(err,obj){
    if(err){
    	console.log(err);
    }else{
-   	console.log(obj);	
+   	console.log(obj);
    }
+   // Do not forget to commit now
+   // to see the changes
 });
 
-client.commit();
+

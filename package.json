@@ -7,7 +7,7 @@
   "name": "solr-client",
   "main": "./main",
   "description": " A Solr client library for indexing, adding, deleting, committing, optimizing and searching documents within an Apache Solr installation (version>=3.2)",
-  "version": "0.2.7",
+  "version": "0.2.9",
   "repository": {
     "type": "git",
     "url": "https://github.com/lbdremy/solr-node-client"
@@ -16,16 +16,22 @@
     "node": ">= 0.4.7"
   },
   "dependencies": {
-    "JSONStream": "~0.6.4",
+    "JSONStream": "~0.9.0",
     "duplexer": "~0.1.1",
-    "request": "~2.27.0"
+    "httperror": "~0.2.2",
+    "json-bigint": "~0.1.3",
+    "request": "~2.40.0"
   },
   "devDependencies": {
-    "vows": "~0.7.0",
-    "nock": "~0.22.1",
-    "csv-stream": "~0.1.3"
+    "chai": "~1.9.1",
+    "bignumber.js": "~1.4.1",
+    "csv-stream": "~0.1.3",
+    "mocha": "~1.20.1",
+    "figc": "~0.0.3"
   },
   "scripts": {
-    "test": "vows --spec test/test-*"
+    "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js",
+    "test-cov": "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
+    "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*"
   }
 }

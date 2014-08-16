@@ -11,11 +11,14 @@ npm install solr-client
 ```
 
 ##Features
-- Commands supported: search(select), index, delete, update, commit, rollback, optimize, ping
+
+- Commands supported: search(select), add, delete, update, commit, rollback, optimize, ping, real-time get, prepare commit, soft commit, arbitrary search handler (i.e: mlt, luke ...)
 - Lucene query / DisMax query
 - Grouping / Field Collapsing. (Apache Solr version must be >= 3.3)
 - Convenients methods for querying with Facet, MoreLikeThis
 - HTTP Basic Access Authentication
+- Over HTTPS as well
+- Use json-bigint to parse and stringify correctly *_l fields of Solr
 
 ##Documentation
 See the website at http://lbdremy.github.com/solr-node-client/.
@@ -34,7 +37,7 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
    if(err){
       console.log(err);
    }else{
-      console.log('Solr response:' + obj);
+      console.log('Solr response:', obj);
    }
 });
 ```
@@ -57,7 +60,6 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 ```
 npm test
 ```
-### v0.3.x
 
 Tests are executed against a running SOLR instance, so you might want to:
 - install the schema.xml and solrconfig.xml expected by the tests. You find these in test/materials
@@ -85,6 +87,9 @@ npm run-script report
 This command will generate a file named `coverage.html`, use your browser to visualize it.
 
 ##Licence
+
 (The MIT License)
+
 Copyright 2011-2012 HipSnip Limited
+
 Copyright 2013-2014 Rémy Loubradou

@@ -46,19 +46,24 @@
       </ul>
       <ul class="code">
         <li style="font-family:&quot;Lato&quot;, &quot;Helvetica Neue&quot;, Helvetica, Arial, sans-serif;color:#666;font-size:14px" class="header">examples</li>
-        <li><a href="/solr-node-client/code/rollback.js.html">rollback.js</a></li>
+        <li><a href="/solr-node-client/code/get.js.html">get.js</a></li>
         <li><a href="/solr-node-client/code/add.js.html">add.js</a></li>
         <li><a href="/solr-node-client/code/addRemoteResource.js.html">addRemoteResource.js</a></li>
         <li><a href="/solr-node-client/code/createAddStream.js.html">createAddStream.js</a></li>
         <li><a href="/solr-node-client/code/basicAuth.js.html">basicAuth.js</a></li>
+        <li><a href="/solr-node-client/code/commit.js.html">commit.js</a></li>
         <li><a href="/solr-node-client/code/delete.js.html">delete.js</a></li>
-        <li><a href="/solr-node-client/code/deleteByRange.js.html">deleteByRange.js</a></li>
         <li><a href="/solr-node-client/code/deleteByQuery.js.html">deleteByQuery.js</a></li>
         <li><a href="/solr-node-client/code/deleteByID.js.html">deleteByID.js</a></li>
         <li><a href="/solr-node-client/code/optimize.js.html">optimize.js</a></li>
         <li><a href="/solr-node-client/code/ping.js.html">ping.js</a></li>
         <li><a href="/solr-node-client/code/search.js.html">search.js</a></li>
-        <li><a href="/solr-node-client/code/commit.js.html">commit.js</a></li>
+        <li><a href="/solr-node-client/code/rollback.js.html">rollback.js</a></li>
+        <li><a href="/solr-node-client/code/spell.js.html">spell.js</a></li>
+        <li><a href="/solr-node-client/code/realTimeGet.js.html">realTimeGet.js</a></li>
+        <li><a href="/solr-node-client/code/prepareCommit.js.html">prepareCommit.js</a></li>
+        <li><a href="/solr-node-client/code/softCommit.js.html">softCommit.js</a></li>
+        <li><a href="/solr-node-client/code/deleteByRange.js.html">deleteByRange.js</a></li>
       </ul>
     </nav>
     <header>
@@ -87,11 +92,13 @@
       <article>
         <h1 id="features-section"><a name="features">Features</a></h1>
         <section><ul>
-<li>Commands supported: search(select), index, delete, update, commit, rollback, optimize, ping</li>
+<li>Commands supported: search(select), add, delete, update, commit, rollback, optimize, ping, real-time get, prepare commit, soft commit, arbitrary search handler (i.e: mlt, luke ...)</li>
 <li>Lucene query / DisMax query</li>
 <li>Grouping / Field Collapsing. (Apache Solr version must be &gt;= 3.3)</li>
 <li>Convenients methods for querying with Facet, MoreLikeThis</li>
 <li>HTTP Basic Access Authentication</li>
+<li>Over HTTPS as well</li>
+<li>Use json-bigint to parse and stringify correctly *_l fields of Solr</li>
 </ul>
 </section>
         <h1 id="installation-section"><a name="installation">Installation</a></h1>
@@ -99,22 +106,28 @@
 <pre><code>npm install solr-client</code></pre>
 </section>
         <h1 id="contributors-section"><a name="contributors">Contributors</a></h1>
-        <section><pre><code>repo age : <span class="number">2</span> years, <span class="number">1</span> month
-active   : <span class="number">56</span> days
-commits  : <span class="number">173</span>
-files    : <span class="number">35</span>
-authors  :
- <span class="number">143</span>  Remy Loubradou          <span class="number">82.7</span>%
-  <span class="number">17</span>  lbdremy                 <span class="number">9.8</span>%
-   <span class="number">4</span>  Tolga Akyüz            <span class="number">2.3</span>%
-   <span class="number">2</span>  Chris Leishman          <span class="number">1.2</span>%
-   <span class="number">1</span>  David Kelly             <span class="number">0.6</span>%
-   <span class="number">1</span>  Dominic Barnes          <span class="number">0.6</span>%
-   <span class="number">1</span>  Jos Shepherd            <span class="number">0.6</span>%
-   <span class="number">1</span>  Thorsten Scherler       <span class="number">0.6</span>%
-   <span class="number">1</span>  Wayne Larsen            <span class="number">0.6</span>%
-   <span class="number">1</span>  amercader               <span class="number">0.6</span>%
-   <span class="number">1</span>  patison                 <span class="number">0.6</span>%</code></pre>
+        <section><pre><code> project  : solr-client
+ repo age : <span class="number">3</span> years, <span class="number">1</span> month
+ active   : <span class="number">91</span> days
+ commits  : <span class="number">282</span>
+ files    : <span class="number">113</span>
+ authors  :
+   <span class="number">242</span>  Remy Loubradou          <span class="number">85.8</span>%
+    <span class="number">17</span>  lbdremy                 <span class="number">6.0</span>%
+     <span class="number">5</span>  Marc Portier            <span class="number">1.8</span>%
+     <span class="number">4</span>  Tolga Akyüz             <span class="number">1.4</span>%
+     <span class="number">2</span>  Chris Leishman          <span class="number">0.7</span>%
+     <span class="number">2</span>  Jochen Brüggemann       <span class="number">0.7</span>%
+     <span class="number">1</span>  Bharat Kishnani         <span class="number">0.4</span>%
+     <span class="number">1</span>  David Kelly             <span class="number">0.4</span>%
+     <span class="number">1</span>  Dominic Barnes          <span class="number">0.4</span>%
+     <span class="number">1</span>  Jos Shepherd            <span class="number">0.4</span>%
+     <span class="number">1</span>  Juzer Ali               <span class="number">0.4</span>%
+     <span class="number">1</span>  Pablo Compagni          <span class="number">0.4</span>%
+     <span class="number">1</span>  Thorsten Scherler       <span class="number">0.4</span>%
+     <span class="number">1</span>  Wayne Larsen            <span class="number">0.4</span>%
+     <span class="number">1</span>  amercader               <span class="number">0.4</span>%
+     <span class="number">1</span>  patison                 <span class="number">0.4</span>%</code></pre>
 </section>
         <h1 id="getting-help-section"><a name="getting-help">Getting Help</a></h1>
         <section><p>If you have questions or issues, please use <a href="https://github.com/lbdremy/solr-node-client/issues?sort=created&amp;direction=desc&amp;state=open">Github Issues</a>.</p>
@@ -122,6 +135,7 @@ authors  :
         <h1 id="licence-section"><a name="licence">Licence</a></h1>
         <section><p>(The MIT License)</p>
 <p>Copyright 2011-2012 HipSnip Limited</p>
+<p>Copyright 2013-2014 Rémy Loubradou</p>
 <p>Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the &quot;Software&quot;), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:</p>
 <p>The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.</p>
 <p>THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.</p>

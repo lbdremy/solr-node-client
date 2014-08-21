@@ -25,13 +25,14 @@ describe('Client',function(){
         
         files.forEach(function(file, i) {
             it('should load & extract test-document ' + file,function(done){
-                var fields = {};
-                fields.id = "TEST-EXTRACT-" + file;
-                fields.path = contentPath + '/' + file;
-                client.extractFileContents(fields.path,fields,options,function(err,data){
+                var doc = {};
+                doc.id = "TEST-EXTRACT-" + file;
+                doc.path = contentPath + '/' + file;
+                var extractStream = client.createExtractStream(doc,options,function(err,data){
                     sassert.ok(err,data);
                     done();
                 });
+                fs.createReadStream(doc.path).pipe(extractStream);
             });
         });
 	});

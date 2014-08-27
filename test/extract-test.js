@@ -28,10 +28,19 @@ describe('Client',function(){
                 var doc = {};
                 doc.id = "TEST-EXTRACT-" + file;
                 doc.path = contentPath + '/' + file;
-                var extractStream = client.createExtractStream(doc,options,function(err,data){
-                    sassert.ok(err,data);
-                    done();
-                });
+                var extractStream = client.createExtractStream(doc,options);
+                var err = null, data = null;
+                extractStream
+                    .on('error', function(error){
+                        err = error;
+                    })
+                    .on('data' , function(obj){
+                        data = obj;
+                    })
+                    .on('end',   function(){
+                        sassert.ok(err,data);
+                        done();
+                    });
                 fs.createReadStream(doc.path).pipe(extractStream);
             });
         });

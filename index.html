@@ -98,7 +98,7 @@
 <li>Convenients methods for querying with Facet, MoreLikeThis</li>
 <li>HTTP Basic Access Authentication</li>
 <li>Over HTTPS as well</li>
-<li>Use json-bigint to parse and stringify correctly *_l fields of Solr</li>
+<li>Use json-bigint to handle correctly numbers too large for Javascript Number such as the values of the fields *<em>l and _version\</em>. By default json-bigint library is not used because the performance difference compared to the native JSON library is too important with &quot;large&quot; chunk of JSON (<a href="https://github.com/lbdremy/solr-node-client/issues/114#issuecomment-54165595">https://github.com/lbdremy/solr-node-client/issues/114#issuecomment-54165595</a>), but you want to enable it if you use the Optimistic Concurreny feature available in Solr 4.x, along with RealTime Get and Atomic Updates features because they use the _version_ field. In order to enable it do <code>var client = solr.createClient({ bigint : true})</code> or directly on the client instance <code>client.options.bigint = true</code>.</li>
 </ul>
 </section>
         <h1 id="installation-section"><a name="installation">Installation</a></h1>

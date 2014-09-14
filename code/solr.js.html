@@ -129,20 +129,22 @@
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">[path='/solr']</span><span class="desc">- root path of all requests</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; http.Agent &#125;</span><span class="name">[agent]</span><span class="desc">- HTTP Agent which is used for pooling sockets used in HTTP(s) client requests</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[secure=false]</span><span class="desc">- if true HTTPS will be used instead of HTTP</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[bigint=false]</span><span class="desc">- if true JSONbig serializer/deserializer will be used instead</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span></div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
           </div>
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>function createClient(host, port, core, path, agent, secure){
-  var options = (typeof host === 'object')? host : {
+            <pre class="source prettyprint"><code>function createClient(host, port, core, path, agent, secure, bigint){
+  var options = (typeof host === 'object') ? host : {
       host : host,
       port : port,
       core : core,
       path : path,
       agent : agent,
-      secure : secure
+      secure : secure,
+      bigint : bigint
    };
   return new Client(options);
 }</code></pre>
@@ -160,6 +162,9 @@
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number | String &#125;</span><span class="name">options.port</span><span class="desc">- port of the Solr server</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.core</span><span class="desc">- name of the Solr core requested</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">options.path</span><span class="desc">- root path of all requests</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; http.Agent &#125;</span><span class="name">[options.agent]</span><span class="desc">- HTTP Agent which is used for pooling sockets used in HTTP(s) client requests</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.secure=false]</span><span class="desc">- if true HTTPS will be used instead of HTTP</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[options.bigint=false]</span><span class="desc">- if true JSONbig serializer/deserializer will be used instead</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span></div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span></div>
           </div>
@@ -173,7 +178,8 @@
       core : options.core || '',
       path : options.path || '/solr',
       agent : options.agent,
-      secure : options.secure || false
+      secure : options.secure || false,
+      bigint : options.bigint || false
    };
 
    // Default paths of all request handlers
@@ -666,13 +672,25 @@
       callback = options;
       options = {};
    }
-   this.options.json = JSONbig.stringify(data);
-   this.options.fullPath = [this.options.path,this.options.core, this.UPDATE_JSON_HANDLER + '?' + querystring.stringify(options) +'&amp;wt=json']
+
+   var json = pickJSON(this.options.bigint).stringify(data);
+   var fullPath = [this.options.path,this.options.core, this.UPDATE_JSON_HANDLER + '?' + querystring.stringify(options) +'&amp;wt=json']
                               .filter(function(element){
                                  return element;
                               })
                               .join('/');
-   return postJSON(this.options,callback);
+
+   var params = {
+      host : this.options.host,
+      port : this.options.port,
+      fullPath : fullPath,
+      json : json,
+      secure : this.options.secure,
+      bigint : this.options.bigint,
+      authorization : this.options.authorization,
+      agent : this.options.agent
+   };
+   return postJSON(params,callback);
 }</code></pre>
           </div>
         </article>
@@ -773,12 +791,22 @@
       parameters += query;
    }
 
-   this.options.fullPath = [this.options.path,this.options.core,handler + '?' + parameters + '&amp;wt=json']
+   var fullPath = [this.options.path,this.options.core,handler + '?' + parameters + '&amp;wt=json']
                               .filter(function(element){
                                  return element;
                               })
                               .join('/');
-   return getJSON(this.options,callback);
+
+   var params = {
+      host : this.options.host,
+      port : this.options.port,
+      fullPath : fullPath,
+      secure : this.options.secure,
+      bigint : this.options.bigint,
+      authorization : this.options.authorization,
+      agent : this.options.agent
+   };
+   return getJSON(params,callback);
 }</code></pre>
           </div>
         </article>
@@ -842,12 +870,32 @@
           <div class="tags">
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">secure</span><span class="desc">-</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Object</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span></div>
           </div>
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>function pickProtocol(secure){
    return secure ? https : http;
+};</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Pick appropriate JSON serializer/deserializer library based on the given <code>bigint</code> flag</p>
+</div>
+          <div class="ctx">
+            <h3>pickJSON()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">bigint</span><span class="desc">- whenever to handle big number correctly or not (the reason for not using JSONbig all the times is it has an important performance cost)</span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Object</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function pickJSON(bigint){
+   return bigint ? JSONbig : JSON;
 };</code></pre>
           </div>
         </article>
@@ -864,7 +912,10 @@
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.core</span><span class="desc">- name of the Solr core requested</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.authorization</span><span class="desc">- value of the authorization header</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.fullPath</span><span class="desc">- full path of the request</span></div>
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.json</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.json</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">params.secure</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">params.bigint</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; http.Agent &#125;</span><span class="name">[params.agent]</span><span class="desc">-</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span></div>
@@ -897,7 +948,7 @@
 
    var request = pickProtocol(params.secure).request(options);
 
-   request.on('response', handleJSONResponse(request,callback));
+   request.on('response', handleJSONResponse(request, params.bigint, callback));
 
    request.on('error',function onError(err){
       if (callback) callback(err,null);
@@ -923,6 +974,9 @@
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.core</span><span class="desc">- name of the Solr core requested</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.authorization</span><span class="desc">- value of the authorization header</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.fullPath</span><span class="desc">- full path of the request, contains query parameters</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">params.secure</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">params.bigint</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; http.Agent &#125;</span><span class="name">[params.agent]</span><span class="desc">-</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span></div>
@@ -956,7 +1010,7 @@
 
    var request = pickProtocol(params.secure).get(options);
 
-   request.on('response', handleJSONResponse(request,callback));
+   request.on('response', handleJSONResponse(request, params.bigint, callback));
 
    request.on('error',function(err){
       if (callback) callback(err,null);
@@ -980,7 +1034,7 @@
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>function handleJSONResponse(request, callback){
+            <pre class="source prettyprint"><code>function handleJSONResponse(request, bigint, callback){
    return function onJSONResponse(response){
       var text = '';
       var err = null;
@@ -999,7 +1053,7 @@
             if(callback)  callback(err,null);
          }else{
             try{
-               data = JSONbig.parse(text);
+               data = pickJSON(bigint).parse(text);
             }catch(error){
                err = error;
             }finally{

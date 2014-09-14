@@ -18,9 +18,10 @@ npm install solr-client
 - Convenients methods for querying with Facet, MoreLikeThis
 - HTTP Basic Access Authentication
 - Over HTTPS as well
-- Use json-bigint to parse and stringify correctly *_l fields of Solr
+- Use json-bigint to handle correctly numbers too large for Javascript Number such as the values of the fields *_l and \_version\_. By default json-bigint library is not used because the performance difference compared to the native JSON library is too important with "large" chunk of JSON (https://github.com/lbdremy/solr-node-client/issues/114#issuecomment-54165595), but you want to enable it if you use the Optimistic Concurreny feature available in Solr 4.x, along with RealTime Get and Atomic Updates features because they use the \_version\_ field. In order to enable it do `var client = solr.createClient({ bigint : true})` or directly on the client instance `client.options.bigint = true`.
 
 ##Documentation
+
 See the website at http://lbdremy.github.com/solr-node-client/.
 
 ##Usage
@@ -41,6 +42,60 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
    }
 });
 ```
+
+##Migration between 0.2.x and 0.3.x
+
+The only breaking change introduced in `v0.3.0` is about method chaining of the solr `Client`.
+Method chaining as simply been removed because we were actually hidding something really interesting and useful
+the `http.ClientRequest` instance.
+
+So, before you could have done this:
+
+```js
+var client = solr.createClient();
+
+client
+	.search('q=hello', function(err, obj){
+		console.log(err, obj);
+	})
+	.search('q=world', function(err, obj){
+		console.log(err, obj);
+	});
+```
+
+Now it won't work, but you have now access to the `http.ClientRequest` instead created by `Client#search`:
+
+```js
+var client = solr.createClient();
+
+var request = client.search('q=hello', function(err, obj){
+	console.log(err, obj);
+});
+request.setTimeout(200, function(){
+	console.log('search timeout');
+});
+```
+
+Post an issue if you have troubles migrating to v0.3.0.
+
+##Migration between 0.3.x and 0.4.x
+
+The only breaking change introduced in `0.4.x` is about JSON serialization/deserialization of numbers too large for Javascript Number type. If you were using the Optimistic Concurreny feature available in Solr 4.x, along with RealTime Get and Atomic Updates features which use the \_version\_ field or *_l type fields you are affected about this change otherwise you are just fine.
+
+If you affected in order to fix that just initialize your client with the `bigint` flag set to `true`:
+
+```js
+var client = solr.createClient({ bigint : true });
+```
+
+or directly on the `Client` instance:
+
+```js
+client.options.bigint = true;
+```
+
+Post an issue if you have troubles migrating to v0.4.0.
+
 ##Roadmap
 
 ###v0.3.x
@@ -78,13 +133,13 @@ Before to be able to run the command below, you will need to install jscoverage 
 npm run-script test-cov
 ```
 
+This command will generate a file named `coverage.html`, use your browser to visualize it.
+
 ## Static analysis and complexity report
 
 ```
 npm run-script report
 ```
-
-This command will generate a file named `coverage.html`, use your browser to visualize it.
 
 ##Licence
 

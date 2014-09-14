@@ -18,6 +18,10 @@ var config = figc(__dirname + '/config.json');
 var client = solr.createClient(config.client);
 var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,'');
 
+// Force Solr client to handle big integers
+client.options.bigint = true;
+
+
 describe('Client',function(){
     describe('Checking support for longs passed down in json formats to/from solr',function(){
 

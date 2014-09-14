@@ -78,6 +78,24 @@ request.setTimeout(200, function(){
 
 Post an issue if you have troubles migrating to v0.3.0.
 
+##Migration between 0.3.x and 0.4.x
+
+The only breaking change introduced in `0.4.x` is about JSON serialization/deserialization of numbers too large for Javascript Number type. If you were using the Optimistic Concurreny feature available in Solr 4.x, along with RealTime Get and Atomic Updates features which use the \_version\_ field or *_l type fields you are affected about this change otherwise you are just fine.
+
+If you affected in order to fix that just initialize your client with the `bigint` flag set to `true`:
+
+```js
+var client = solr.createClient({ bigint : true });
+```
+
+or directly on the `Client` instance:
+
+```js
+client.options.bigint = true;
+```
+
+Post an issue if you have troubles migrating to v0.4.0.
+
 ##Roadmap
 
 ###v0.3.x

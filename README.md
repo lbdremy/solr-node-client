@@ -21,6 +21,7 @@ npm install solr-client
 - Use json-bigint to parse and stringify correctly *_l fields of Solr
 
 ##Documentation
+
 See the website at http://lbdremy.github.com/solr-node-client/.
 
 ##Usage
@@ -114,13 +115,13 @@ Before to be able to run the command below, you will need to install jscoverage 
 npm run-script test-cov
 ```
 
+This command will generate a file named `coverage.html`, use your browser to visualize it.
+
 ## Static analysis and complexity report
 
 ```
 npm run-script report
 ```
-
-This command will generate a file named `coverage.html`, use your browser to visualize it.
 
 ##Licence
 

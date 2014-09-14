@@ -30,7 +30,7 @@
     "figc": "~0.0.3"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js",
+    "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js && ./node_modules/mocha/bin/mocha -R spec test/*-test.js --client.bigint=true",
     "test-cov": "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
     "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*"
   }

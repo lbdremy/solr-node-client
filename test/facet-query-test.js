@@ -77,7 +77,7 @@ describe('Client#createQuery()',function(){
 						"facet.offset": "5",
 						"facet.prefix": "prefix",
 						"facet.query": "query",
-						"facet.sort": "field\\ desc"
+						"facet.sort": "field desc"
 					}
         		);
 				assert.equal(data.debug.QParser,'LuceneQParser');
@@ -141,7 +141,7 @@ describe('Client#createQuery()',function(){
 						"facet.offset": "5",
 						"facet.prefix": "prefix",
 						"facet.query": "query",
-						"facet.sort": "field\\ desc"
+						"facet.sort": "field desc"
 					}
         		);
 				assert.equal(data.debug.QParser,'LuceneQParser');

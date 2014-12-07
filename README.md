@@ -97,9 +97,29 @@ client.options.bigint = true;
 
 Post an issue if you have troubles migrating to v0.4.0.
 
+##Migration between 0.4.x and 0.5.x
+
+The only breaking change introduced in `0.5.x` is introduced in this commit [3cbc7fc6cf631f019a4626913c0a4b616092133b](https://github.com/lbdremy/solr-node-client/commit/3cbc7fc6cf631f019a4626913c0a4b616092133b) which remove escaping of the Solr special characters in some of the methods of the `Query` class i.e in `Query#rangeFilter`, `Query#matchFilter`, `Query#group`, `Query#facet`, `Query#mlt` if you were relying on this behavior just wrap the arguments you passed to those methods into the [`solr.escapeSpecialChars(arg)`](https://github.com/lbdremy/solr-node-client/blob/master/lib/solr.js#L605) method.
+
+For example, for some weird reason you wanted to escape the special char `*`, don't ask me ;)
+
+```js
+var query = client.createQuery();
+query.q({ '*' : '*' }).rangeFilter({ field : 'id', start : 100, end : '*'})
+```
+
+You still can:
+
+```js
+var query = client.createQuery();
+query.q({ '*' : '*' }).rangeFilter({ field : 'id', start : 100, end : solr.escapeSpecialChars('*')})
+```
+
+Post an issue if you have troubles migrating to v0.5.0.
+
 ##Roadmap
 
-###v0.3.x
+###v0.3.x - v0.x.x
 
 - Test suite with mocha and chai instead of vows
 - Implement all features available in Solr 4 (SolrCloud API in particular)

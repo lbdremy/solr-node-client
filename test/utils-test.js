@@ -12,9 +12,9 @@ var mocha = require('mocha'),
 describe('format',function(){
 	describe('.escapeSpecialChars(string)',function(){
 		it('should escape all special characters',function(){
-			var string = '+-&&||!(){}[]^"~*?:\\ ';
+			var string = '+-&&||!(){}[]^"~*?:\\';
         	var escapedString = format.escapeSpecialChars(string);
-        	assert.equal(escapedString,'\\+\\-\\&\\&\\|\\|\\!\\(\\)\\{\\}\\[\\]\\^\\"\\~\\*\\?\\:\\\\\\ ');
+        	assert.equal(escapedString,'\\+\\-\\&\\&\\|\\|\\!\\(\\)\\{\\}\\[\\]\\^\\"\\~\\*\\?\\:\\\\');
 		});
 	});
 	describe('.dateISOify()',function(){

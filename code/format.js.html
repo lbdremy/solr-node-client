@@ -262,40 +262,11 @@ Sidesteps <code>Invalid Date</code> objects by returning <code>null</code> inste
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>function escapeSpecialChars(s){
-  return s.replace(/([\+\-&amp;\|!\(\)\{\}\[\]\^&quot;~\*\?:\\\ ])/g, function(match) {
+  return s.replace(/([\+\-!\(\)\{\}\[\]\^&quot;~\*\?:\\])/g, function(match) {
     return '\\' + match;
-  });
-}</code></pre>
-          </div>
-        </article>
-        <article class="codeblock">
-          <div class="header"><p>Expose <code>escapeAndEncode</code></p>
-</div>
-          <div class="ctx">
-            <h3>exports.escapeAndEncode</h3>
-          </div>
-          <div class="description"></div>
-          <div class="view-source">Hide Source</div>
-          <div class="code-wrap">
-            <pre class="source prettyprint"><code>exports.escapeAndEncode = escapeAndEncode;</code></pre>
-          </div>
-        </article>
-        <article class="codeblock">
-          <div class="header"><p>Escape with <code>escapeSpecialChars</code> and encode with <code>encodeURIComponent</code></p>
-</div>
-          <div class="ctx">
-            <h3>escapeAndEncode()</h3>
-          </div>
-          <div class="tags">
-            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">s</span><span class="desc">- string to escape and encode</span></div>
-            <div class="tag"><span class="type">&#64;return</span><span class="desc">String</span></div>
-            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span></div>
-          </div>
-          <div class="description"></div>
-          <div class="view-source">Hide Source</div>
-          <div class="code-wrap">
-            <pre class="source prettyprint"><code>function escapeAndEncode(s){
-  return encodeURIComponent(escapeSpecialChars(s.toString()));
+  })
+  .replace(/&amp;&amp;/g, '\\&amp;\\&amp;')
+  .replace(/\|\|/g, '\\|\\|');
 }</code></pre>
           </div>
         </article>

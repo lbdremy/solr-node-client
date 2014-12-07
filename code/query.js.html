@@ -358,7 +358,7 @@ Note that usage of a cursor requires a sort containing a uniqueKey field tie bre
       var filters = options.map(function(option){
          var key = option.field;
          var filter = {};
-         filter[key] = '[' + format.escapeAndEncode(option.start) + '%20TO%20' + format.escapeAndEncode(option.end) + ']';
+         filter[key] = '[' + encodeURIComponent(option.start) + '%20TO%20' + encodeURIComponent(option.end) + ']';
          return format.stringify(filter, '',':');
       });
       parameter += filters.join('%20AND%20');
@@ -366,7 +366,7 @@ Note that usage of a cursor requires a sort containing a uniqueKey field tie bre
    }else{
       var key = options.field;
       var filter = {};
-      filter[key] = '[' + format.escapeAndEncode(options.start) + '%20TO%20' + format.escapeAndEncode(options.end) + ']';
+      filter[key] = '[' + encodeURIComponent(options.start) + '%20TO%20' + encodeURIComponent(options.end) + ']';
       parameter += format.stringify(filter, '',':');
    }
    this.parameters.push(parameter);
@@ -393,7 +393,7 @@ Note that usage of a cursor requires a sort containing a uniqueKey field tie bre
    var self = this;
    value = format.dateISOify(value);
    var parameter = 'fq=';
-   parameter += field + ':' + format.escapeAndEncode(value);
+   parameter += field + ':' + encodeURIComponent(value);
    this.parameters.push(parameter);
    return self;
 }</code></pre>
@@ -521,7 +521,7 @@ Result Grouping groups documents with a common field value into groups, returnin
       this.parameters.push('group.sort=' + encodeURIComponent(options.sort));
    }
    if( options.format ){
-      this.parameters.push('group.format=' + format.escapeAndEncode(options.format));
+      this.parameters.push('group.format=' + encodeURIComponent(options.format));
    }
    if( options.main !== undefined){
       this.parameters.push('group.main=' + options.main);
@@ -582,10 +582,10 @@ Result Grouping groups documents with a common field value into groups, returnin
       }
    }
    if(options.prefix){
-      this.parameters.push('facet.prefix=' + format.escapeAndEncode(options.prefix))
+      this.parameters.push('facet.prefix=' + encodeURIComponent(options.prefix))
    }
    if(options.sort){
-      this.parameters.push('facet.sort=' + format.escapeAndEncode(options.sort))
+      this.parameters.push('facet.sort=' + encodeURIComponent(options.sort))
    }
    if(options.limit !== undefined){
       this.parameters.push('facet.limit=' + options.limit);
@@ -640,7 +640,7 @@ Result Grouping groups documents with a common field value into groups, returnin
   }
   if(options.fl){
     if(options.fl instanceof Array) options.fl = options.fl.join(',');
-    this.parameters.push('mlt.fl=' + format.escapeAndEncode(options.fl))
+    this.parameters.push('mlt.fl=' + encodeURIComponent(options.fl))
   }
   if(options.count !== undefined){
     this.parameters.push('mlt.count=' + options.count)
@@ -670,7 +670,7 @@ Result Grouping groups documents with a common field value into groups, returnin
     if( typeof options.qf === 'object'){
       var parameter = querystring.stringify(options.qf, '%20' , '^');;
     }else{
-      var parameter = format.escapeAndEncode(options.qf);
+      var parameter = encodeURIComponent(options.qf);
     }
     this.parameters.push('mlt.qf=' + parameter);
   }

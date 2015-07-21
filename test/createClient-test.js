@@ -14,16 +14,16 @@ describe('solr', function() {
   describe('.createClient()', function() {
     it('should return a `Client` instance', function() {
       var client = solr.createClient();
-      assert.equal(client.options.endpoints.length, 1);
-      assert.equal(client.options.endpoints[0], '127.0.0.1:8983');
+      assert.equal(client.options.servers.length, 1);
+      assert.equal(client.options.servers[0], '127.0.0.1:8983');
       assert.equal(client.options.core, '');
       assert.equal(client.options.path, '/solr');
     });
   });
-  describe('.createClient({ endpoints : "10.10.10.10:8080", core : "core1", path : "/solr4"})', function() {
+  describe('.createClient({ servers : "10.10.10.10:8080", core : "core1", path : "/solr4"})', function() {
     it('should return a `Client` instance with the given options', function() {
       var options = {
-        endpoints: ['10.10.10.10:8080'],
+        servers: ['10.10.10.10:8080'],
         core: 'core1',
         path: '/solr4'
       };
@@ -54,10 +54,10 @@ describe('solr', function() {
       assert.equal(client.pool.http, https);
     });
   });
-  describe('.createClient({endpoints:["10.10.10.10:8080", "11.11.11.11:8888"],core:"core1",paht:"/solr4"})', function(){
-    it('should create a `Client` instance with two endpoints', function(){
+  describe('.createClient({servers:["10.10.10.10:8080", "11.11.11.11:8888"],core:"core1",paht:"/solr4"})', function(){
+    it('should create a `Client` instance with two servers', function(){
       var options = {
-        endpoints: ['10.10.10.10:8080', '11.11.11.11:8888'],
+        servers: ['10.10.10.10:8080', '11.11.11.11:8888'],
         core: 'core1',
         path: '/solr4'
       };

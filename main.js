@@ -6,5 +6,3 @@
  */
 
 module.exports = exports = require("./lib/solr");
-
-

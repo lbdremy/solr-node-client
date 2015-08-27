@@ -38,4 +38,21 @@ describe('Client',function(){
 			});
 		});
 	});
+	describe('#search(query)',function(){
+		it('should find documents describe in the `query` instance of `Query` even if the `query` is very big',function(done){
+			var test = 'test';
+			for (var i = 0; i < 1024; i++) {
+				test += 't';
+			}
+			var query = client.createQuery()
+				.q({
+					'title_t' : test
+				});
+			client.search(query,function(err,data){
+				sassert.ok(err,data);
+				assert.deepEqual({ q : 'title_t:' + test, wt: 'json' },data.responseHeader.params);
+				done();
+			});
+		});
+	});
 });

@@ -35,14 +35,16 @@ describe('Collection',function(){
 				done();
 			});
 		});
-                it('should create one new Collection, two shards, with array of shard names',function(done){
+                it('should create one new Collection, one shard, one replicas',function(done){
 			this.timeout(10000);
                         var collection = client.collection();
                         collection.create(
                                 {
                                         name: 'solrCollectionTest2',
                                         routerName: 'compositeId',
-                                        numShards: 2
+                                        numShards: 1,
+					shards: 'shard1',
+					replicationFactor: 1
                                 }
                         );
                         client.executeCollection(collection,function(err,data){
@@ -161,6 +163,39 @@ describe('Collection',function(){
                 });
         });
 
+	describe('#addReplica',function(){
+                it('should add replica to shard2 of solrCollectionTest2',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.addReplica({
+                                collection:'solrCollectionTest2',
+                                shard: 'shard1'
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+	describe('#deleteReplica',function(){
+                it('should delete replica1 from shard1 from solrCollectionTest2',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.deleteReplica({
+				collection:'solrCollectionTest2',
+				shard: 'shard1',
+				replica: 'core_node2',
+				onlyIfDown: 'false'
+			});
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
 
 	describe('#deleteCollection',function(){
                 it('should delete collection solrCollectionTest1',function(done){

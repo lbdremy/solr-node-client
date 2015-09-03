@@ -340,6 +340,23 @@ describe('Collection',function(){
                 });
         });
 
+        describe('#rebalanceLeaders',function(){
+                it('should balance leaders on a collection',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.rebalanceLeaders({
+                                collection:'solrCollectionTest2',
+                                maxAtOnce: 100,
+                                maxWaitSeconds: 60
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
 	describe('#deleteCollection',function(){
                 it('should delete collection solrCollectionTest1',function(done){
                         this.timeout(10000);
@@ -351,6 +368,7 @@ describe('Collection',function(){
                                 done();
                         });
                 });
+/*
 		it('should delete collection solrCollectionTest2',function(done){
                         this.timeout(10000);
                         var collection = client.collection();
@@ -361,6 +379,7 @@ describe('Collection',function(){
                                 done();
                         });
                 });
+*/
 		it('should delete collection solrCollectionTest3',function(done){
                         this.timeout(10000);
                         var collection = client.collection();

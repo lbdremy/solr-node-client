@@ -5,9 +5,9 @@
 var mocha = require('mocha'),
 	figc = require('figc'),
 	assert = require('chai').assert,
-	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
+	libPath = process.env['SOLR_CLIENT_COV'] ? '../../lib-cov' : '../../lib',
 	solr = require( libPath + '/solr'),
-	sassert = require('./sassert');
+	sassert = require('../sassert');
 
 // Test suite
 var config = figc(__dirname + '/config.json');
@@ -26,7 +26,6 @@ describe('Collection',function(){
 					numShards: 2,
 					replicationFactor: 1,
 					maxShardsPerNode: 1,
-					//createNodeSet: config.client.host + '/' + config.client.port,
 					autoAddReplicas: 'false'
 				}
 			);
@@ -69,6 +68,100 @@ describe('Collection',function(){
                         });
                 });
         });
+
+        describe('#reloadCollection',function(){
+                it('should reload collection solrCollectionTest1',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.reload('solrCollectionTest1');
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+        describe('#splitShard',function(){
+		//params `ranges, splitKey not included
+                it('should split shard shard1 in solrCollectionTest1',function(done){
+                        this.timeout(20000);
+                        var collection = client.collection();
+                        collection.splitShard({
+				collection: 'solrCollectionTest1',
+				shard: 'shard1'
+			});
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+	describe('#deleteShard',function(){
+                it('should delete shard shard1 in collection solrCollectionTest3',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.deleteShard({
+                                collection:'solrCollectionTest3',
+                                shard: 'shard1'
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+
+        describe('#createShard',function(){
+                it('should create shard shardtest1 in collection solrCollectionTest3',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.createShard({
+				collection:'solrCollectionTest3',
+				shard: 'shard1'
+			});
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+	describe('#createAlias',function(){
+                it('should create alias testAlias for collections solrCollectionTest1, solrCollectionTest2',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.createAlias({
+                                name:'testAlias',
+                                collections: ['solrCollectionTest1', 'solrCollectionTest2']
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+	describe('#deleteAlias',function(){
+                it('should delete alias testAlias',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.deleteAlias('testAlias');
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+
 	describe('#deleteCollection',function(){
                 it('should delete collection solrCollectionTest1',function(done){
                         this.timeout(10000);
@@ -100,7 +193,6 @@ describe('Collection',function(){
                                 done();
                         });
                 });
-
 	});
 
 });

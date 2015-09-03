@@ -228,7 +228,7 @@ describe('Collection',function(){
 
         describe('#migrate',function(){
                 it('should migrate documents from solrCollectionTest2 to solrCollectionTest1',function(done){
-                        this.timeout(10000);
+                        this.timeout(20000);
                         var collection = client.collection();
                         collection.migrate({
                                 collection:'solrCollectionTest2',
@@ -284,7 +284,61 @@ describe('Collection',function(){
                 });
         });
 
+	describe('#addReplicaProp',function(){
+                it('should add preferredLeader property to replica core_node1 on collection solrCollectionTest2',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.addReplicaProp({
+				collection:'solrCollectionTest2',
+				shard: 'shard1',
+				replica: 'core_node1',
+				property: 'preferredLeader',
+				propertyValue: 'true',
+				shardUnique: 'true'
+			});
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
 
+        describe('#deleteReplicaProp',function(){
+                it('should delete preferredLeader property on replica core_node1 on collection solrCollectionTest2',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.deleteReplicaProp({
+                                collection:'solrCollectionTest2',
+                                shard: 'shard1',
+                                replica: 'core_node1',
+                                property: 'preferredLeader',
+                                sharedUnique: 'true'
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+	describe('#balanceShardUnique',function(){
+                it('should balance the property on collection solrCollectionTest2',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.balanceShardUnique({
+                                collection:'solrCollectionTest2',
+                                property: 'preferredLeader',
+                                shardUnique: 'true'
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
 
 	describe('#deleteCollection',function(){
                 it('should delete collection solrCollectionTest1',function(done){

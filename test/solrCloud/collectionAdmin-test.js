@@ -180,7 +180,7 @@ describe('Collection',function(){
         });
 
 	describe('#deleteReplica',function(){
-                it('should delete replica1 from shard1 from solrCollectionTest2',function(done){
+                it('should delete replica core_node2 from shard1 from solrCollectionTest2',function(done){
                         this.timeout(10000);
                         var collection = client.collection();
                         collection.deleteReplica({
@@ -196,6 +196,95 @@ describe('Collection',function(){
                         });
                 });
         });
+
+	describe('#clusterProp',function(){
+                it('should set autoAddReplicas to true',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.clusterProp({
+                                name:'autoAddReplicas',
+                                val: 'true',
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+		it('should unset autoAddReplicas',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.clusterProp({
+                                name:'autoAddReplicas',
+                                val: null
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+        describe('#migrate',function(){
+                it('should migrate documents from solrCollectionTest2 to solrCollectionTest1',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.migrate({
+                                collection:'solrCollectionTest2',
+                                targetCollection: 'solrCollectionTest1',
+				splitKey: 'A!'
+                        });
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });     
+        });
+
+//test for ADDROLE and REMOVEROLE should go here, after we have defined a config file for solrCloud
+
+	describe('#overseerStatus',function(){
+                it('should return information with status OK',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.overseerStatus();
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+	describe('#clusterStatus',function(){
+                it('should return information with status OK',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.clusterStatus();
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+	describe('#list',function(){
+                it('should return information with status OK',function(done){
+                        this.timeout(10000);
+                        var collection = client.collection();
+                        collection.list();
+                        client.executeCollection(collection,function(err,data){
+                                //sassert.ok(err,data);
+                                assert.equal(data.responseHeader.status,0);
+                                done();
+                        });
+                });
+        });
+
+
 
 	describe('#deleteCollection',function(){
                 it('should delete collection solrCollectionTest1',function(done){

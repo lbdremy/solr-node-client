@@ -15,7 +15,6 @@ var config = figc(__dirname + '/config.json');
 var client = solr.createClient(config.client);
 var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
 
-//other things to test: regex fragmenter, regexSlop, regexPattern, maxAnalyzedChars
 describe('Client#createQuery()',function(){
 	describe('.hl(options)',function(){
 		it('should create a highlighted query with most options specified (strings only).',function(done){

@@ -35,17 +35,7 @@ describe('Client#createQuery',function(){
 
       client.terms(query, function(err, data){
         sassert.ok(err,data);
-        assert.deepEqual(data.responseHeader.params,
-          {
-            terms: 'true',
-            wt: 'json',
-            'terms.fl': 'title',
-            'terms.prefix': 's',
-            'terms.mincount': '1',
-            'terms.maxcount': '10',
-            'terms.limit': '5',
-            'terms.sort': 'index'
-          });
+        assert.isObject(data.terms);
         done();
       });
     });

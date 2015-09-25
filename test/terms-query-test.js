@@ -21,8 +21,8 @@ describe('Client#createQuery',function(){
     it('should create a Terms query',function(done){
       var options = {
             "on": true
-          ,	"fl": 'title'
-          ,	"prefix": 's'
+          , "fl": 'title'
+          , "prefix": 's'
           , "mincount": 1
           , "maxcount": 10
           , "limit": 5

@@ -44,8 +44,8 @@ describe('Client',function(){
             client.add(doc, add_options, function(err,data){
                 sassert.ok(err,data);
                 assert.ok(big != Number(big).toString(), 'the big number used for testing should exceed the limits of javascript Number variables');
-                assert.ok(big == BigNumber(big).toString(), 'the big number used for testing should not exceed the limits of BigNumber processing');
-                _version_ = BigNumber(data.adds[1].toString());
+                assert.ok(big == (new BigNumber(big)).toString(), 'the big number used for testing should not exceed the limits of BigNumber processing');
+                _version_ = new BigNumber(data.adds[1].toString());
                 assert.ok(_version_.comparedTo(0) == 1, '_version_ should be set to a positive number');
                 done();
             });
@@ -72,7 +72,7 @@ describe('Client',function(){
             client.add(doc, add_options, function(err,data){
                 sassert.ok(err,data);
                 var prev_version_ = _version_;
-                _version_ = BigNumber(data.adds[1].toString());
+                _version_ = new BigNumber(data.adds[1].toString());
                 assert.ok(_version_.comparedTo(prev_version_) == 1, 'new _version_ should be bigger then previous');
                 done();
             });

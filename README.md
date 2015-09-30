@@ -13,6 +13,15 @@ npm install solr-client
 
 ##Features
 
+###Latest (0.6.0)
+
+- Solr5 Query-Highlighting support through StandardHighlighter (@LukeTavern) (https://github.com/lbdremy/solr-node-client/pull/144)
+- Experimental support for SolrCloud collections administration (@LukeTavern) (https://github.com/lbdremy/solr-node-client/issues/138)
+- Support for large query through POST via configurable automatic switch (@kfitzgerald) (https://github.com/lbdremy/solr-node-client/pull/129) 
+- Set Default Field (query.df()) (@cbarrientos-ias) (https://github.com/lbdremy/solr-node-client/pull/137)
+
+###0.5.0
+
 - Commands supported: search(select), add, delete, update, commit, rollback, optimize, ping, real-time get, prepare commit, soft commit, arbitrary search handler (i.e: mlt, luke ...)
 - Lucene query / DisMax query
 - Grouping / Field Collapsing. (Apache Solr version must be >= 3.3)
@@ -24,6 +33,10 @@ npm install solr-client
 ##Documentation
 
 See the website at http://lbdremy.github.com/solr-node-client/.
+
+##Contributing
+
+See the [Contributions](CONTRIBUTIONS.md) page.
 
 ##Usage
 
@@ -119,17 +132,13 @@ Post an issue if you have troubles migrating to v0.5.0.
 
 ##Roadmap
 
-###v0.3.x - v0.x.x
+###v1.0.0
 
-- Test suite with mocha and chai instead of vows
-- Implement all features available in Solr 4 (SolrCloud API in particular)
-- Provide all low-level commands
-- Complete documentation
-
-###v1.0.x
-
-- First stable version
-- the API is frozen until v2.0.x, only new features and bug fixes can be introduced
+- Adopt [semver](http://semver.org/)
+- Clean-up guidelines
+- Clean-up/Refresh/Complete the documentation + more samples
+- Docker-based automated test system + complete/add the missing tests
+- Full-on SolrCloud Collection administration
 
 ##Test
 

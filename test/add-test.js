@@ -7,7 +7,8 @@ var mocha = require('mocha'),
 	assert = require('chai').assert,
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
 	solr = require( libPath + '/solr'),
-	sassert = require('./sassert');
+	sassert = require('./sassert'),
+	versionUtils = require('./../lib/utils/version');
 
 // Test suite
 var config = figc(__dirname + '/config.json');
@@ -61,7 +62,11 @@ describe('Client',function(){
 				softCommit : true
 			};
 			var request = client.add(docs,options,function(err,data){
-				assert.equal(request.path, basePath + '/update/json?softCommit=true&wt=json');
+				if(client.options.solrVersion && versionUtils.version(client.options.solrVersion) >= versionUtils.Solr4_0) {
+					assert.equal(request.path, basePath + '/update?softCommit=true&wt=json');
+				} else {
+					assert.equal(request.path, basePath + '/update/json?softCommit=true&wt=json');
+				}
 				sassert.ok(err,data);
 				done();
 			});
@@ -83,7 +88,11 @@ describe('Client',function(){
 				commit : true
 			};
 			var request = client.add(docs,options,function(err,data){
-				assert.equal(request.path, basePath + '/update/json?commit=true&wt=json');
+				if(client.options.solrVersion && versionUtils.version(client.options.solrVersion) >= versionUtils.Solr4_0) {
+					assert.equal(request.path, basePath + '/update?commit=true&wt=json');
+				} else {
+					assert.equal(request.path, basePath + '/update/json?commit=true&wt=json');
+				}
 				sassert.ok(err,data);
 				done();
 			});
@@ -105,7 +114,11 @@ describe('Client',function(){
 				commitWithin : 10000
 			};
 			var request = client.add(docs,options,function(err,data){
-				assert.equal(request.path, basePath + '/update/json?commitWithin=10000&wt=json');
+				if(client.options.solrVersion && versionUtils.version(client.options.solrVersion) >= versionUtils.Solr4_0) {
+					assert.equal(request.path, basePath + '/update?commitWithin=10000&wt=json');
+				} else {
+					assert.equal(request.path, basePath + '/update/json?commitWithin=10000&wt=json');
+				}
 				sassert.ok(err,data);
 				done();
 			});

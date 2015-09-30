@@ -8,7 +8,8 @@ var mocha = require('mocha'),
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
 	solr = require( libPath + '/solr'),
 	SolrError = require(libPath + '/error/solr-error'),
-	sassert = require('./sassert');
+	sassert = require('./sassert'),
+	versionUtils = require('./../lib/utils/version');
 
 //TODO support all stuff describe there
 // http://wiki.apache.org/solr/SimpleFacetParameters#Retrieve_docs_with_facets_missing
@@ -63,28 +64,30 @@ describe('Client#createQuery()',function(){
 				.debugQuery();
 			client.search(query,function(err,data){
 				sassert.ok(err,data);
-				assert.deepEqual(data.responseHeader.params,
-					{
-						facet: 'true',
-						wt: 'json',
-						debugQuery: 'true',
-						q: 'title_t:test',
-						"facet.field": 'author',
- 						"facet.limit": "100",
-						"facet.method": "fc",
-						"facet.mincount": "10",
-						"facet.missing": "true",
-						"facet.offset": "5",
-						"facet.pivot": [
-							"cat",
-							"popularity"
-						],
-						"facet.pivot.mincount": "10",
-						"facet.prefix": "prefix",
-						"facet.query": "query",
-						"facet.sort": "field desc"
-					}
-        		);
+				var validationJSON = {
+					facet: 'true',
+					wt: 'json',
+					debugQuery: 'true',
+					q: 'title_t:test',
+					"facet.field": 'author',
+					"facet.limit": "100",
+					"facet.method": "fc",
+					"facet.mincount": "10",
+					"facet.missing": "true",
+					"facet.offset": "5",
+					"facet.prefix": "prefix",
+					"facet.query": "query",
+					"facet.sort": "field desc"
+				};
+				if(client.options.solrVersion && versionUtils.version(client.options.solrVersion) >= versionUtils.Solr4_0) {
+					validationJSON["facet.pivot.mincount"] = "10";
+					validationJSON["facet.pivot"] = [
+						"cat",
+						"popularity"
+					];
+				}
+
+				assert.deepEqual(data.responseHeader.params, validationJSON);
 				assert.equal(data.debug.QParser,'LuceneQParser');
 				done();
 			});
@@ -132,25 +135,28 @@ describe('Client#createQuery()',function(){
 				.debugQuery();
 			client.search(query,function(err,data){
 				sassert.ok(err,data);
-				assert.deepEqual(data.responseHeader.params,
-					{
-						facet: 'true',
-						wt: 'json',
-						debugQuery: 'true',
-						q: 'title_t:test',
-						"facet.field": 'author',
- 						"facet.limit": "100",
-						"facet.method": "fc",
-						"facet.mincount": "10",
-						"facet.missing": "true",
-						"facet.offset": "5",
-						"facet.pivot": "cat",
-						"facet.pivot.mincount": "10",
-						"facet.prefix": "prefix",
-						"facet.query": "query",
-						"facet.sort": "field desc"
-					}
-        		);
+				var validationJSON = {
+					facet: 'true',
+					wt: 'json',
+					debugQuery: 'true',
+					q: 'title_t:test',
+					"facet.field": 'author',
+					"facet.limit": "100",
+					"facet.method": "fc",
+					"facet.mincount": "10",
+					"facet.missing": "true",
+					"facet.offset": "5",
+					"facet.prefix": "prefix",
+					"facet.query": "query",
+					"facet.sort": "field desc"
+				};
+
+				if(client.options.solrVersion && versionUtils.version(client.options.solrVersion) >= versionUtils.Solr4_0) {
+					validationJSON["facet.pivot"] = "cat";
+					validationJSON["facet.pivot.mincount"] = "10";
+				}
+
+				assert.deepEqual(data.responseHeader.params, validationJSON);
 				assert.equal(data.debug.QParser,'LuceneQParser');
 				done();
 			});

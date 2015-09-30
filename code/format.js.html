@@ -123,7 +123,7 @@ exports.toISOString = toISOString;</code></pre>
       if( obj instanceof Date ) obj = toISOString(obj);
    }
    return obj;
-};</code></pre>
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -143,7 +143,7 @@ Sidesteps <code>Invalid Date</code> objects by returning <code>null</code> inste
           <div class="code-wrap">
             <pre class="source prettyprint"><code>function toISOString(date) {
    return (date &amp;&amp; !isNaN(date.getTime())) ? date.toISOString() : null;
-};</code></pre>
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -201,7 +201,7 @@ Sidesteps <code>Invalid Date</code> objects by returning <code>null</code> inste
       return stringifyPrimitive(name) + eq +
              stringifyPrimitive(obj);
   }
-};</code></pre>
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -232,7 +232,7 @@ Sidesteps <code>Invalid Date</code> objects by returning <code>null</code> inste
     default:
       return '';
   }
-};</code></pre>
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">

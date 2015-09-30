@@ -46,7 +46,7 @@ describe('Client#createQuery()',function(){
 								,	"range": [{
 											"field": "range_field"
 										,	"start": 0.0
-										,	"end": "1000"	
+										,	"end": "1000"
 										,	"gap": "+1DAY"
 										,	"hardened": true
 										,	"other": "all"
@@ -54,9 +54,9 @@ describe('Client#createQuery()',function(){
 										}]
 								,	"pivot": {
 											"fields": ["cat", "popularity"]
-										,	"mincount": 10	
+										,	"mincount": 10
 										}
-								}
+								};
 			var query = client.createQuery()
 				.facet(facetOptions)
 				.q({ title_t : 'test'})
@@ -75,6 +75,11 @@ describe('Client#createQuery()',function(){
 						"facet.mincount": "10",
 						"facet.missing": "true",
 						"facet.offset": "5",
+						"facet.pivot": [
+							"cat",
+							"popularity"
+						],
+						"facet.pivot.mincount": "10",
 						"facet.prefix": "prefix",
 						"facet.query": "query",
 						"facet.sort": "field desc"
@@ -110,7 +115,7 @@ describe('Client#createQuery()',function(){
 								,	"range": {
 											"field": "range_field"
 										,	"start": 0.0
-										,	"end": "1000"	
+										,	"end": "1000"
 										,	"gap": "+1DAY"
 										,	"hardened": true
 										,	"other": "all"
@@ -118,9 +123,9 @@ describe('Client#createQuery()',function(){
 										}
 								,	"pivot": {
 											"fields": "cat"
-										,	"mincount": 10	
+										,	"mincount": 10
 										}
-								}
+								};
 			var query = client.createQuery()
 				.facet(facetOptions)
 				.q({ title_t : 'test'})
@@ -139,6 +144,8 @@ describe('Client#createQuery()',function(){
 						"facet.mincount": "10",
 						"facet.missing": "true",
 						"facet.offset": "5",
+						"facet.pivot": "cat",
+						"facet.pivot.mincount": "10",
 						"facet.prefix": "prefix",
 						"facet.query": "query",
 						"facet.sort": "field desc"

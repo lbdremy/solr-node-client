@@ -15,8 +15,8 @@ npm install solr-client
 
 ###Latest (0.6.0)
 
-- Solr5 Query-Highlighting support through StandardHighlighter (@LukeTavern) (https://github.com/lbdremy/solr-node-client/pull/144)
-- Experimental support for SolrCloud collections administration (@LukeTavern) (https://github.com/lbdremy/solr-node-client/issues/138)
+- Solr5 Query-Highlighting support through StandardHighlighter (@LukeTaverne) (https://github.com/lbdremy/solr-node-client/pull/144)
+- Experimental support for SolrCloud collections administration (@LukeTaverne) (https://github.com/lbdremy/solr-node-client/issues/138)
 - Support for large query through POST via configurable automatic switch (@kfitzgerald) (https://github.com/lbdremy/solr-node-client/pull/129) 
 - Set Default Field (query.df()) (@cbarrientos-ias) (https://github.com/lbdremy/solr-node-client/pull/137)
 - Adds support for facet.pivot and facet.pivot.mincount (@nicolasembleton) (https://github.com/lbdremy/solr-node-client/issues/146)

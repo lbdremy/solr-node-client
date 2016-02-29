@@ -18,7 +18,7 @@ var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,
 
 describe('Client#createQuery',function(){
   describe('#terms(options), callback)',function(){
-    it('should create a Terms query',function(done){
+    it('should create a Terms query and termsSearch',function(done){
       var options = {
             "on": true
           , "fl": 'title'
@@ -33,7 +33,7 @@ describe('Client#createQuery',function(){
         .terms(options)
         .debugQuery();
 
-      client.search(query, function(err, data){
+      client.termsSearch(query, function(err, data){
         sassert.ok(err,data);
         assert.isObject(data.terms);
         done();

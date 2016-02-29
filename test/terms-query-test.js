@@ -33,7 +33,7 @@ describe('Client#createQuery',function(){
         .terms(options)
         .debugQuery();
 
-      client.terms(query, function(err, data){
+      client.search(query, function(err, data){
         sassert.ok(err,data);
         assert.isObject(data.terms);
         done();

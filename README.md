@@ -5,11 +5,15 @@
 
 [![NPM](https://nodei.co/npm/solr-client.png?downloads=true&stars=true)](https://nodei.co/npm/solr-client/)
 
-##Install
 
+## Installation
+
+This module is distributed using [npm](https://npmjs.com) which comes bundled with [node](https://nodejs.org):
+
+```console
+npm install --save solr-client
 ```
-npm install solr-client
-```
+
 
 ##Features
 

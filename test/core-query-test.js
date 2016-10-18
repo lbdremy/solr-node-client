@@ -108,6 +108,19 @@ describe('Client#createQuery',function(){
 			});
 		});
 
+		it('escapes fl parameter',function(done){
+			// if it's not escaped correctly, SOLR returns HTTP 400
+			var query = client.createQuery()
+				.q("*:*").fl(['id', 'score', 'found_words:exists(query({!v=\'name:word\'}))']);
+			client.search(query, function(err, data){
+				sassert.ok(err, data);
+				assert.deepEqual(data.responseHeader.params,
+						{ q: "*:*", fl: "id,score,found_words:exists(query({!v='name:word'}))"
+            , wt: 'json'});
+				done();
+			});
+		});
+
 		it('query with deftype',function(done){
 
 			var query = client.createQuery()

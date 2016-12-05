@@ -13,7 +13,17 @@ npm install solr-client
 
 ##Features
 
-###Latest (0.6.0)
+###Latest (0.7.0)
+
+- `*` escaping fl parameter in Query (@Grzegorz Wilk)
+- feat(Error): Properly capture and proxy status codes and error messages (@jsvk)
+- Do not send the parameters in the url when using POST. (@voidberg)
+- Add support for ipv6 when resolving host/hostname (@fractalf)
+- URI encode the cursorMark value before use (@flawless2011)
+- Only check options.pivot.mincount if options.pivot is available. (@saschagoebel)
+- test(rangeFilter): test array of multiple fields and obj of single field (@luketaverne)
+
+###0.6.0
 
 - Solr5 Query-Highlighting support through StandardHighlighter (@LukeTavern) (https://github.com/lbdremy/solr-node-client/pull/144)
 - Experimental support for SolrCloud collections administration (@LukeTavern) (https://github.com/lbdremy/solr-node-client/issues/138)

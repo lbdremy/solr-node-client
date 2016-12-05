@@ -95,13 +95,15 @@
             <pre class="source prettyprint"><code>var http = require('http'),
    https = require('https'),
    Query = require('./query'),
+   Collection = require('./collection'),
    querystring = require('querystring'),
    format = require('./utils/format'),
    SolrError = require('./error/solr-error'),
    JSONStream = require('JSONStream'),
    duplexer = require('duplexer'),
    request = require('request'),
-   JSONbig = require('json-bigint');</code></pre>
+   JSONbig = require('json-bigint'),
+   versionUtils = require('./utils/version');</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -130,13 +132,14 @@
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; http.Agent &#125;</span><span class="name">[agent]</span><span class="desc">- HTTP Agent which is used for pooling sockets used in HTTP(s) client requests</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[secure=false]</span><span class="desc">- if true HTTPS will be used instead of HTTP</span></div>
             <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">[bigint=false]</span><span class="desc">- if true JSONbig serializer/deserializer will be used instead</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; solrVersion &#125;</span><span class="name">['3.2',</span><span class="desc">'4.0', '5.0', '5.1'], check lib/utils/version.js for full reference</span></div>
             <div class="tag"><span class="type">&#64;return</span><span class="desc">Client</span></div>
             <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
           </div>
           <div class="description"></div>
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
-            <pre class="source prettyprint"><code>function createClient(host, port, core, path, agent, secure, bigint){
+            <pre class="source prettyprint"><code>function createClient(host, port, core, path, agent, secure, bigint, solrVersion){
   var options = (typeof host === 'object') ? host : {
       host : host,
       port : port,
@@ -144,7 +147,8 @@
       path : path,
       agent : agent,
       secure : secure,
-      bigint : bigint
+      bigint : bigint,
+      solrVersion: solrVersion
    };
   return new Client(options);
 }</code></pre>
@@ -179,13 +183,16 @@
       path : options.path || '/solr',
       agent : options.agent,
       secure : options.secure || false,
-      bigint : options.bigint || false
+      bigint : options.bigint || false,
+      get_max_request_entity_size: options.get_max_request_entity_size || false,
+      solrVersion: options.solrVersion || versionUtils.Solr3_2
    };
 
    // Default paths of all request handlers
-   this.UPDATE_JSON_HANDLER = 'update/json';
+   this.UPDATE_JSON_HANDLER = (versionUtils.version(this.options.solrVersion) &gt;= versionUtils.Solr4_0) ? 'update' : 'update/json';
    this.UPDATE_HANDLER = 'update';
    this.SELECT_HANDLER = 'select';
+   this.COLLECTIONS_HANDLER = 'admin/collections';
    this.ADMIN_PING_HANDLER = 'admin/ping';
    this.REAL_TIME_GET_HANDLER = 'get';
    this.SPELL_HANDLER = 'spell';
@@ -211,7 +218,7 @@
    var self = this;
    this.options.authorization = 'Basic ' + new Buffer(username + ':' + password).toString('base64');
    return self;
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -231,7 +238,7 @@
    var self = this;
    delete this.options.authorization;
    return self;
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -260,7 +267,7 @@
    docs = format.dateISOify(docs); // format `Date` object into string understable for Solr as a date.
    docs = Array.isArray(docs) ? docs : [docs];
    return this.update(docs,options,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -291,7 +298,7 @@
    query.ids = ids.join(',');
 
    return this.get(this.REAL_TIME_GET_HANDLER,query,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -329,7 +336,7 @@
    var handler = this.UPDATE_HANDLER + '/' + options.format.toLowerCase();
    var query = querystring.stringify(options.parameters);
    return this.get(handler,query,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -368,9 +375,8 @@
    var jsonStreamStringify = JSONStream.stringify();
    var postRequest = request(optionsRequest);
    jsonStreamStringify.pipe(postRequest);
-   var duplex = duplexer(jsonStreamStringify,postRequest);
-   return duplex ;
-}</code></pre>
+   return duplexer(jsonStreamStringify,postRequest);
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -399,7 +405,7 @@
       commit : options || {}
    };
    return this.update(data,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -420,7 +426,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.prepareCommit = function(callback){
    return this.update({},{ prepareCommit : true},callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -441,7 +447,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.softCommit = function(callback){
    return this.update({},{ softCommit : true},callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -475,7 +481,7 @@
       }
    };
    return this.update(data,options,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -507,7 +513,7 @@
 
    var query = field + ':[' + start + ' TO ' + stop + ']';
    return this.deleteByQuery(query,options,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -539,7 +545,7 @@
       }
    };
    return this.update(data,options,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -571,7 +577,7 @@
       }
    };
    return this.update(data,options,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -593,7 +599,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.deleteAll = function(options,callback){
    return this.deleteByQuery('*:*',options,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -622,7 +628,7 @@
       optimize : options || {}
    };
    return this.update(data,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -646,7 +652,7 @@
       rollback : {}
    };
    return this.update(data,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -691,7 +697,7 @@
       agent : this.options.agent
    };
    return postJSON(params,callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -713,7 +719,29 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.search = function(query,callback){
    return this.get(this.SELECT_HANDLER, query, callback);
-}</code></pre>
+};</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Execute an Admin Collections task on <code>collection</code></p>
+</div>
+          <div class="ctx">
+            <h3>Client.prototype.executeCollection()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Query | Object | String &#125;</span><span class="name">collection</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">http.ClientRequest</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Client.prototype.executeCollection = function(collection,callback){
+   return this.get(this.COLLECTIONS_HANDLER, collection, callback);
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -734,7 +762,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.searchAll = function(callback){
    return this.search('q=*', callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -757,7 +785,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.spell = function(query,callback){
    return this.get(this.SPELL_HANDLER, query, callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -783,6 +811,69 @@
    var parameters = '';
    if(typeof query === 'function'){
       callback = query;
+   }else if((query instanceof Query) || (query instanceof Collection)){
+      parameters += query.build();
+   }else if(typeof query === 'object'){
+      parameters += querystring.stringify(query);
+   }else if(typeof query === 'string'){
+      parameters += query;
+   }
+   var pathArray;
+
+   if(handler != 'admin/collections'){
+      pathArray = [this.options.path,this.options.core,handler + '?' + parameters + '&amp;wt=json'];
+   } else {
+      pathArray = [this.options.path,handler + '?' + parameters + '&amp;wt=json'];
+   }
+
+   var fullPath = pathArray.filter(function(element){
+                 return element;
+              }).join('/');
+
+   var approxUrlLength = 10 + Buffer.byteLength(this.options.host) + (this.options.port+&quot;&quot;).length + Buffer.byteLength(fullPath); // Buffer (10) accounts for protocol and special characters like ://, port colon, and initial slash etc
+
+   if (this.options.get_max_request_entity_size === false || approxUrlLength &lt;= this.options.get_max_request_entity_size) {
+      var params = {
+         host: this.options.host,
+         port: this.options.port,
+         fullPath: fullPath,
+         secure: this.options.secure,
+         bigint: this.options.bigint,
+         authorization: this.options.authorization,
+         agent: this.options.agent
+      };
+      return getJSON(params, callback);
+   } else {
+
+      // Funnel this through a POST because it's too large
+      return this.post(handler, query, callback);
+   }
+};</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Send an arbitrary HTTP POST request to Solr on the specified <code>handler</code> (as Solr like to call it i.e path)</p>
+</div>
+          <div class="ctx">
+            <h3>Client.prototype.post()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">handler</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Query | Object | String &#125;</span><span class="name">[query]</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">http.ClientRequest</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Client.prototype.post = function(handler,query,callback){
+
+   var parameters = '';
+   if(typeof query === 'function'){
+      callback = query;
    }else if(query instanceof Query){
       parameters += query.build();
    }else if(typeof query === 'object'){
@@ -791,27 +882,53 @@
       parameters += query;
    }
 
-   var fullPath = [this.options.path,this.options.core,handler + '?' + parameters + '&amp;wt=json']
-                              .filter(function(element){
-                                 return element;
-                              })
-                              .join('/');
+   var pathArray;
+
+   if(handler != 'admin/collections'){
+      pathArray = [this.options.path,this.options.core,handler + '?' + parameters + '&amp;wt=json'];
+   } else {
+      pathArray = [this.options.path,handler + '?' + parameters + '&amp;wt=json'];
+   }
+
+   var fullPath = pathArray.filter(function(element){
+                 return element;
+              }).join('/');
 
    var params = {
       host : this.options.host,
       port : this.options.port,
       fullPath : fullPath,
+      params : parameters,
       secure : this.options.secure,
       bigint : this.options.bigint,
       authorization : this.options.authorization,
       agent : this.options.agent
    };
-   return getJSON(params,callback);
-}</code></pre>
+   return postForm(params,callback);
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
           <div class="header"><p>Create an instance of <code>Query</code></p>
+</div>
+          <div class="ctx">
+            <h3>Client.prototype.query()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Query</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Client.prototype.query = function(){
+   return new Query(this.options);
+}</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Create an instance of <code>Query</code>
+NOTE: This method will be deprecated in the v0.6 release. Please use <code>Client.query()</code> instead.</p>
 </div>
           <div class="ctx">
             <h3>Client.prototype.createQuery()</h3>
@@ -824,8 +941,26 @@
           <div class="view-source">Hide Source</div>
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.createQuery = function(){
-   return new Query();
+   return new Query(this.options);
 }</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>Create an instance of <code>Collection</code></p>
+</div>
+          <div class="ctx">
+            <h3>Client.prototype.collection()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">Collection</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">public</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>Client.prototype.collection = function(){
+   return new Collection();
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -858,7 +993,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>Client.prototype.ping = function(callback){
    return this.get(this.ADMIN_PING_HANDLER, callback);
-}</code></pre>
+};</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -877,7 +1012,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>function pickProtocol(secure){
    return secure ? https : http;
-};</code></pre>
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -896,7 +1031,7 @@
           <div class="code-wrap">
             <pre class="source prettyprint"><code>function pickJSON(bigint){
    return bigint ? JSONbig : JSON;
-};</code></pre>
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -958,7 +1093,69 @@
    request.end();
 
    return request;
-};</code></pre>
+}</code></pre>
+          </div>
+        </article>
+        <article class="codeblock">
+          <div class="header"><p>HTTP POST request. Send update commands to the Solr server using form encoding (e.g. search)</p>
+</div>
+          <div class="ctx">
+            <h3>postForm()</h3>
+          </div>
+          <div class="tags">
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">params</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.host</span><span class="desc">- IP address or host address of the Solr server</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Number | String &#125;</span><span class="name">params.port</span><span class="desc">- port of the Solr server</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.core</span><span class="desc">- name of the Solr core requested</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.authorization</span><span class="desc">- value of the authorization header</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.fullPath</span><span class="desc">- full path of the request</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; String &#125;</span><span class="name">params.params</span><span class="desc">- form params</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">params.secure</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Boolean &#125;</span><span class="name">params.bigint</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; http.Agent &#125;</span><span class="name">[params.agent]</span><span class="desc">-</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Function &#125;</span><span class="name">callback(err,obj)</span><span class="desc">- a function executed when the Solr server responds or an error occurs</span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Error &#125;</span><span class="name">callback().err</span><span class="desc"></span></div>
+            <div class="tag"><span class="type">&#64;param</span><span class="types">&#123; Object &#125;</span><span class="name">callback().obj</span><span class="desc">- JSON response sent by the Solr server deserialized</span></div>
+            <div class="tag"><span class="type">&#64;return</span><span class="desc">http.ClientRequest</span></div>
+            <div class="tag"><span class="type">&#64;api</span><span class="visibility">private</span></div>
+          </div>
+          <div class="description"></div>
+          <div class="view-source">Hide Source</div>
+          <div class="code-wrap">
+            <pre class="source prettyprint"><code>function postForm(params,callback){
+   var headers = {
+      'content-type' : 'application/x-www-form-urlencoded; charset=utf-8',
+      'content-length':  Buffer.byteLength(params.params),
+      'accept' : 'application/json; charset=utf-8'
+   };
+   if(params.authorization){
+      headers['authorization'] = params.authorization;
+   }
+   var options = {
+      host : params.host,
+      port : params.port,
+      method : 'POST',
+      headers : headers,
+      path : params.fullPath
+   };
+
+   if(params.agent !== undefined){
+      options.agent = params.agent;
+   }
+
+   var request = pickProtocol(params.secure).request(options);
+
+   request.on('response', handleJSONResponse(request, params.bigint, callback));
+
+   request.on('error',function onError(err){
+      if (callback) callback(err,null);
+   });
+
+   request.write(params.params);
+   request.end();
+
+   return request;
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -1016,7 +1213,7 @@
       if (callback) callback(err,null);
    });
    return request;
-};</code></pre>
+}</code></pre>
           </div>
         </article>
         <article class="codeblock">
@@ -1062,7 +1259,7 @@
          }
       });
    };
-};</code></pre>
+}</code></pre>
           </div>
         </article>
       </div>

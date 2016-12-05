@@ -36,13 +36,13 @@ describe('Client#createQuery',function(){
 		it('query sorted',function(done){
 
 			var query = client.createQuery()
-				.q("*:*").sort({ "author":"asc", "category":"desc"}).debugQuery();
+				.q("*:*").sort({ "author":"asc" }).debugQuery(); // remove ', "category":"desc"' as newer solr doesn't support
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
-            , q: "*:*", sort: "author asc,category desc"
+            , q: "*:*", "sort": "author asc"
             , wt: 'json'});
 				done();
 			});
@@ -149,6 +149,21 @@ describe('Client#createQuery',function(){
 						{ debugQuery: "true"
             , q: "author:ali remy marc", "q.op": "OR"
             , wt: 'json'});
+				done();
+			});
+		});
+
+		it('df - Default field query',function(done){
+
+			var query = client.createQuery()
+				.q("ali").df("author").debugQuery();
+
+			client.search(query, function(err, data){
+				sassert.ok(err, data);
+				assert.deepEqual(data.responseHeader.params,
+					{ debugQuery: "true"
+						, q: "ali", "df": "author"
+						, wt: 'json'});
 				done();
 			});
 		});

@@ -18,19 +18,19 @@ var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,
 
 describe('Client#createQuery',function(){
   describe('#stats(options), callback)',function(){
-    it('should create a StatsComponent query and termsSearch',function(done){
+    it('should create a StatsComponent query',function(done){
       var options = {
-            "field": "id"
-          , "key": "id_key"
-          , "min": true
-          , "max": true
-          , "sum": true
-          , "count": true
-          , "missing": true
-          , "sumOfSquares": true
-          , "mean": true
-          , "stddev": true
-          , "percentiles": [3,4.5,10,23,99]
+            "field": "price", 
+            "key": "price_key", 
+            "min": true, 
+            "max": true, 
+            "sum": true, 
+            "count": true, 
+            "missing": true, 
+            "sumOfSquares": true, 
+            "mean": true, 
+            "stddev": true, 
+            "percentiles": [3,4.5,10,23,99]
         };
 
       var query = client.createQuery()
@@ -39,7 +39,7 @@ describe('Client#createQuery',function(){
 
       client.search(query, function(err, data){
         sassert.ok(err,data);
-        assert.isObject(data.stats.stats_fields.id_key);
+        assert.isObject(data.stats.stats_fields.price_key);
         done();
       });
     });

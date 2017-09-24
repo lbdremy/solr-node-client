@@ -39,7 +39,7 @@ describe('Client#createQuery',function(){
 
       client.search(query, function(err, data){
         sassert.ok(err,data);
-        assert.isObject(obj.stats.stats_fields.id_key);
+        assert.isObject(data.stats.stats_fields.id_key);
         done();
       });
     });

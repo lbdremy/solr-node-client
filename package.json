@@ -21,15 +21,15 @@
     "duplexer": "~0.1.1",
     "httperror": "~0.2.3",
     "json-bigint": "~0.1.4",
-    "request": "~2.81.0"
+    "request": "^2.88.0"
   },
   "devDependencies": {
-    "chai": "~3.3.0",
     "bignumber.js": "~2.0.7",
-    "minimist": "~1.2.0",
+    "chai": "~3.3.0",
     "csv-stream": "~0.1.3",
-    "mocha": "~2.3.3",
-    "figc": "~0.0.3"
+    "figc": "~0.0.3",
+    "minimist": "~1.2.0",
+    "mocha": "^5.2.0"
   },
   "scripts": {
     "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js && ./node_modules/mocha/bin/mocha -R spec test/*-test.js --client.bigint=true",

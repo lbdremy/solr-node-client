@@ -11,7 +11,7 @@ var field = 'id';
 var query = '*'; // Everything !Dangerous!
 
 // Delete every documents
-client.delete('id','*',function(err,obj){
+client.delete(field,query,function(err,obj){
    if(err){
    	console.log(err);
    }else{

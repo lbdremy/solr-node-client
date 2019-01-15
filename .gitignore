@@ -1,3 +1,9 @@
+old_test
 node_modules
 output.txt
 docs/out
+coverage.html
+lib-cov
+report
+*.swp
+.idea

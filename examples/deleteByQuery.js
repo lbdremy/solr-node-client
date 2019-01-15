@@ -2,7 +2,7 @@
  * Delete documents matching the given `query`
  */
 
-// Use `var solr = require('solr-client')` in your code 
+// Use `var solr = require('solr-client')` in your code
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
@@ -12,8 +12,10 @@ client.deleteByQuery(query,function(err,obj){
    if(err){
    	console.log(err);
    }else{
-   	console.log(obj);	
+   	console.log(obj);
    }
+   // Do not forget to commit now
+   // to see the changes
 });
 
-client.commit();
+

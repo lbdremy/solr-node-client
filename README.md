@@ -177,18 +177,13 @@ Post an issue if you have troubles migrating to v0.3.0.
 
 ## Test
 
+Tests are executed against a Solr instance in a Docker container. In order to execute them, run:
+
 ```
+npm run solr:start
 npm test
 ```
 
-Tests are executed against a running SOLR instance, so you might want to:
-- install the schema.xml and solrconfig.xml expected by the tests. You find these in test/materials
-- make sure your solr instance is running
-- specify non-default connection params to your server in test/config.json You can inject these also on the command line through:
-
-```
-mocha test/*-test.js --client.core=test-node-client --client.port=8080
-```
 
 ## Test coverage
 

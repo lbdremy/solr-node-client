@@ -32,7 +32,7 @@
     "mocha": "^5.2.0"
   },
   "scripts": {
-    "test": "mocha -R spec test/*-test.js && ./node_modules/mocha/bin/mocha -R spec test/*-test.js --client.bigint=true",
+    "test": "mocha -R spec test/*-test.js && mocha -R spec test/*-test.js",
     "test-cov": "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
     "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*",
     "solr:start": "docker-compose -f docker-compose.yml up --build -d solr",

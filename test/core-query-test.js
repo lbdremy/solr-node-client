@@ -1,10 +1,10 @@
 // Testing support http://wiki.apache.org/solr/CommonQueryParameters
+require('mocha');
 /**
  * Modules dependencies
  */
 
-const mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
@@ -13,9 +13,7 @@ const mocha = require('mocha'),
 // Test suite
 const config = figc(__dirname + '/config.json');
 const client = solr.createClient(config.client);
-const basePath = [config.client.path, config.client.core]
-  .join('/')
-  .replace(/\/$/, '');
+[config.client.path, config.client.core].join('/').replace(/\/$/, '');
 const { createSchemaField } = require('./utils/schemaHelper');
 
 describe('Client#createQuery', function () {
@@ -46,7 +44,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query sorted', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('*:*')
         .sort({ author: 'asc' })
@@ -65,7 +63,12 @@ describe('Client#createQuery', function () {
     });
 
     it('query with paging', function (done) {
-      var query = client.createQuery().q('*:*').start(21).rows(20).debugQuery();
+      const query = client
+        .createQuery()
+        .q('*:*')
+        .start(21)
+        .rows(20)
+        .debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -81,7 +84,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query paged with cursorMark', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('*:*')
         .start(0)
@@ -104,7 +107,11 @@ describe('Client#createQuery', function () {
     });
 
     it('custom parameter setting - allows for any Filterquery(fq)', function (done) {
-      var query = client.createQuery().q('*:*').set('fq=sqrt(id)').debugQuery();
+      const query = client
+        .createQuery()
+        .q('*:*')
+        .set('fq=sqrt(id)')
+        .debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -119,7 +126,7 @@ describe('Client#createQuery', function () {
     });
 
     it('listing fields with fl', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('*:*')
         .fl(['id', 'title*', 'score'])
@@ -139,7 +146,7 @@ describe('Client#createQuery', function () {
 
     it('escapes fl parameter', function (done) {
       // if it's not escaped correctly, SOLR returns HTTP 400
-      var query = client
+      const query = client
         .createQuery()
         .q('*:*')
         .fl(['id', 'score', "found_words:exists(query({!v='name:word'}))"]);
@@ -155,7 +162,11 @@ describe('Client#createQuery', function () {
     });
 
     it('query with deftype', function (done) {
-      var query = client.createQuery().q('*:*').defType('lucene').debugQuery();
+      const query = client
+        .createQuery()
+        .q('*:*')
+        .defType('lucene')
+        .debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -170,7 +181,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query with time-allowed', function (done) {
-      var query = client.createQuery().q('*:*').timeout(1000).debugQuery();
+      const query = client.createQuery().q('*:*').timeout(1000).debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -185,7 +196,7 @@ describe('Client#createQuery', function () {
     });
 
     it('q.op - Default query-operator', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('author:ali remy marc')
         .qop('OR')
@@ -204,7 +215,7 @@ describe('Client#createQuery', function () {
     });
 
     it('df - Default field query', function (done) {
-      var query = client.createQuery().q('ali').df('author').debugQuery();
+      const query = client.createQuery().q('ali').df('author').debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -219,7 +230,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query with range-filter', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('*:*')
         .rangeFilter({ field: 'id', start: 100, end: 200 })
@@ -238,7 +249,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query with match-filter', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('*:*')
         .matchFilter('id', '19700506.173.85')

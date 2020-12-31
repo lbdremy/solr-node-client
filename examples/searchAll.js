@@ -1,12 +1,10 @@
 /**
  * Search all documents
- * 	tiny shorhand command for commodity
+ *    tiny shorhand command for commodity
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 
 client.searchAll(function (err, obj) {
   if (err) {

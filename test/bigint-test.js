@@ -4,9 +4,7 @@
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
@@ -14,28 +12,26 @@ var mocha = require('mocha'),
   BigNumber = require('bignumber.js');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
-  .join('/')
-  .replace(/\/$/, '');
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+[config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 // Force Solr client to handle big integers
 client.options.bigint = true;
 
 describe('Client', function () {
   describe('Checking support for longs passed down in json formats to/from solr', function () {
-    var _version_ = new BigNumber(-1); // -1 ensures document doesn't exist prior to test
-    var id = 'RandomId-' + Math.floor(Math.random() * 1000000);
-    var big = '9007199254740993'; // deliberately kept as a string to avoid truncate before test
-    var small = '97'; // same showing string-conversion is not at fault
-    var doc = {
+    let _version_ = new BigNumber(-1); // -1 ensures document doesn't exist prior to test
+    const id = 'RandomId-' + Math.floor(Math.random() * 1000000);
+    const big = '9007199254740993'; // deliberately kept as a string to avoid truncate before test
+    const small = '97'; // same showing string-conversion is not at fault
+    const doc = {
       id: id,
       small_l: small,
       big_l: big,
       _version_: _version_.toString(),
     };
-    var add_options = {
+    const add_options = {
       commit: true, // force commit, not really needed, but it ensures full process cycle at solr side
       versions: true, // feedback optimistic concurrency info for later update
     };
@@ -69,7 +65,7 @@ describe('Client', function () {
           1,
           'Added document should be retrieved in real-time get.'
         );
-        var retrieved = data.response.docs[0];
+        const retrieved = data.response.docs[0];
         assert.equal(
           retrieved.id,
           id,
@@ -100,7 +96,7 @@ describe('Client', function () {
 
       client.add(doc, add_options, function (err, data) {
         sassert.ok(err, data);
-        var prev_version_ = _version_;
+        const prev_version_ = _version_;
         _version_ = new BigNumber(data.adds[1].toString());
         assert.ok(
           _version_.comparedTo(prev_version_) == 1,

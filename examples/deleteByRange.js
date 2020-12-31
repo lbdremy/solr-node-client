@@ -1,15 +1,13 @@
 /**
  * Delete set of documents based on a range
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
+const client = solr.createClient();
 
-var client = solr.createClient();
-
-var startOffset = new Date();
+const startOffset = new Date();
 start.setDate(start.getDate() - 1);
-var stopOffset = new Date();
+const stopOffset = new Date();
 client.deleteByRange(
   'last_update',
   startOffset,

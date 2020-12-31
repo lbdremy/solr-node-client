@@ -1,11 +1,9 @@
 /**
  * Ping the Solr server
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 
 client.ping(function (err, obj) {
   if (err) {

@@ -1,27 +1,24 @@
+require('../sassert');
+require('mocha');
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../../lib-cov' : '../../lib',
-  solr = require(libPath + '/solr'),
-  sassert = require('../sassert');
+  solr = require(libPath + '/solr');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
-  .join('/')
-  .replace(/\/$/, '');
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+[config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 //TO-DO: add test for collectionConfigName, routerField, async, createNodeSet, createNodeSetShuffle
 describe('Collection', function () {
   describe('#createCollection', function () {
     it('should create one new Collection', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.create({
         name: 'solrCollectionTest1',
         numShards: 2,
@@ -37,7 +34,7 @@ describe('Collection', function () {
     });
     it('should create one new Collection, one shard, one replicas', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.create({
         name: 'solrCollectionTest2',
         routerName: 'compositeId',
@@ -53,7 +50,7 @@ describe('Collection', function () {
     });
     it('should create one new Collection, with implicit router', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.create({
         name: 'solrCollectionTest3',
         routerName: 'implicit',
@@ -70,7 +67,7 @@ describe('Collection', function () {
   describe('#reloadCollection', function () {
     it('should reload collection solrCollectionTest1', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.reload('solrCollectionTest1');
       client.executeCollection(collection, function (err, data) {
         //sassert.ok(err,data);
@@ -84,7 +81,7 @@ describe('Collection', function () {
     //params `ranges, splitKey not included
     it('should split shard shard1 in solrCollectionTest1', function (done) {
       this.timeout(20000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.splitShard({
         collection: 'solrCollectionTest1',
         shard: 'shard1',
@@ -100,7 +97,7 @@ describe('Collection', function () {
   describe('#deleteShard', function () {
     it('should delete shard shard1 in collection solrCollectionTest3', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.deleteShard({
         collection: 'solrCollectionTest3',
         shard: 'shard1',
@@ -116,7 +113,7 @@ describe('Collection', function () {
   describe('#createShard', function () {
     it('should create shard shardtest1 in collection solrCollectionTest3', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.createShard({
         collection: 'solrCollectionTest3',
         shard: 'shard1',
@@ -132,7 +129,7 @@ describe('Collection', function () {
   describe('#createAlias', function () {
     it('should create alias testAlias for collections solrCollectionTest1, solrCollectionTest2', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.createAlias({
         name: 'testAlias',
         collections: ['solrCollectionTest1', 'solrCollectionTest2'],
@@ -148,7 +145,7 @@ describe('Collection', function () {
   describe('#deleteAlias', function () {
     it('should delete alias testAlias', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.deleteAlias('testAlias');
       client.executeCollection(collection, function (err, data) {
         //sassert.ok(err,data);
@@ -161,7 +158,7 @@ describe('Collection', function () {
   describe('#addReplica', function () {
     it('should add replica to shard2 of solrCollectionTest2', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.addReplica({
         collection: 'solrCollectionTest2',
         shard: 'shard1',
@@ -177,7 +174,7 @@ describe('Collection', function () {
   describe('#deleteReplica', function () {
     it('should delete replica core_node2 from shard1 from solrCollectionTest2', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.deleteReplica({
         collection: 'solrCollectionTest2',
         shard: 'shard1',
@@ -195,7 +192,7 @@ describe('Collection', function () {
   describe('#clusterProp', function () {
     it('should set autoAddReplicas to true', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.clusterProp({
         name: 'autoAddReplicas',
         val: 'true',
@@ -208,7 +205,7 @@ describe('Collection', function () {
     });
     it('should unset autoAddReplicas', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.clusterProp({
         name: 'autoAddReplicas',
         val: null,
@@ -224,7 +221,7 @@ describe('Collection', function () {
   describe('#migrate', function () {
     it('should migrate documents from solrCollectionTest2 to solrCollectionTest1', function (done) {
       this.timeout(20000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.migrate({
         collection: 'solrCollectionTest2',
         targetCollection: 'solrCollectionTest1',
@@ -243,7 +240,7 @@ describe('Collection', function () {
   describe('#overseerStatus', function () {
     it('should return information with status OK', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.overseerStatus();
       client.executeCollection(collection, function (err, data) {
         //sassert.ok(err,data);
@@ -256,7 +253,7 @@ describe('Collection', function () {
   describe('#clusterStatus', function () {
     it('should return information with status OK', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.clusterStatus();
       client.executeCollection(collection, function (err, data) {
         //sassert.ok(err,data);
@@ -269,7 +266,7 @@ describe('Collection', function () {
   describe('#list', function () {
     it('should return information with status OK', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.list();
       client.executeCollection(collection, function (err, data) {
         //sassert.ok(err,data);
@@ -282,7 +279,7 @@ describe('Collection', function () {
   describe('#addReplicaProp', function () {
     it('should add preferredLeader property to replica core_node1 on collection solrCollectionTest2', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.addReplicaProp({
         collection: 'solrCollectionTest2',
         shard: 'shard1',
@@ -302,7 +299,7 @@ describe('Collection', function () {
   describe('#deleteReplicaProp', function () {
     it('should delete preferredLeader property on replica core_node1 on collection solrCollectionTest2', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.deleteReplicaProp({
         collection: 'solrCollectionTest2',
         shard: 'shard1',
@@ -321,7 +318,7 @@ describe('Collection', function () {
   describe('#balanceShardUnique', function () {
     it('should balance the property on collection solrCollectionTest2', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.balanceShardUnique({
         collection: 'solrCollectionTest2',
         property: 'preferredLeader',
@@ -338,7 +335,7 @@ describe('Collection', function () {
   describe('#rebalanceLeaders', function () {
     it('should balance leaders on a collection', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.rebalanceLeaders({
         collection: 'solrCollectionTest2',
         maxAtOnce: 100,
@@ -355,7 +352,7 @@ describe('Collection', function () {
   describe('#deleteCollection', function () {
     it('should delete collection solrCollectionTest1', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.delete('solrCollectionTest1');
       client.executeCollection(collection, function (err, data) {
         //sassert.ok(err,data);
@@ -377,7 +374,7 @@ describe('Collection', function () {
 */
     it('should delete collection solrCollectionTest3', function (done) {
       this.timeout(10000);
-      var collection = client.collection();
+      const collection = client.collection();
       collection.delete('solrCollectionTest3');
       client.executeCollection(collection, function (err, data) {
         //sassert.ok(err,data);

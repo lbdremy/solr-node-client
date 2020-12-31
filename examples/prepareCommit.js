@@ -1,11 +1,9 @@
 /**
  * Prepare commit
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 
 client.prepareCommit(function (err, res) {
   if (err) {

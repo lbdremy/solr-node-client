@@ -1,26 +1,21 @@
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
-  SolrError = require(libPath + '/error/solr-error'),
   sassert = require('./sassert');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
-  .join('/')
-  .replace(/\/$/, '');
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+[config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery()', function () {
   describe('.hl(options)', function () {
     it('should create a highlighted query with most options specified (strings only).', function (done) {
-      var highlightOptions = {
+      const highlightOptions = {
         on: true,
         q: 'query',
         qparser: 'lucene',
@@ -43,7 +38,7 @@ describe('Client#createQuery()', function () {
         preserveMulti: false,
         payloads: false,
       };
-      var query = client
+      const query = client
         .createQuery()
         .hl(highlightOptions)
         .q({ title_t: 'test' })
@@ -81,7 +76,7 @@ describe('Client#createQuery()', function () {
       });
     });
     it('should create a highlighted query with a second set of options specified.', function (done) {
-      var highlightOptions = {
+      const highlightOptions = {
         on: true,
         q: { id: 'id', title_t: 'title' },
         fl: ['author', 'title_t'],
@@ -90,7 +85,7 @@ describe('Client#createQuery()', function () {
         regexPattern: '',
         regexMaxAnalyzedChars: 10000,
       };
-      var query = client
+      const query = client
         .createQuery()
         .hl(highlightOptions)
         .q({ title_t: 'test' })

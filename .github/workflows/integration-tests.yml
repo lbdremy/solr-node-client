@@ -38,6 +38,14 @@ jobs:
       - name: Run npm install
         run: npm install
 
+      - name: Print Solr logs
+        run: npm run solr:current:logs
+
+      - name: Sleep for 3 seconds
+        uses: kibertoad/wait-action@1.0.0
+        with:
+          time: '3s'
+
       - name: Run Tests
         run: npm run test:current
         env:

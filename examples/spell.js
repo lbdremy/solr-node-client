@@ -6,12 +6,11 @@
 var solr = require('./../lib/solr');
 
 var client = solr.createClient();
-var query = client.createQuery()
-				  .q('laptop');
-client.spell(query,function(err,obj){
-   if(err){
-   	console.log(err);
-   }else{
-   	console.log(obj);
-   }
+var query = client.createQuery().q('laptop');
+client.spell(query, function (err, obj) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(obj);
+  }
 });

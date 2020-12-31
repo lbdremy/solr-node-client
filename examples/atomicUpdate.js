@@ -12,32 +12,32 @@ var client = solr.createClient();
 client.autoCommit = true;
 
 var doc = {
-     id : 12357,
-     title_t : "Original Title"
-     small_l : 12,
-     description_t : "Some Description"
- }
+  id: 12357,
+  title_t: 'Original Title',
+  small_l: 12,
+  description_t: 'Some Description',
+};
 
 // Add documents
-client.add(doc,function(err,obj){
-   if(err){
-      console.log(err);
-   }else{
-      console.log(obj);
-   }
+client.add(doc, function (err, obj) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(obj);
+  }
 });
 
 var updateDoc = {
-     id : 12357,
-     title_t : { "set" : "Modified Title" },
-     small_l : { "inc" : 2 }
- }
+  id: 12357,
+  title_t: { set: 'Modified Title' },
+  small_l: { inc: 2 },
+};
 
 // Add documents
-client.atomicUpdate(doc,function(err,obj){
-   if(err){
-      console.log(err);
-   }else{
-      console.log(obj);
-   }
+client.atomicUpdate(doc, function (err, obj) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(obj);
+  }
 });

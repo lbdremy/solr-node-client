@@ -7,10 +7,10 @@ var solr = require('./../lib/solr');
 
 var client = solr.createClient();
 
-client.prepareCommit(function(err,res){
-   if(err){
-   	console.log(err);
-   }else{
-   	console.log(res);
-   }
+client.prepareCommit(function (err, res) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(res);
+  }
 });

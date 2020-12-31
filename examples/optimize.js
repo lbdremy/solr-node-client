@@ -25,15 +25,15 @@ var client = solr.createClient();
 
 // You can use  `optimize` with or without options.
 var options = {
-   waitFlush: false ,
-   waitSearcher: true
+  waitFlush: false,
+  waitSearcher: true,
 };
-client.optimize(options,function(err,obj){
-   if(err){
-   	console.log(err);
-   }else{
-   	console.log(obj);
-   }
+client.optimize(options, function (err, obj) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(obj);
+  }
 });
 // waitFlush : default is true
 // waitSearcher : default is true

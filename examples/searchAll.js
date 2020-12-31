@@ -8,10 +8,10 @@ var solr = require('./../lib/solr');
 
 var client = solr.createClient();
 
-client.searchAll(function(err,obj){
-	if(err){
-   	console.log(err);
-   }else{
-   	console.log(obj);
-   }
+client.searchAll(function (err, obj) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(obj);
+  }
 });

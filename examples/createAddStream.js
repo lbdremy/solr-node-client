@@ -15,19 +15,21 @@ client.autoCommit = true;
 
 // Save all the products in the csv file into the database
 fs.createReadStream(__dirname + '/materials/products.csv')
-    .on('error',onerror)
-    .pipe(csv.createStream({
-        escapeChar : '"', // default is an empty string
-        enclosedChar : '"' // default is an empty string
-    }))
-    .on('error',onerror)
-    .pipe(client.createAddStream())
-    .on('error',onerror)
-    .on('end',function(){
-        console.log('all products are in the database now.');
-    });
+  .on('error', onerror)
+  .pipe(
+    csv.createStream({
+      escapeChar: '"', // default is an empty string
+      enclosedChar: '"', // default is an empty string
+    })
+  )
+  .on('error', onerror)
+  .pipe(client.createAddStream())
+  .on('error', onerror)
+  .on('end', function () {
+    console.log('all products are in the database now.');
+  });
 
 // Error handler
-function onerror(err){
-    console.error(err);
+function onerror(err) {
+  console.error(err);
 }

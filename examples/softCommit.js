@@ -7,10 +7,10 @@ var solr = require('./../lib/solr');
 
 var client = solr.createClient();
 
-client.softCommit(function(err,res){
-   if(err){
-   	console.log(err);
-   }else{
-   	console.log(res);
-   }
+client.softCommit(function (err, res) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(res);
+  }
 });

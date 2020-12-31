@@ -32,15 +32,16 @@
     "mocha": "^5.2.0"
   },
   "scripts": {
-    "test": "mocha -R spec test/*-test.js && mocha -R spec test/*-test.js",
     "test-cov": "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
     "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*",
     "solr:current:start": "docker-compose -f docker-compose-solr-8.yml up --build -d solr8",
     "solr:current:stop": "docker-compose -f docker-compose-solr-8.yml down",
     "solr:current:logs": "docker logs solr-node-client_solr8_1",
+    "test:current": "mocha -R spec test/*-test.js && mocha -R spec test/*-test.js",
     "solr:legacy:start": "docker-compose -f docker-compose-solr-5.yml up --build -d solr5",
     "solr:legacy:stop": "docker-compose -f docker-compose-solr-5.yml down",
-    "solr:legacy:logs": "docker logs solr-node-client_solr5_1"
+    "solr:legacy:logs": "docker logs solr-node-client_solr5_1",
+    "test:legacy": "mocha -R spec test/*-test.js --client.port=8984 && mocha -R spec test/*-test.js --client.port=8984"
   },
   "license": "MIT"
 }

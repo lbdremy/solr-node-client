@@ -3,7 +3,7 @@ services:
   solr5:
     image: solr:5
     ports:
-      - "8983:8983"
+      - "8984:8983"
     volumes:
       - data:/var/solr
     command:

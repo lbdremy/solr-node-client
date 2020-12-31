@@ -1,5 +1,4 @@
 // Testing support http://wiki.apache.org/solr/TermsComponent
-require('mocha');
 /**
  * Modules dependencies
  */

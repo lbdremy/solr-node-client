@@ -1,5 +1,4 @@
 // Testing support for Real-Time GET -- https://wiki.apache.org/solr/RealTimeGet
-require('mocha');
 /**
  * Modules dependencies
  */

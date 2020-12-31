@@ -1,5 +1,4 @@
 // Testing support http://wiki.apache.org/solr/MoreLikeThis
-require('mocha');
 /**
  * Modules dependencies
  */

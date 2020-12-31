@@ -1,4 +1,3 @@
-require('mocha');
 /**
  * Modules dependencies
  */

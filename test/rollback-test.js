@@ -1,5 +1,3 @@
-require('chai').assert;
-require('mocha');
 /**
  * Modules dependencies
  */

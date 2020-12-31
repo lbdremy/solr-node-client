@@ -1,5 +1,3 @@
-require(libPath + '/error/solr-error');
-require('mocha');
 /**
  * Modules dependencies
  */

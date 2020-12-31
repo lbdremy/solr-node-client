@@ -1,6 +1,3 @@
-require(libPath + '/error/solr-error');
-require('chai').assert;
-require('mocha');
 /**
  * Modules dependencies
  */

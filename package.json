@@ -56,5 +56,20 @@
     "solr:legacy:logs": "docker logs solr-node-client_solr5_1",
     "test:legacy": "mocha -R spec test/*-test.js --client.port=8984 && mocha -R spec test/*-test.js --client.port=8984"
   },
+  "files": [
+    "lib/*",
+    "CHANGELOG.md",
+    "CONTRIBUTIONS.md",
+    "LICENSE",
+    "main.js",
+    "README.md",
+    "UPGRADING.md"
+  ],
+  "keywords": [
+    "solr",
+    "client",
+    "query",
+    "sdk"
+  ],
   "license": "MIT"
 }

@@ -9,7 +9,7 @@ const assert = require('chai').assert,
 // Macros to assert Solr response
 
 exports.ok = function(err, data){
-	assert.isNull(err, `Response was not ok: ${err.message}`);
+	assert.isNull(err, `Response was not ok: ${err && err.message}`);
 	assert.isObject(data);
 	assert.equal(data.responseHeader.status,0);
 }

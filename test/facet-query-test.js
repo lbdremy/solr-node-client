@@ -1,13 +1,10 @@
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
-  SolrError = require(libPath + '/error/solr-error'),
   sassert = require('./sassert'),
   versionUtils = require('./../lib/utils/version');
 
@@ -16,17 +13,15 @@ var mocha = require('mocha'),
 // and http://wiki.apache.org/solr/HierarchicalFaceting
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
-  .join('/')
-  .replace(/\/$/, '');
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+[config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery()', function () {
   describe('.facet(options)', function () {
     it('should create a facet for multiple date/range fields', function (done) {
-      var date = new Date().getTime();
-      var facetOptions = {
+      const date = new Date().getTime();
+      const facetOptions = {
         on: true,
         query: 'query',
         field: 'author',
@@ -64,14 +59,14 @@ describe('Client#createQuery()', function () {
           mincount: 10,
         },
       };
-      var query = client
+      const query = client
         .createQuery()
         .facet(facetOptions)
         .q({ title_t: 'test' })
         .debugQuery();
       client.search(query, function (err, data) {
         sassert.ok(err, data);
-        var validationJSON = {
+        const validationJSON = {
           facet: 'true',
           wt: 'json',
           debugQuery: 'true',
@@ -102,8 +97,8 @@ describe('Client#createQuery()', function () {
     });
 
     it('should create a facet for single date/range fields', function (done) {
-      var date = new Date().getTime();
-      var facetOptions = {
+      const date = new Date().getTime();
+      const facetOptions = {
         on: true,
         query: 'query',
         field: 'author',
@@ -137,14 +132,14 @@ describe('Client#createQuery()', function () {
           mincount: 10,
         },
       };
-      var query = client
+      const query = client
         .createQuery()
         .facet(facetOptions)
         .q({ title_t: 'test' })
         .debugQuery();
       client.search(query, function (err, data) {
         sassert.ok(err, data);
-        var validationJSON = {
+        const validationJSON = {
           facet: 'true',
           wt: 'json',
           debugQuery: 'true',

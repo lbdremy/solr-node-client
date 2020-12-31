@@ -1,29 +1,28 @@
+require(libPath + '/error/solr-error');
+require('mocha');
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
-  SolrError = require(libPath + '/error/solr-error'),
   sassert = require('./sassert'),
   versionUtils = require('./../lib/utils/version');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+const basePath = [config.client.path, config.client.core]
   .join('/')
   .replace(/\/$/, '');
 
 describe('Client', function () {
   describe('#deleteByRange(field,start,stop,callback)', function () {
     it('should delete all documents between `start` and `stop` on the field `fied`', function (done) {
-      var field = 'last_update_dt';
-      var start = new Date();
-      var stop = new Date();
+      const field = 'last_update_dt';
+      const start = new Date();
+      const stop = new Date();
       stop.setDate(stop.getDate() - 1);
       client.deleteByRange(field, start, stop, function (err, data) {
         sassert.ok(err, data);
@@ -33,11 +32,11 @@ describe('Client', function () {
   });
   describe('#deleteByRange(field,start,stop,{softCommit : true },callback)', function () {
     it('should delete all documents between `start` and `stop` on the field `fied` with the soft commit option enabled', function (done) {
-      var field = 'last_update_dt';
-      var start = new Date();
-      var stop = new Date();
+      const field = 'last_update_dt';
+      const start = new Date();
+      const stop = new Date();
       stop.setDate(stop.getDate() - 1);
-      var request = client.deleteByRange(
+      const request = client.deleteByRange(
         field,
         start,
         stop,
@@ -66,11 +65,11 @@ describe('Client', function () {
   });
   describe('#deleteByRange(field,start,stop,{commitWithin : 10000},callback)', function () {
     it('should delete all documents between `start` and `stop` on the field `fied` and commit changes within 10s', function (done) {
-      var field = 'last_update_dt';
-      var start = new Date();
-      var stop = new Date();
+      const field = 'last_update_dt';
+      const start = new Date();
+      const stop = new Date();
       stop.setDate(stop.getDate() - 1);
-      var request = client.deleteByRange(
+      const request = client.deleteByRange(
         field,
         start,
         stop,
@@ -99,11 +98,11 @@ describe('Client', function () {
   });
   describe('#deleteByRange(field,start,stop,{commit : true},callback)', function () {
     it('should delete all documents between `start` and `stop` on the field `fied` and hard commit changes', function (done) {
-      var field = 'last_update_dt';
-      var start = new Date();
-      var stop = new Date();
+      const field = 'last_update_dt';
+      const start = new Date();
+      const stop = new Date();
       stop.setDate(stop.getDate() - 1);
-      var request = client.deleteByRange(
+      const request = client.deleteByRange(
         field,
         start,
         stop,

@@ -2,8 +2,7 @@
  * Modules dependencies
  */
 
-const mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
@@ -32,7 +31,7 @@ describe('Client', function () {
   });
   describe('#add([{},{},...],callback)', function () {
     it('should add all documents in the array', function (done) {
-      var docs = [
+      const docs = [
         {
           id: 2,
           title_t: 'title2',
@@ -50,7 +49,7 @@ describe('Client', function () {
   });
   describe('#add(docs,{ softCommit : true},callback)', function () {
     it('should add all documents with the softCommit option enabled', function (done) {
-      var docs = [
+      const docs = [
         {
           id: 4,
           title_t: 'title4',
@@ -60,10 +59,10 @@ describe('Client', function () {
           title_t: 'title5',
         },
       ];
-      var options = {
+      const options = {
         softCommit: true,
       };
-      var request = client.add(docs, options, function (err, data) {
+      const request = client.add(docs, options, function (err, data) {
         if (
           client.options.solrVersion &&
           versionUtils.version(client.options.solrVersion) >=
@@ -86,7 +85,7 @@ describe('Client', function () {
   });
   describe('#add(docs,{ commit : true},callback)', function () {
     it('should add all documents with the commit option enabled', function (done) {
-      var docs = [
+      const docs = [
         {
           id: 6,
           title_t: 'title6',
@@ -96,10 +95,10 @@ describe('Client', function () {
           title_t: 'title7',
         },
       ];
-      var options = {
+      const options = {
         commit: true,
       };
-      var request = client.add(docs, options, function (err, data) {
+      const request = client.add(docs, options, function (err, data) {
         if (
           client.options.solrVersion &&
           versionUtils.version(client.options.solrVersion) >=
@@ -119,7 +118,7 @@ describe('Client', function () {
   });
   describe('#add(docs,{ commitWithin : 10000},callback)', function () {
     it('should add all documents with the commitWithin option set to 10s', function (done) {
-      var docs = [
+      const docs = [
         {
           id: 8,
           title_t: 'title8',
@@ -129,10 +128,10 @@ describe('Client', function () {
           title_t: 'title9',
         },
       ];
-      var options = {
+      const options = {
         commitWithin: 10000,
       };
-      var request = client.add(docs, options, function (err, data) {
+      const request = client.add(docs, options, function (err, data) {
         if (
           client.options.solrVersion &&
           versionUtils.version(client.options.solrVersion) >=

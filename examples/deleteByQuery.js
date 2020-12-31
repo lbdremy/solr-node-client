@@ -1,13 +1,11 @@
 /**
  * Delete documents matching the given `query`
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
+const client = solr.createClient();
 
-var client = solr.createClient();
-
-var query = 'title_t:Hello';
+const query = 'title_t:Hello';
 client.deleteByQuery(query, function (err, obj) {
   if (err) {
     console.log(err);

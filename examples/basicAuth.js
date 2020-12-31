@@ -1,18 +1,16 @@
 /**
  * Use Basic HTTP Authentication to communicate with the Solr server.
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 client.basicAuth('admin', 'passtest');
 
 // Use `client.unauth` if you want to remove credentials previously set.
 //client.unauth();
 
 // You can now search documents using your credentials
-var query = client
+const query = client
   .createQuery()
   .q('laptop')
   .dismax()

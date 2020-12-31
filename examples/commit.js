@@ -1,11 +1,9 @@
 /**
  * Commit your changes in the index with or without options.
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 
 // Commit your changes without options
 client.commit(function (err, res) {
@@ -14,7 +12,7 @@ client.commit(function (err, res) {
 });
 
 // Commit your changes with `waitSearcher` options.
-var options = {
+const options = {
   waitSearcher: false,
 };
 client.commit(options, function (err, obj) {

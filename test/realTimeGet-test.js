@@ -1,30 +1,27 @@
 // Testing support for Real-Time GET -- https://wiki.apache.org/solr/RealTimeGet
+require('mocha');
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
   sassert = require('./sassert');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
-  .join('/')
-  .replace(/\/$/, '');
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+[config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client', function () {
   describe('Real-time-get functionality', function () {
-    var id = 'RandomId-' + Math.floor(Math.random() * 1000000);
-    var title = 'the title for ' + id;
-    var doc = { id: id, title_t: title };
+    const id = 'RandomId-' + Math.floor(Math.random() * 1000000);
+    const title = 'the title for ' + id;
+    const doc = { id: id, title_t: title };
 
     it('should add one document with a long period before committing', function (done) {
-      var options = {
+      const options = {
         commitWithin: 10000000, //extremely long, giving us plenty of time to test
       };
       client.add(doc, options, function (err, data) {
@@ -34,7 +31,7 @@ describe('Client', function () {
     });
 
     it('should not find that document in the index yet', function (done) {
-      var query = client.createQuery();
+      const query = client.createQuery();
       query.matchFilter('id', id);
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -56,7 +53,7 @@ describe('Client', function () {
           1,
           'Added document should be retrieved in real-time get.'
         );
-        var retrieved = data.response.docs[0];
+        const retrieved = data.response.docs[0];
         assert.equal(
           retrieved.id,
           id,

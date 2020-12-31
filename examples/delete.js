@@ -1,14 +1,12 @@
 /**
  * Delete set of documents
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
+const client = solr.createClient();
 
-var client = solr.createClient();
-
-var field = 'id';
-var query = '*'; // Everything !Dangerous!
+const field = 'id';
+const query = '*'; // Everything !Dangerous!
 
 // Delete every documents
 client.delete(field, query, function (err, obj) {

@@ -1,14 +1,12 @@
 /**
  * Search documents with DisMax query or Lucene query
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 
 // DixMax query
-var query = client
+const query = client
   .createQuery()
   .q('laptop')
   .dismax()
@@ -25,7 +23,7 @@ client.search(query, function (err, obj) {
 });
 
 // Lucene query
-var query2 = client.createQuery().q({ title_t: 'laptop' }).start(0).rows(10);
+const query2 = client.createQuery().q({ title_t: 'laptop' }).start(0).rows(10);
 client.search(query2, function (err, obj) {
   if (err) {
     console.log(err);
@@ -43,7 +41,7 @@ client.search(query2, function (err, obj) {
  * @see <http://wiki.apache.org/solr/ExtendedDisMax>
  * @author Tolga Akyüz <me@tolgaakyuz.org>
  */
-var query3 = client
+const query3 = client
   .createQuery()
   .q('laptop')
   .edismax()
@@ -71,7 +69,7 @@ client.search(query3, function (err, obj) {
  * @see <http://wiki.apache.org/solr/ExtendedDisMax#boost_.28Boost_Function.2C_multiplicative.29>
  * @author Tolga Akyüz <me@tolgaakyuz.org>
  */
-var query4 = client
+const query4 = client
   .createQuery()
   .q('laptop')
   .edismax()

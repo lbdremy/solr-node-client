@@ -34,6 +34,9 @@
     "bignumber.js": "~2.0.7",
     "chai": "^4.2.0",
     "csv-stream": "~0.1.3",
+    "eslint": "^7.16.0",
+    "eslint-config-prettier": "^7.1.0",
+    "eslint-plugin-prettier": "^3.3.0",
     "figc": "~0.0.3",
     "minimist": "~1.2.0",
     "mocha": "^5.2.0",
@@ -41,6 +44,7 @@
   },
   "scripts": {
     "format": "prettier --write \"{lib,examples,test}/**/*.js\"",
+    "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\"",
     "test-cov": "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
     "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*",
     "solr:current:start": "docker-compose -f docker-compose-solr-8.yml up --build -d solr8",

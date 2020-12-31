@@ -1,27 +1,26 @@
+require(libPath + '/error/solr-error');
+require('mocha');
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
-  SolrError = require(libPath + '/error/solr-error'),
   sassert = require('./sassert'),
   versionUtils = require('./../lib/utils/version');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+const basePath = [config.client.path, config.client.core]
   .join('/')
   .replace(/\/$/, '');
 
 describe('Client', function () {
   describe('#softCommit(callback)', function () {
     it('should do a soft commit', function (done) {
-      var request = client.softCommit(function (err, data) {
+      const request = client.softCommit(function (err, data) {
         sassert.ok(err, data);
         if (
           client.options.solrVersion &&

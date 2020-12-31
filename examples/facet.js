@@ -1,8 +1,8 @@
 // Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
+const solr = require('./../lib/solr');
 
-var client = solr.createClient();
-var query = client.createQuery().q('*:*').rows(0).facet({
+const client = solr.createClient();
+const query = client.createQuery().q('*:*').rows(0).facet({
   field: 'title',
   prefix: 'Ipa',
   query: 'title:Ipad',

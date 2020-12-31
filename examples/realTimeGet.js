@@ -1,14 +1,12 @@
 /**
  * Use real-time get feature
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 
 // Retrieve only one document
-var id = 3973873;
+const id = 3973873;
 client.realTimeGet(id, function (err, obj) {
   if (err) {
     console.log(err);
@@ -18,7 +16,7 @@ client.realTimeGet(id, function (err, obj) {
 });
 
 // Retrieve multiple documents
-var ids = [4874847, 9449747, 949448];
+const ids = [4874847, 9449747, 949448];
 client.realTimeGet(ids, function (err, obj) {
   if (err) {
     console.log(err);

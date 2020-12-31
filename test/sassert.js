@@ -14,6 +14,6 @@ exports.ok = function (err, data) {
   assert.equal(data.responseHeader.status, 0);
 };
 
-exports.nok = function (err, data) {
+exports.nok = function (err) {
   assert.instanceOf(err, SolrError);
 };

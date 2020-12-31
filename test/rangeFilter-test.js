@@ -1,26 +1,23 @@
 //Testing support http://wiki.apache.org/solr/FieldCollapsing?highlight=%28field%29%7C%28collapsing%29
+require('mocha');
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
   sassert = require('./sassert');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
-  .join('/')
-  .replace(/\/$/, '');
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+[config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery', function () {
   describe('.rangeFilter(array)', function () {
     it('should filter a query using an array of multiple fields', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('test')
         .rangeFilter([
@@ -41,7 +38,7 @@ describe('Client#createQuery', function () {
 
   describe('.rangeFilter(start, end)', function () {
     it('should filter a query using a range', function (done) {
-      var query = client
+      const query = client
         .createQuery()
         .q('test')
         .rangeFilter({ field: 'id', start: 100, end: 200 });

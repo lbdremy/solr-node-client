@@ -1,19 +1,17 @@
 /**
  * Add documents into the Solr index.
  */
-
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
+const solr = require('./../lib/solr');
 
 // Create a client
-var client = solr.createClient();
+const client = solr.createClient();
 
 // Switch on "auto commit", by default `client.autoCommit = false`
 client.autoCommit = true;
 
-var docs = [];
-for (var i = 0; i <= 10; i++) {
-  var doc = {
+const docs = [];
+for (let i = 0; i <= 10; i++) {
+  const doc = {
     id: 12345 + i,
     title_t: 'Title ' + i,
     description_t: 'Text' + i + 'Alice',

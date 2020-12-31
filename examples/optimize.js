@@ -17,14 +17,12 @@
 /**
  * Optimize Solr index.
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
+const client = solr.createClient();
 
 // You can use  `optimize` with or without options.
-var options = {
+const options = {
   waitFlush: false,
   waitSearcher: true,
 };

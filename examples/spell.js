@@ -1,12 +1,10 @@
 /**
  * Search documents matching the `query` with Spellcheck enabled.
  */
+const solr = require('./../lib/solr');
 
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-
-var client = solr.createClient();
-var query = client.createQuery().q('laptop');
+const client = solr.createClient();
+const query = client.createQuery().q('laptop');
 client.spell(query, function (err, obj) {
   if (err) {
     console.log(err);

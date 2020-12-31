@@ -1,18 +1,17 @@
+require('mocha');
 /**
  * Modules dependencies
  */
-
-var mocha = require('mocha'),
-  figc = require('figc'),
+const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr'),
   sassert = require('./sassert');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core]
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+const basePath = [config.client.path, config.client.core]
   .join('/')
   .replace(/\/$/, '');
 
@@ -28,7 +27,7 @@ describe('Client', function () {
   });
   describe('#get("update/json", "softCommit=true", callback)', function () {
     it('should soft commit', function (done) {
-      var request = client.get(
+      const request = client.get(
         'update/json',
         'softCommit=true',
         function (err, data) {
@@ -44,7 +43,7 @@ describe('Client', function () {
   });
   describe('#get("select", query, callback)', function () {
     it('should find documents describe in the `query` instance of `Query`', function (done) {
-      var query = client.createQuery().q({
+      const query = client.createQuery().q({
         title_t: 'test',
       });
       client.get('select', query, function (err, data) {

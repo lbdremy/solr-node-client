@@ -1,14 +1,12 @@
 /**
  * Create a stream to add documents into the database
  */
-
-// Use `var solr = require('solr-client')` in your code
-var solr = require('./../lib/solr');
-var csv = require('csv-stream');
-var fs = require('fs');
+const solr = require('./../lib/solr');
+const csv = require('csv-stream');
+const fs = require('fs');
 
 // Create a client
-var client = solr.createClient();
+const client = solr.createClient();
 
 // Switch on "auto commit", by default `client.autoCommit = false`
 client.autoCommit = true;

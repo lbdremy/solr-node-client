@@ -28,7 +28,7 @@ function createSchemaField(solr, fieldName, fieldType, cb) {
               // so some fields already exist in Solr 8. Hence if that's the case, we just ignore that.
               console.warn(err.message)
           }
-          cb(result);
+          cb(undefined, result);
       }
   )
 }

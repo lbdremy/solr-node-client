@@ -14,11 +14,11 @@ npm install --save solr-client
 
 ## Documentation
 
-Solr versions 4-8 are supported
+Solr versions 4-8 are supported.
 
-See the [official documentation](http://lbdremy.github.com/solr-node-client/)
-If you are upgrading from an earlier version, please see the [migration guide](https://github.com/lbdremy/solr-node-client/blob/master/UPGRADING.md)
-You can also check out the [changelog](https://github.com/lbdremy/solr-node-client/blob/master/CHANGELOG.md)
+* See the [official documentation](http://lbdremy.github.com/solr-node-client/) for more details.
+* If you are upgrading from an earlier version, please see the [migration guide](https://github.com/lbdremy/solr-node-client/blob/master/UPGRADING.md).
+* You can also check out the [changelog](https://github.com/lbdremy/solr-node-client/blob/master/CHANGELOG.md).
 
 ## Usage
 

@@ -23,23 +23,23 @@
     "node": ">= 0.4.7"
   },
   "dependencies": {
-    "bluebird": "^3.5.0",
-    "duplexer": "~0.1.1",
-    "httperror": "~0.2.3",
-    "json-bigint": "~0.1.4",
-    "JSONStream": "~1.0.6",
-    "request": "^2.88.0"
+    "bluebird": "^3.7.2",
+    "duplexer": "^0.1.2",
+    "httperror": "^0.2.3",
+    "json-bigint": "^1.0.0",
+    "JSONStream": "^1.3.5",
+    "request": "^2.88.2"
   },
   "devDependencies": {
-    "bignumber.js": "~2.0.7",
+    "bignumber.js": "^9.0.1",
     "chai": "^4.2.0",
-    "csv-stream": "~0.1.3",
+    "csv-stream": "^0.2.0",
     "eslint": "^7.16.0",
     "eslint-config-prettier": "^7.1.0",
     "eslint-plugin-prettier": "^3.3.0",
-    "figc": "~0.0.3",
-    "minimist": "~1.2.0",
-    "mocha": "^5.2.0",
+    "figc": "^0.0.3",
+    "minimist": "^1.2.5",
+    "mocha": "^8.2.1",
     "prettier": "^2.2.1"
   },
   "scripts": {
@@ -50,7 +50,7 @@
     "solr:current:start": "docker-compose -f docker-compose-solr-8.yml up --build -d solr8",
     "solr:current:stop": "docker-compose -f docker-compose-solr-8.yml down",
     "solr:current:logs": "docker logs solr-node-client_solr8_1",
-    "test:current": "mocha -R spec test/*-test.js && mocha -R spec test/*-test.js",
+    "test:current": "mocha -R spec test/*-test.js --client.bigint=true",
     "solr:legacy:start": "docker-compose -f docker-compose-solr-5.yml up --build -d solr5",
     "solr:legacy:stop": "docker-compose -f docker-compose-solr-5.yml down",
     "solr:legacy:logs": "docker logs solr-node-client_solr5_1",

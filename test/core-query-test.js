@@ -3,7 +3,7 @@
  * Modules dependencies
  */
 
-var mocha = require('mocha'),
+const mocha = require('mocha'),
 	figc = require('figc'),
 	assert = require('chai').assert,
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
@@ -11,21 +11,29 @@ var mocha = require('mocha'),
 	sassert = require('./sassert');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+const basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
+const { createSchemaField } = require('./utils/schemaHelper')
 
 describe('Client#createQuery',function(){
 
+	before((cb) => {
+		createSchemaField(client, "title", "text_general", () => {
+			createSchemaField(client, "name", "text_general", () => {
+				createSchemaField(client, "author", "text_general", cb)
+			})
+		})
+	})
+
 	describe('query() with various query options',function(){
 		it('basic query with multiple fields',function(done){
-
-			var query = client.createQuery()
+			const query = client.createQuery()
 				.q({"title": "name", "author" : "me"}).debugQuery();
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "title:name AND author:me"
             , wt: 'json'});
@@ -55,7 +63,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", start: "21", rows: "20"
             , wt: 'json'});
@@ -70,7 +78,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", start: "0", sort: "id asc", cursorMark: "*"
             , wt: 'json'});
@@ -85,7 +93,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", fq: "sqrt(id)"
             , wt: 'json'});
@@ -100,7 +108,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", fl: "id,title*,score"
             , wt: 'json'});
@@ -128,7 +136,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", defType: "lucene"
             , wt: 'json'});
@@ -143,7 +151,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", timeAllowed: "1000"
             , wt: 'json'});
@@ -158,7 +166,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "author:ali remy marc", "q.op": "OR"
             , wt: 'json'});
@@ -188,7 +196,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", fq:"id:[100 TO 200]"
             , wt: 'json'});
@@ -203,7 +211,7 @@ describe('Client#createQuery',function(){
 
 			client.search(query, function(err, data){
 				sassert.ok(err, data);
-				assert.deepEqual(data.responseHeader.params, 
+				assert.deepEqual(data.responseHeader.params,
 						{ debugQuery: "true"
             , q: "*:*", fq:"id:19700506.173.85"
             , wt: 'json'});

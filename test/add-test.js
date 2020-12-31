@@ -2,7 +2,7 @@
  * Modules dependencies
  */
 
-var mocha = require('mocha'),
+const mocha = require('mocha'),
 	figc = require('figc'),
 	assert = require('chai').assert,
 	libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
@@ -11,14 +11,14 @@ var mocha = require('mocha'),
 	versionUtils = require('./../lib/utils/version');
 
 // Test suite
-var config = figc(__dirname + '/config.json');
-var client = solr.createClient(config.client);
-var basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
+const config = figc(__dirname + '/config.json');
+const client = solr.createClient(config.client);
+const basePath = [config.client.path, config.client.core].join('/').replace(/\/$/,"");
 
 describe('Client',function(){
 	describe('#add({ id : 1, title_t : "title"},callback)',function(){
 		it('should add one document',function(done){
-			var doc = {
+			const doc = {
 				id : 1,
 				title_t : 'title1'
 			};

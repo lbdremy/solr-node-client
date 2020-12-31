@@ -1,8 +1,6 @@
 # solr-client - a node.js solr client
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lbdremy/solr-node-client?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-
-[![](https://secure.travis-ci.org/lbdremy/solr-node-client.png)](http://travis-ci.org/#!/lbdremy/solr-node-client) [![Dependency Status](https://gemnasium.com/lbdremy/solr-node-client.png)](https://gemnasium.com/lbdremy/solr-node-client)
-
+![](https://github.com/lbdremy/solr-node-client/workflows/CI/badge.svg)
 [![NPM](https://nodei.co/npm/solr-client.png?downloads=true&stars=true)](https://nodei.co/npm/solr-client/)
 
 
@@ -179,18 +177,13 @@ Post an issue if you have troubles migrating to v0.3.0.
 
 ## Test
 
+Tests are executed against a Solr instance in a Docker container. In order to execute them, run:
+
 ```
+npm run solr:start
 npm test
 ```
 
-Tests are executed against a running SOLR instance, so you might want to:
-- install the schema.xml and solrconfig.xml expected by the tests. You find these in test/materials
-- make sure your solr instance is running
-- specifiy non-default connection params to your server in test/config.json You can inject these also on the command line through:
-
-```
-mocha test/*-test.js --client.core=test-node-client --client.port=8080
-```
 
 ## Test coverage
 

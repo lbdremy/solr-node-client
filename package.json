@@ -16,11 +16,11 @@
     "node": ">= 0.4.7"
   },
   "dependencies": {
-    "JSONStream": "~1.0.6",
     "bluebird": "^3.5.0",
     "duplexer": "~0.1.1",
     "httperror": "~0.2.3",
     "json-bigint": "~0.1.4",
+    "JSONStream": "~1.0.6",
     "request": "^2.88.0"
   },
   "devDependencies": {
@@ -32,9 +32,12 @@
     "mocha": "^5.2.0"
   },
   "scripts": {
-    "test": "./node_modules/mocha/bin/mocha -R spec test/*-test.js && ./node_modules/mocha/bin/mocha -R spec test/*-test.js --client.bigint=true",
+    "test": "mocha -R spec test/*-test.js && mocha -R spec test/*-test.js",
     "test-cov": "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
-    "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*"
+    "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*",
+    "solr:start": "docker-compose -f docker-compose.yml up --build -d solr",
+    "solr:stop": "docker-compose -f docker-compose.yml down",
+    "solr:logs": "docker logs solr-node-client_solr_1"
   },
   "license": "MIT"
 }

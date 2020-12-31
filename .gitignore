@@ -7,3 +7,4 @@ lib-cov
 report
 *.swp
 .idea
+package-lock.json

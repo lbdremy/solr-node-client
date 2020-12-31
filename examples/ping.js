@@ -7,10 +7,10 @@ var solr = require('./../lib/solr');
 
 var client = solr.createClient();
 
-client.ping(function(err,obj){
-   if(err){
-   	console.log(err);
-   }else{
-   	console.log(obj);
-   }
+client.ping(function (err, obj) {
+  if (err) {
+    console.log(err);
+  } else {
+    console.log(obj);
+  }
 });

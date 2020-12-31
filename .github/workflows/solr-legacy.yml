@@ -1,6 +1,6 @@
 ---
 
-name: CI
+name: Solr Legacy (5)
 
 on:
   push:
@@ -13,12 +13,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: CI
+    name: Solr Legacy
 
     strategy:
       fail-fast: false
       matrix:
-        node-version: [15.x, 14.x, 12.x, 10.x]
+        node-version: [14.x]
 
     steps:
       - name: Checkout Repository
@@ -33,23 +33,15 @@ jobs:
           node-version: ${{ matrix.node-version }}
 
       - name: Start Solr
-        run: npm run solr:current:start
+        run: npm run solr:legacy:start
 
       - name: Run npm install
         run: npm install
 
-      - name: Print Solr logs
-        run: npm run solr:current:logs
-
-      - name: Sleep for 3 seconds
-        uses: kibertoad/wait-action@1.0.0
-        with:
-          time: '3s'
-
       - name: Run Tests
-        run: npm run test:current
+        run: npm run test:legacy
         env:
           CI: true
 
       - name: Stop Solr
-        run: npm run solr:current:stop
+        run: npm run solr:legacy:stop

@@ -22,7 +22,14 @@ function createSchemaField(solr, fieldName, fieldType, cb) {
     };
   postJSON(
       params,
-      cb
+      (err, result) => {
+          if (err) {
+              // ToDo We should handle this in a more robust way in the future, but there is a difference between default setup in Solr 5 and Solr 8,
+              // so some fields already exist in Solr 8. Hence if that's the case, we just ignore that.
+              console.warn(err.message)
+          }
+          cb(undefined, result);
+      }
   )
 }
 

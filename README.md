@@ -177,12 +177,14 @@ Post an issue if you have troubles migrating to v0.3.0.
 
 ## Test
 
-Tests are executed against a Solr instance in a Docker container. In order to execute them, run:
+Tests are executed against a Solr instance in a Docker container. In order to execute them on latest supported Solr version, run:
 
 ```
-npm run solr:start
+npm run solr:current:start
 npm test
 ```
+
+If you want to execute them on oldest Solr version supported, run `solr:legacy:start` instead.
 
 
 ## Test coverage

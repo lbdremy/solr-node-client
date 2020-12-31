@@ -1,6 +1,18 @@
 # Changelog
 
-## Latest (0.6.0)
+## 0.8.0
+
+- Update dependencies, resolving security vulnerabilities (@kibertoad) (https://github.com/lbdremy/solr-node-client/pull/239)
+- Support for Result Grouping / Field Collapsing (@leejessy) (https://github.com/lbdremy/solr-node-client/pull/84)
+- Ability to inject options to the request (@MennoTammens) (https://github.com/lbdremy/solr-node-client/pull/223)
+- Port should be optional (@nbaosullivan) (https://github.com/lbdremy/solr-node-client/pull/227)
+- Improve documentation structure (@kibertoad) (https://github.com/lbdremy/solr-node-client/pull/235)
+- Test with multiple Solr versions (@kibertoad) (https://github.com/lbdremy/solr-node-client/pull/234)
+- Docker-based tests run via GitHub Actions (@kibertoad) (https://github.com/lbdremy/solr-node-client/pull/233)
+- Automatic formatting via prettier (@kibertoad) (https://github.com/lbdremy/solr-node-client/pull/237)
+- Linting (@kibertoad) (https://github.com/lbdremy/solr-node-client/pull/238)
+
+## 0.6.0
 
 - Solr5 Query-Highlighting support through StandardHighlighter (@LukeTaverne) (https://github.com/lbdremy/solr-node-client/pull/144)
 - Experimental support for SolrCloud collections administration (@LukeTaverne) (https://github.com/lbdremy/solr-node-client/issues/138)

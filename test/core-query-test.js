@@ -266,5 +266,43 @@ describe('Client#createQuery', function () {
         done();
       });
     });
+
+    it('query with multiple match-filters', function (done) {
+      const query = client
+        .createQuery()
+        .q('*:*')
+        .fq([{field: 'id', value: '19700506.173.85'}, {field: 'title', value: 'testvalue'}])
+        .debugQuery();
+
+      client.search(query, function (err, data) {
+        sassert.ok(err, data);
+        assert.deepEqual(data.responseHeader.params, {
+          debugQuery: 'true',
+          q: '*:*',
+          fq: ['id:19700506.173.85', 'title:testvalue'],
+          wt: 'json',
+        });
+        done();
+      });
+    });
+
+    it('query with object match-filter', function (done) {
+      const query = client
+        .createQuery()
+        .q('*:*')
+        .fq({field: 'id', value: '19700506.173.85'})
+        .debugQuery();
+
+      client.search(query, function (err, data) {
+        sassert.ok(err, data);
+        assert.deepEqual(data.responseHeader.params, {
+          debugQuery: 'true',
+          q: '*:*',
+          fq: 'id:19700506.173.85',
+          wt: 'json',
+        });
+        done();
+      });
+    });
   });
 });

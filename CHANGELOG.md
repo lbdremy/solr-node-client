@@ -1,5 +1,9 @@
 # Changelog
 
+## 0.9.0
+
+- Add fq(), a wrapper function for matchFilter for passing in an object or multiple filters (@ni-do) (https://github.com/lbdremy/solr-node-client/pull/241)
+
 ## 0.8.0
 
 - Update dependencies, resolving security vulnerabilities (@kibertoad) (https://github.com/lbdremy/solr-node-client/pull/239)

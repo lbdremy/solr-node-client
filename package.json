@@ -23,7 +23,6 @@
     "node": ">= 12"
   },
   "dependencies": {
-    "bluebird": "^3.7.2",
     "duplexer": "^0.1.2",
     "httperror": "^0.2.3",
     "json-bigint": "^1.0.0",

@@ -42,7 +42,7 @@ jobs:
         run: npm run solr:current:logs
 
       - name: Sleep for 3 seconds
-        uses: kibertoad/wait-action@1.0.0
+        uses: kibertoad/wait-action@1.0.1
         with:
           time: '3s'
 

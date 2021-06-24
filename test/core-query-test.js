@@ -14,15 +14,12 @@ const figc = require('figc'),
 const config = figc(__dirname + '/config.json');
 const client = solr.createClient(config.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
-const { createSchemaField } = require('./utils/schemaHelper');
 
 describe('Client#createQuery', function () {
-  before((cb) => {
-    createSchemaField(client, 'title', 'text_general', () => {
-      createSchemaField(client, 'name', 'text_general', () => {
-        createSchemaField(client, 'author', 'text_general', cb);
-      });
-    });
+  before(async () => {
+    await client.createSchemaField('title', 'text_general');
+    await client.createSchemaField('name', 'text_general');
+    await client.createSchemaField('author', 'text_general');
   });
 
   describe('query() with various query options', function () {

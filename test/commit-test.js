@@ -14,7 +14,7 @@ const client = solr.createClient(config.client);
 describe('Client', function () {
   describe('#commit(callback)', function () {
     it('should commit', function (done) {
-      client.commit(function (err, data) {
+      client.commit({}, function (err, data) {
         sassert.ok(err, data);
         done();
       });

@@ -17,7 +17,7 @@ const basePath = [config.client.path, config.client.core]
 describe('Client', function () {
   describe('#get("admin/ping",callback)', function () {
     it('should ping', function (done) {
-      client.get('admin/ping', function (err, data) {
+      client.doQuery('admin/ping', "", function (err, data) {
         sassert.ok(err, data);
         assert.equal(data.status, 'OK');
         done();
@@ -26,7 +26,7 @@ describe('Client', function () {
   });
   describe('#get("update/json", "softCommit=true", callback)', function () {
     it('should soft commit', function (done) {
-      const request = client.get(
+      const request = client.doQuery(
         'update/json',
         'softCommit=true',
         function (err, data) {
@@ -45,7 +45,7 @@ describe('Client', function () {
       const query = client.createQuery().q({
         title_t: 'test',
       });
-      client.get('select', query, function (err, data) {
+      client.doQuery('select', query, function (err, data) {
         assert.deepEqual(
           { q: 'title_t:test', wt: 'json' },
           data.responseHeader.params

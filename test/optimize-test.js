@@ -14,7 +14,7 @@ const client = solr.createClient(config.client);
 describe('Client', function () {
   describe('#optimize(callback)', function () {
     it('should optimize', function (done) {
-      client.optimize(function (err, data) {
+      client.optimize({}, function (err, data) {
         sassert.ok(err, data);
         done();
       });
@@ -46,7 +46,7 @@ describe('Client', function () {
   });
   describe('#optimize({unknownOption : true},callback)', function () {
     it('should return a `SolrError`', function (done) {
-      client.optimize({ unknownOption: true }, function (err, data) {
+      client.optimize({ unknownOption: true }, function (err) {
         sassert.nok(err);
         done();
       });

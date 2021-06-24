@@ -20,7 +20,7 @@
     "url": "https://github.com/lbdremy/solr-node-client"
   },
   "engines": {
-    "node": ">= 6"
+    "node": ">= 10"
   },
   "dependencies": {
     "bluebird": "^3.7.2",

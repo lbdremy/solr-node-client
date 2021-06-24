@@ -1,8 +1,8 @@
 # solr-client - a node.js solr client
+[![NPM Version](https://img.shields.io/npm/v/solr-client.svg)](https://npmjs.org/package/solr-client)
+[![NPM Downloads](https://img.shields.io/npm/dm/solr-client.svg)](https://npmjs.org/package/solr-client)
 [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/lbdremy/solr-node-client?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 ![](https://github.com/lbdremy/solr-node-client/workflows/CI/badge.svg)
-[![NPM](https://nodei.co/npm/solr-client.png?downloads=true&stars=true)](https://nodei.co/npm/solr-client/)
-
 
 ## Installation
 
@@ -88,5 +88,4 @@ npm run-script report
 (The MIT License)
 
 Copyright 2011-2012 HipSnip Limited
-
 Copyright 2013-2014 Rémy Loubradou

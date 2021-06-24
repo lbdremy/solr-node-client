@@ -14,7 +14,7 @@ npm install --save solr-client
 
 ## Documentation
 
-Node.js version 6+ is supported.
+Node.js version 12+ is supported.
 Solr versions 3-8 are supported.
 
 * See the [official documentation](https://lbdremy.github.io/solr-node-client/) for more details.

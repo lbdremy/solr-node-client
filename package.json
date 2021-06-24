@@ -35,7 +35,7 @@
     "chai": "^4.2.0",
     "csv-stream": "^0.2.0",
     "eslint": "^7.16.0",
-    "eslint-config-prettier": "^7.1.0",
+    "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.3.0",
     "figc": "^0.0.3",
     "minimist": "^1.2.5",

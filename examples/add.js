@@ -20,7 +20,7 @@ for (let i = 0; i <= 10; i++) {
 }
 
 // Add documents
-client.add(docs, function (err, obj) {
+client.add(docs, {}, function (err, obj) {
   if (err) {
     console.log(err);
   } else {

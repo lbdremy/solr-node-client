@@ -23,7 +23,7 @@ describe('Client', function () {
       const options = {
         commitWithin: 10000000, //extremely long, giving us plenty of time to test
       };
-      client.add(doc, options, function (err, data) {
+      client.add([doc], options, function (err, data) {
         sassert.ok(err, data);
         done();
       });
@@ -45,7 +45,7 @@ describe('Client', function () {
 
     it('should be able to get that specific document', function (done) {
       // note that by default the /get handler will have omitHeader=true configured on the server!
-      client.realTimeGet(id, { omitHeader: false }, function (err, data) {
+      client.realTimeGet([id], { omitHeader: false }, function (err, data) {
         sassert.ok(err, data);
         assert.equal(
           data.response.numFound,
@@ -68,14 +68,14 @@ describe('Client', function () {
     });
 
     it('should be able to delete it', function (done) {
-      client.deleteByID(id, function (err, data) {
+      client.deleteByID(id, {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });
     });
 
     it('should no longer be able to get that specific document', function (done) {
-      client.realTimeGet(id, { omitHeader: false }, function (err, data) {
+      client.realTimeGet([id], { omitHeader: false }, function (err, data) {
         sassert.ok(err, data);
         assert.equal(
           data.response.numFound,

@@ -6,7 +6,7 @@ const solr = require('./../lib/solr');
 const client = solr.createClient();
 
 // Commit your changes without options
-client.commit(function (err, res) {
+client.commit({}, function (err, res) {
   if (err) console.log(err);
   if (res) console.log(res);
 });

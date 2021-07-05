@@ -17,7 +17,7 @@ const basePath = [config.client.path, config.client.core]
 describe('Client', function () {
   describe('#get("admin/ping",callback)', function () {
     it('should ping', function (done) {
-      client.get('admin/ping', function (err, data) {
+      client.get('admin/ping', {}, function (err, data) {
         sassert.ok(err, data);
         assert.equal(data.status, 'OK');
         done();

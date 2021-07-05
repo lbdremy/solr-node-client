@@ -14,7 +14,7 @@ const client = solr.createClient(config.client);
 describe('Client', function () {
   describe('#deleteAll(callback)', function () {
     it('should delete all documents', function (done) {
-      client.deleteAll(function (err, data) {
+      client.deleteAll({}, function (err, data) {
         sassert.ok(err, data);
         done();
       });

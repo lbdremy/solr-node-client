@@ -22,7 +22,7 @@ describe('Client', function () {
       const start = new Date();
       const stop = new Date();
       stop.setDate(stop.getDate() - 1);
-      client.deleteByRange(field, start, stop, function (err, data) {
+      client.deleteByRange(field, start, stop, {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });

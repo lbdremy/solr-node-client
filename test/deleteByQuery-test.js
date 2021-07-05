@@ -18,7 +18,7 @@ const basePath = [config.client.path, config.client.core]
 describe('Client', function () {
   describe('#deleteByQuery("title_t:*",callback)', function () {
     it('should delete all documents having the field title_t', function (done) {
-      client.deleteByQuery('title_t:*', function (err, data) {
+      client.deleteByQuery('title_t:*', {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });

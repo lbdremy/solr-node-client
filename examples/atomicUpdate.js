@@ -17,7 +17,7 @@ const doc = {
 };
 
 // Add documents
-client.add(doc, function (err, obj) {
+client.add([doc], {}, function (err, obj) {
   if (err) {
     console.log(err);
   } else {
@@ -26,7 +26,7 @@ client.add(doc, function (err, obj) {
 });
 
 // Add documents
-client.atomicUpdate(doc, function (err, obj) {
+client.atomicUpdate([doc], {}, function (err, obj) {
   if (err) {
     console.log(err);
   } else {

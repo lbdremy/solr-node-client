@@ -8,7 +8,7 @@ const solr = require('./../lib/solr');
 const client = solr.createClient();
 
 const query = 'q=id:UTF8TEST&mlt.fl=manu,cat&mlt.mindf=1&mlt.mintf=1';
-client.get('mlt', query, function (err, obj) {
+client.doQuery('mlt', query, function (err, obj) {
   if (err) {
     console.log(err);
   } else {

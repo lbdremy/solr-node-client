@@ -18,7 +18,7 @@ const basePath = [config.client.path, config.client.core]
 describe('Client', function () {
   describe('#deleteByID(1,callback)', function () {
     it('should delete the document with the id 1', function (done) {
-      client.deleteByID(1, function (err, data) {
+      client.deleteByID(1, {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });

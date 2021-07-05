@@ -23,7 +23,7 @@ describe('Client', function () {
         id: 1,
         title_t: 'title1',
       };
-      client.add(doc, function (err, data) {
+      client.add([doc], {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });
@@ -41,7 +41,7 @@ describe('Client', function () {
           title_t: 'title3',
         },
       ];
-      client.add(docs, function (err, data) {
+      client.add(docs, {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });

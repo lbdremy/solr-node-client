@@ -12,6 +12,7 @@ client.deleteByRange(
   'last_update',
   startOffset,
   stopOffset,
+  {},
   function (err, obj) {
     if (err) {
       console.log(err);

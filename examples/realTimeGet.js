@@ -7,7 +7,7 @@ const client = solr.createClient();
 
 // Retrieve only one document
 const id = 3973873;
-client.realTimeGet(id, function (err, obj) {
+client.realTimeGet([id], {}, function (err, obj) {
   if (err) {
     console.log(err);
   } else {
@@ -17,7 +17,7 @@ client.realTimeGet(id, function (err, obj) {
 
 // Retrieve multiple documents
 const ids = [4874847, 9449747, 949448];
-client.realTimeGet(ids, function (err, obj) {
+client.realTimeGet(ids, {}, function (err, obj) {
   if (err) {
     console.log(err);
   } else {

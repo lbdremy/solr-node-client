@@ -6,7 +6,7 @@ const solr = require('./../lib/solr');
 const client = solr.createClient();
 
 const id = 38738;
-client.deleteByID(id, function (err, obj) {
+client.deleteByID(id, {}, function (err, obj) {
   if (err) {
     console.log(err);
   } else {

@@ -14,7 +14,7 @@ const client = solr.createClient(config.client);
 describe('Client', function () {
   describe('#commit(callback)', function () {
     it('should commit', function (done) {
-      client.commit(function (err, data) {
+      client.commit({}, function (err, data) {
         sassert.ok(err, data);
         done();
       });
@@ -38,7 +38,7 @@ describe('Client', function () {
   });
   describe('#commit({unknownOption : true},callback)', function () {
     it('should return a `SolrError`', function (done) {
-      client.commit({ unknownOption: true }, function (err, data) {
+      client.commit({ unknownOption: true }, function (err) {
         sassert.nok(err);
         done();
       });

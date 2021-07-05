@@ -18,7 +18,7 @@ const basePath = [config.client.path, config.client.core]
 describe('Client', function () {
   describe('#delete("title_t","test",callback)', function () {
     it('should delete all documents where the field "title_t" is "test"', function (done) {
-      client.delete('title_t', 'test', function (err, data) {
+      client.delete('title_t', 'test', {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });
@@ -110,7 +110,7 @@ describe('Client', function () {
   });
   describe('#delete("unknownField","test",callback)', function () {
     it('should return a `SolrError`', function (done) {
-      client.delete('unknownField', 'test', function (err, data) {
+      client.delete('unknownField', 'test', {}, function (err) {
         sassert.nok(err);
         done();
       });

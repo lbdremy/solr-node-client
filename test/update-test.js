@@ -29,7 +29,7 @@ describe('Client', function () {
     };
 
     it('should add one document', function (done) {
-      client.add(doc, options, function (err, data) {
+      client.add([doc], options, function (err, data) {
         sassert.ok(err, data);
         done();
       });
@@ -40,14 +40,14 @@ describe('Client', function () {
         id: doc_id,
         title_t: { set: 'Modified title' },
       };
-      client.atomicUpdate(updatedDoc, function (err, data) {
+      client.atomicUpdate([updatedDoc], {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });
     });
 
     it('should have updated the document', function (done) {
-      client.realTimeGet(doc_id, { omitHeader: false }, function (err, data) {
+      client.realTimeGet([doc_id], { omitHeader: false }, function (err, data) {
         sassert.ok(err, data);
         assert.equal(
           data.response.numFound,

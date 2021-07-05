@@ -37,19 +37,19 @@ describe('Client', function () {
     };
 
     it('should add the document with commit and versions true', function (done) {
-      client.add(doc, add_options, function (err, data) {
+      client.add([doc], add_options, function (err, data) {
         sassert.ok(err, data);
         assert.ok(
-          big != Number(big).toString(),
+          big !== Number(big).toString(),
           'the big number used for testing should exceed the limits of javascript Number variables'
         );
         assert.ok(
-          big == new BigNumber(big).toString(),
+          big === new BigNumber(big).toString(),
           'the big number used for testing should not exceed the limits of BigNumber processing'
         );
         _version_ = new BigNumber(data.adds[1].toString());
         assert.ok(
-          _version_.comparedTo(0) == 1,
+          _version_.comparedTo(0) === 1,
           '_version_ should be set to a positive number'
         );
         done();
@@ -58,7 +58,7 @@ describe('Client', function () {
 
     it('should be able to get that specific document with the big-long unchange and in full glory', function (done) {
       // note that by default the /get handler will have omitHeader=true configured on the server!
-      client.realTimeGet(id, { omitHeader: false }, function (err, data) {
+      client.realTimeGet([id], { omitHeader: false }, function (err, data) {
         sassert.ok(err, data);
         assert.equal(
           data.response.numFound,
@@ -94,12 +94,12 @@ describe('Client', function () {
       doc._version_ = _version_.toString(); // needed for optimistic lock check
       doc.new_t = 'new text field';
 
-      client.add(doc, add_options, function (err, data) {
+      client.add([doc], add_options, function (err, data) {
         sassert.ok(err, data);
         const prev_version_ = _version_;
         _version_ = new BigNumber(data.adds[1].toString());
         assert.ok(
-          _version_.comparedTo(prev_version_) == 1,
+          _version_.comparedTo(prev_version_) === 1,
           'new _version_ should be bigger then previous'
         );
         done();
@@ -107,7 +107,7 @@ describe('Client', function () {
     });
 
     it('should be able to delete it', function (done) {
-      client.deleteByID(id, function (err, data) {
+      client.deleteByID(id, {}, function (err, data) {
         sassert.ok(err, data);
         done();
       });

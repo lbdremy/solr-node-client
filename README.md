@@ -9,7 +9,13 @@
 Install the library with:
 
 ```shell
-npm install --save solr-client
+npm install solr-client
+```
+
+or
+
+```shell
+yarn add solr-client
 ```
 
 ## Documentation
@@ -40,8 +46,6 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 });
 ```
 
-
-
 ## Roadmap
 
 ### v0.3.x - v0.x.x
@@ -57,19 +61,26 @@ client.add({ id : 12, title_t : 'Hello' },function(err,obj){
 
 ## Test
 
-Tests are executed against a Solr instance in a Docker container. In order to execute them on latest supported Solr version, run:
+Tests are executed against a Solr instance in a Docker container. 
 
-```
+To execute them on latest supported Solr version, run:
+
+```shell
 npm run solr:current:start
-npm test
+npm run test:current
 ```
 
-If you want to execute them on oldest Solr version supported, run `solr:legacy:start` instead.
+If you want to execute them on oldest Solr version supported, run:
 
+```shell
+npm run solr:legacy:start
+npm run test:legacy
+```
 
 ## Test coverage
 
-Before to be able to run the command below, you will need to install jscoverage available here https://github.com/visionmedia/node-jscoverage.
+Before to be able to run the command below, you will need to install jscoverage available 
+[here](https://github.com/visionmedia/node-jscoverage).
 
 ```
 npm run-script test-cov

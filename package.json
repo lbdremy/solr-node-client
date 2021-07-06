@@ -69,7 +69,8 @@
     "solr",
     "client",
     "query",
-    "sdk"
+    "sdk",
+    "search"
   ],
   "license": "MIT"
 }

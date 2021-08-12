@@ -1,7 +1,7 @@
 /**
  * Partially update a document into the Solr index.
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 // Create a client
 const client = solr.createClient();

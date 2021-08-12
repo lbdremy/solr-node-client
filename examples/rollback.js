@@ -1,7 +1,7 @@
 /**
  * Rollback changes after the last commit.
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 const client = solr.createClient();
 

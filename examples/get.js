@@ -3,7 +3,7 @@
  * Use case: use a Search handler exposed by Solr but not supported by this client
  * for example MoreLikeThisHandler (https://wiki.apache.org/solr/MoreLikeThisHandler)
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 const client = solr.createClient();
 

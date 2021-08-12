@@ -2,7 +2,7 @@
  * Search all documents
  *    tiny shorhand command for commodity
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 const client = solr.createClient();
 

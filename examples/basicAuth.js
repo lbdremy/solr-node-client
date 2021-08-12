@@ -1,7 +1,7 @@
 /**
  * Use Basic HTTP Authentication to communicate with the Solr server.
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 const client = solr.createClient();
 client.basicAuth('admin', 'passtest');

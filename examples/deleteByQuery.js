@@ -1,7 +1,7 @@
 /**
  * Delete documents matching the given `query`
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 const client = solr.createClient();
 

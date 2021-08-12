@@ -1,7 +1,7 @@
 /**
  * Use real-time get feature
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 const client = solr.createClient();
 

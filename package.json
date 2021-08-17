@@ -1,23 +1,23 @@
 {
-  "author": {
-    "name": "Remy Loubradou",
-    "email": "remy.loubradou@gmail.com",
-    "url": "https://twitter.com/#!/lbdremy"
-  },
-  "contributors": [
-    {
-      "name": "Igor Savin",
-      "email": "kibertoad@gmail.com",
-      "url": "https://twitter.com/kibertoad"
-    }
-  ],
   "name": "solr-client",
-  "main": "./main",
+  "main": "dist/main.js",
+  "types": "dist/main.d.ts",
   "description": " A Solr client library for indexing, adding, deleting, committing, optimizing and searching documents within an Apache Solr installation (version>=3.2)",
   "version": "0.9.0",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/lbdremy/solr-node-client"
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"{lib,examples,test}/**/*.js\"",
+    "lint": "eslint \"lib/**/*.ts\" \"test/**/*.ts\"",
+    "test-cov": "jscoverage lib lib-cov && mocha -r ts-node/register -R html-cov test/*-test.ts > coverage.html && rm -r lib-cov",
+    "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*",
+    "solr:current:start": "docker-compose -f docker-compose-solr-8.yml up --build -d solr8",
+    "solr:current:stop": "docker-compose -f docker-compose-solr-8.yml down",
+    "solr:current:logs": "docker logs solr-node-client_solr8_1",
+    "test:current": "mocha -r ts-node/register -R spec test/*-test.ts --client.bigint=true",
+    "solr:legacy:start": "docker-compose -f docker-compose-solr-5.yml up --build -d solr5",
+    "solr:legacy:stop": "docker-compose -f docker-compose-solr-5.yml down",
+    "solr:legacy:logs": "docker logs solr-node-client_solr5_1",
+    "test:legacy": "mocha -r ts-node/register -R spec test/*-test.ts --client.port=8984 && mocha -r ts-node/register -R spec test/*-test.ts --client.port=8984"
   },
   "engines": {
     "node": ">= 12"
@@ -25,39 +25,33 @@
   "dependencies": {
     "bluebird": "^3.7.2",
     "duplexer": "^0.1.2",
-    "httperror": "^0.2.3",
+    "hnp": "^1.0.1",
     "json-bigint": "^1.0.0",
     "JSONStream": "^1.3.5",
     "request": "^2.88.2"
   },
   "devDependencies": {
+    "@types/chai": "^4.2.21",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^16.6.0",
+    "@types/request": "^2.48.7",
+    "@typescript-eslint/eslint-plugin": "^4.29.2",
+    "@typescript-eslint/parser": "^4.29.2",
     "bignumber.js": "^9.0.1",
-    "chai": "^4.2.0",
+    "chai": "^4.3.4",
     "csv-stream": "^0.2.0",
-    "eslint": "^7.16.0",
+    "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^3.3.0",
     "figc": "^0.0.3",
     "minimist": "^1.2.5",
-    "mocha": "^9.0.1",
-    "prettier": "^2.2.1"
-  },
-  "scripts": {
-    "format": "prettier --write \"{lib,examples,test}/**/*.js\"",
-    "lint": "eslint \"lib/**/*.js\" \"test/**/*.js\"",
-    "test-cov": "jscoverage lib lib-cov && ./node_modules/mocha/bin/mocha -R html-cov test/*-test.js > coverage.html && rm -r lib-cov",
-    "report": "rm -rf report && mkdir report && plato -r -d report main.js lib/*",
-    "solr:current:start": "docker-compose -f docker-compose-solr-8.yml up --build -d solr8",
-    "solr:current:stop": "docker-compose -f docker-compose-solr-8.yml down",
-    "solr:current:logs": "docker logs solr-node-client_solr8_1",
-    "test:current": "mocha -R spec test/*-test.js --client.bigint=true",
-    "solr:legacy:start": "docker-compose -f docker-compose-solr-5.yml up --build -d solr5",
-    "solr:legacy:stop": "docker-compose -f docker-compose-solr-5.yml down",
-    "solr:legacy:logs": "docker logs solr-node-client_solr5_1",
-    "test:legacy": "mocha -R spec test/*-test.js --client.port=8984 && mocha -R spec test/*-test.js --client.port=8984"
+    "mocha": "^9.0.3",
+    "prettier": "^2.2.1",
+    "ts-node": "^10.2.0",
+    "typescript": "^4.3.5"
   },
   "files": [
-    "lib/*",
+    "dist/*",
     "CHANGELOG.md",
     "CONTRIBUTIONS.md",
     "LICENSE",
@@ -70,6 +64,22 @@
     "client",
     "query",
     "sdk"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/lbdremy/solr-node-client"
+  },
+  "author": {
+    "name": "Remy Loubradou",
+    "email": "remy.loubradou@gmail.com",
+    "url": "https://twitter.com/#!/lbdremy"
+  },
+  "contributors": [
+    {
+      "name": "Igor Savin",
+      "email": "kibertoad@gmail.com",
+      "url": "https://twitter.com/kibertoad"
+    }
   ],
   "license": "MIT"
 }

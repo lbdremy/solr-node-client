@@ -8,3 +8,4 @@ report
 *.swp
 .idea
 package-lock.json
+/dist/

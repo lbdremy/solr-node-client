@@ -1,7 +1,7 @@
 /**
  * Create a stream to add documents into the database
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 const csv = require('csv-stream');
 const fs = require('fs');
 

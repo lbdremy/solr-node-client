@@ -1,7 +1,7 @@
 /**
  * Delete all documents
  */
-const solr = require('./../lib/solr');
+const solr = require('../lib/solr');
 
 const client = solr.createClient();
 

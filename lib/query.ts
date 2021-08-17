@@ -1,9 +1,9 @@
 /**
  * Load dependencies
  */
-const querystring = require('querystring');
-const format = require('./utils/format');
-const arrayUtils = require('./utils/array');
+import * as querystring from 'querystring';
+import * as format from './utils/format';
+import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
 
 export type QueryOptions = {
@@ -297,7 +297,7 @@ fq(filters) {
   /**
    * Specify a set of fields to return.
    *
-   * @param {String|Array} field - field name
+   * @param {String|Array} fields - field name
    *
    * @return {Query}
    * @api public

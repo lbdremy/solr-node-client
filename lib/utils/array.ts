@@ -1,15 +1,8 @@
-/**
- *
- * @param value
- * @param defaultIfNull - Will set the value to the default if it is Null or Undefined
- * @returns {*[]}
- */
-exports.toArray = function toArray(value, defaultIfNull) {
-  defaultIfNull = defaultIfNull || '';
-
-  function defaultValue(value) {
-    return value === null || value === undefined ? defaultIfNull : value;
+export function toArray(value: string | string[], defaultValue?: string): string[] {
+  if (Array.isArray(value)) {
+    return value
   }
 
-  return Array.isArray(value) ? value : [defaultValue(value)];
-};
+  defaultValue = defaultValue || '';
+  return value === null || value === undefined ? [defaultValue] : [value];
+}

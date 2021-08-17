@@ -63,7 +63,8 @@
     "solr",
     "client",
     "query",
-    "sdk"
+    "sdk",
+    "search"
   ],
   "repository": {
     "type": "git",

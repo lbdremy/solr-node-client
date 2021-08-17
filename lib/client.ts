@@ -88,7 +88,8 @@ function handleJSONResponse(request, bigint, callback) {
  *
  * @return {http.ClientRequest}
  * @api private
- */ function postJSON(params, callback) {
+ */
+function postJSON(params, callback) {
   const headers = {
     'content-type': 'application/json; charset=utf-8',
     'content-length': Buffer.byteLength(params.json),

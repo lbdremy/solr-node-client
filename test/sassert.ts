@@ -2,9 +2,11 @@
  * Modules dependencies
  */
 
-const assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib';
-  import { SolrError } from '../lib/error/solr-error';
+const assert = require('chai').assert
+
+// ToDo See if we still need it
+// libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib';
+import { SolrError } from '../lib/error/solr-error';
 
 // Macros to assert Solr response
 

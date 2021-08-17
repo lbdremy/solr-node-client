@@ -46,7 +46,7 @@ describe('Client', function () {
   });
   describe('#optimize({unknownOption : true},callback)', function () {
     it('should return a `SolrError`', function (done) {
-      client.optimize({ unknownOption: true }, function (err, data) {
+      client.optimize({ unknownOption: true }, function (err) {
         sassert.nok(err);
         done();
       });

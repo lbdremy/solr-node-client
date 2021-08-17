@@ -38,7 +38,7 @@ describe('Client', function () {
   });
   describe('#commit({unknownOption : true},callback)', function () {
     it('should return a `SolrError`', function (done) {
-      client.commit({ unknownOption: true }, function (err, data) {
+      client.commit({ unknownOption: true }, function (err) {
         sassert.nok(err);
         done();
       });

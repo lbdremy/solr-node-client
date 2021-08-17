@@ -1,8 +1,12 @@
-/**
+export function dateISOify(obj: Record<string, Date>): Record<string, string>
+export function dateISOify(obj: Date): string
+export function dateISOify(obj: Date[]): string[]
+
+  /**
  * ISOify `Date` objects (possibly in collections)
  * @api private
  */
-export function dateISOify<T extends Date | Date[]>(obj: T): T {
+export function dateISOify(obj: any | any[]): string | Record<string, string> | string[] {
   if (obj instanceof Array) {
     for (let i = 0; i < obj.length; i++) {
       obj[i] = dateISOify(obj[i]);

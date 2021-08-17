@@ -7,7 +7,7 @@ const request = require('request')
 const bluebird = require('bluebird');
 
 import { Query } from './query'
-const Collection = require('./collection')
+import { Collection } from './collection'
 const format = require('./utils/format')
 import * as versionUtils from './utils/version'
 

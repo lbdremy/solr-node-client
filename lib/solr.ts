@@ -6,7 +6,7 @@ const duplexer = require('duplexer')
 const request = require('request')
 const bluebird = require('bluebird');
 
-const Query = require('./query')
+import { Query } from './query'
 const Collection = require('./collection')
 const format = require('./utils/format')
 import * as versionUtils from './utils/version'
@@ -197,8 +197,6 @@ class Client {
    * @return {http.ClientRequest}
    * @api public
    */
-
-  // ToDo
   atomicUpdate = Client.prototype.add;
 
   /**
@@ -816,8 +814,6 @@ collection() {
   /**
    * Expose `format.escapeSpecialChars` from `Client.escapeSpecialChars`
    */
-
-  // ToDo
 escapeSpecialChars = format.escapeSpecialChars;
 
   /**
@@ -830,7 +826,6 @@ escapeSpecialChars = format.escapeSpecialChars;
    * @return {http.ClientRequest}
    * @api public
    */
-
 
   ping(callback) {
     return this.get(this.ADMIN_PING_HANDLER, callback);

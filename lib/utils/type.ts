@@ -4,7 +4,7 @@
  * @param strict - Pass true if you want to make sure the number is fully and only composed of digits, false to just check if we can extract a number via parseInt(). Default to true.
  * @returns boolean
  */
-exports.isNumber = function isNumber(value, strict) {
+export function isNumber(value: any, strict?: boolean): boolean {
   strict = strict === undefined ? true : strict;
   const digitRegex = /^\-?\d+$/; // At least 1 digit, possibly a minus sign before
 
@@ -18,4 +18,4 @@ exports.isNumber = function isNumber(value, strict) {
       return !isNaN(parseInt(value));
     }
   }
-};
+}

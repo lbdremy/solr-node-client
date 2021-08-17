@@ -1,11 +1,12 @@
 /**
  * Modules dependencies
  */
-const assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  format = require(libPath + '/utils/format'),
-  arrayUtils = require(libPath + '/utils/array'),
-  typeUtils = require(libPath + '/utils/type');
+import { assert } from 'chai'
+  // ToDo check if necessary
+  // libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
+import * as format from '../lib/utils/format'
+import * as arrayUtils from '../lib/utils/array'
+import * as typeUtils from '../lib/utils/type'
 
 // Test suite
 

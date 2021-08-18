@@ -10,6 +10,7 @@ import { Query } from './query'
 import { Collection } from './collection'
 const format = require('./utils/format')
 import * as versionUtils from './utils/version'
+import { CallbackFn } from './types';
 
 // eslint-disable-next-line
 const http = require('http');
@@ -358,7 +359,7 @@ softCommit(callback) {
    *
    * @param {String} field
    * @param {String} text
-   * @param {Object} [options]
+   * @param {Object} [options] //neprivalomas parametras [ tokiuose skliasutuose]
    * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
@@ -367,9 +368,9 @@ softCommit(callback) {
    * @api public
    */
 
-delete(field, text, options, callback) {
+delete(field: string, text: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     text = format.dateISOify(text);

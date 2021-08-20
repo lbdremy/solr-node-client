@@ -90,7 +90,7 @@ export function createClient(
  * @api private
  */
 
-class Client {
+export class Client {
   private options: FullSolrClientParams;
   private UPDATE_JSON_HANDLER: string;
   private UPDATE_HANDLER: string;

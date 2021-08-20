@@ -1,4 +1,4 @@
-export { createClient } from './lib/solr'
+export { createClient, Client } from './lib/solr'
 
 export { Query } from './lib/query'
 export type { QueryOptions } from './lib/query'

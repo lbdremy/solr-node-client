@@ -25,8 +25,8 @@ export type SolrRequestParams = {
 };
 
 export type SolrClientParams = {
-  host: string;
-  port: string | number;
+  host?: string;
+  port?: string | number;
   core?: string;
   path?: string
   secure?: boolean;

@@ -43,7 +43,7 @@ const {
 
 export function createClient(
   hostOrParams: string | SolrClientParams,
-  port: number | string,
+  port?: number | string,
   core?: string,
   path?: string,
   agent?: http.Agent,

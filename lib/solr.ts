@@ -205,15 +205,20 @@ class Client {
    * @api public
    */
 
-  realTimeGet(ids: Record<string, any>[] | string, query?: Query | Record<string, any> | string, callback?: CallbackFn): ClientRequest {
+  realTimeGet(ids: string | string[], query?: Query | Record<string, any> | string, callback?: CallbackFn): ClientRequest {
     if (typeof query === 'function') {
       callback = query as CallbackFn;
+    }
+    if (!query) {
       query = {};
     }
     ids = Array.isArray(ids) ? ids : [ids];
-    query!.ids = ids.join(',');
 
-    return this.get(this.REAL_TIME_GET_HANDLER, query!, callback);
+    if (typeof query === 'object') {
+      query['ids'] = ids.join(',');
+    }
+
+    return this.get(this.REAL_TIME_GET_HANDLER, query, callback);
   };
 
   /**

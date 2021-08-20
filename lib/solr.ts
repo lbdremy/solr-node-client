@@ -175,7 +175,7 @@ class Client {
    * @api public
    */
 
-  add(docs: {} | [], options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
+  add(docs: Record<string, any> | Record<string, any>[], options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
       callback = options as any;
       options = {};
@@ -776,7 +776,7 @@ post(handler, query?: Query | Record<string, any> | string, callback?: CallbackF
       ipVersion: this.options.ipVersion,
       request: this.options.request,
     };
-    return postForm(params, callback);
+    return postForm(params, callback!);
   };
 
   /**

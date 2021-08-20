@@ -10,6 +10,7 @@ import { Query } from './query'
 import { Collection } from './collection'
 const format = require('./utils/format')
 import * as versionUtils from './utils/version'
+import { CallbackFn } from './types';
 
 // eslint-disable-next-line
 const http = require('http');
@@ -141,7 +142,7 @@ class Client {
    * @api public
    */
 
-  basicAuth (username, password) {
+  basicAuth (username: string, password: string) {
     const self = this;
     this.options.authorization =
       'Basic ' + new Buffer(username + ':' + password).toString('base64');
@@ -174,9 +175,9 @@ class Client {
    * @api public
    */
 
-  add(docs, options, callback) {
+  add(docs: Record<string, any> | Record<string, any>[], options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     docs = format.dateISOify(docs); // format `Date` object into string understable for Solr as a date.
@@ -213,9 +214,9 @@ class Client {
    * @api public
    */
 
-  realTimeGet(ids, query, callback) {
+  realTimeGet(ids, query, callback: CallbackFn) {
     if (typeof query === 'function') {
-      callback = query;
+      callback = query as any;
       query = {};
     }
     ids = Array.isArray(ids) ? ids : [ids];
@@ -312,9 +313,9 @@ class Client {
    * @api public
    */
 
-  commit(options, callback) {
+  commit(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -349,7 +350,7 @@ prepareCommit(callback) {
    * @api public
    */
 
-softCommit(callback) {
+softCommit(callback: CallbackFn) {
     return this.update({}, { softCommit: true }, callback);
   };
 
@@ -367,9 +368,9 @@ softCommit(callback) {
    * @api public
    */
 
-delete(field, text, options, callback) {
+delete(field: string, text: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     text = format.dateISOify(text);
@@ -396,14 +397,14 @@ delete(field, text, options, callback) {
    */
 
   deleteByRange(
-    field,
-    start,
-    stop,
-    options,
-    callback
+    field: string,
+    start: string | Date,
+    stop: string | Date,
+    options?: Record<string, any> | CallbackFn,
+    callback?: CallbackFn
   ) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     start = format.dateISOify(start);
@@ -426,9 +427,9 @@ delete(field, text, options, callback) {
    * @api public
    */
 
-deleteByID(id, options, callback) {
+deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -452,9 +453,9 @@ deleteByID(id, options, callback) {
    * @api public
    */
 
-deleteByQuery(query, options, callback) {
+deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -477,7 +478,7 @@ deleteByQuery(query, options, callback) {
    * @api public
    */
 
-deleteAll(options, callback) {
+deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
     return this.deleteByQuery('*:*', options, callback);
   };
 
@@ -493,9 +494,9 @@ deleteAll(options, callback) {
    * @api public
    */
 
-optimize(options, callback) {
+optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -515,7 +516,7 @@ optimize(options, callback) {
    * @api public
    */
 
-rollback(callback) {
+rollback(callback: CallbackFn) {
     const data = {
       rollback: {},
     };
@@ -583,7 +584,7 @@ update(data: Record<string, any>, options: any, callback?: any) {
    * @api public
    */
 
-search(query, callback) {
+search(query: Query | Record<string, any> | string, callback: CallbackFn) {
     return this.get(this.SELECT_HANDLER, query, callback);
   };
 
@@ -599,7 +600,7 @@ search(query, callback) {
    * @api public
    */
 
-executeCollection(collection, callback) {
+executeCollection(collection: Query | Record<string, any> | string, callback: CallbackFn) {
     return this.get(this.COLLECTIONS_HANDLER, collection, callback);
   };
 
@@ -614,7 +615,7 @@ executeCollection(collection, callback) {
    * @api public
    */
 
-searchAll(callback) {
+searchAll(callback:CallbackFn) {
     return this.search('q=*', callback);
   };
 
@@ -632,7 +633,7 @@ searchAll(callback) {
    * @api public
    */
 
-spell(query, callback) {
+spell(query: Query, callback: CallbackFn) {
     return this.get(this.SPELL_HANDLER, query, callback);
   };
 
@@ -650,7 +651,7 @@ spell(query, callback) {
    * @api public
    */
 
-termsSearch(query, callback) {
+termsSearch(query: Query | Record<string, any> | string, callback: CallbackFn) {
     return this.get(this.TERMS_HANDLER, query, callback);
   };
 
@@ -729,7 +730,7 @@ get(handler: string, query: any, callback?: any) {
    * Send an arbitrary HTTP POST request to Solr on the specified `handler` (as Solr like to call it i.e path)
    *
    * @param {String} handler
-   * @param {Query|Object|String} [query]
+   * @param {Query|Object|String} [query] -//
    * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
@@ -737,10 +738,10 @@ get(handler: string, query: any, callback?: any) {
    * @return {http.ClientRequest}
    * @api public
    */
-post(handler, query, callback) {
+post(handler, query?: Query | Record<string, any> | string | CallbackFn, callback?: CallbackFn) {
     let parameters = '';
     if (typeof query === 'function') {
-      callback = query;
+      callback = query as any;
     } else if (query instanceof Query) {
       parameters += query.build();
     } else if (typeof query === 'object') {
@@ -775,7 +776,7 @@ post(handler, query, callback) {
       ipVersion: this.options.ipVersion,
       request: this.options.request,
     };
-    return postForm(params, callback);
+    return postForm(params, callback!);
   };
 
   /**
@@ -827,7 +828,7 @@ escapeSpecialChars = format.escapeSpecialChars;
    * @api public
    */
 
-  ping(callback) {
+  ping(callback: CallbackFn) {
     return this.get(this.ADMIN_PING_HANDLER, callback);
   };
 
@@ -854,7 +855,7 @@ escapeSpecialChars = format.escapeSpecialChars;
  * @return {http.ClientRequest}
  * @api private
  */
-function postForm(params, callback) {
+function postForm(params, callback: CallbackFn) {
   const headers = {
     'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
     'content-length': Buffer.byteLength(params.params),

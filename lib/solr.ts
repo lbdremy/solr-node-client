@@ -738,7 +738,7 @@ get(handler: string, query: any, callback?: any) {
    * @return {http.ClientRequest}
    * @api public
    */
-post(handler, callback: CallbackFn, query?: Query | Record<string, any> | string, ) {
+post(handler, query?: Query | Record<string, any> | string | CallbackFn, callback?: CallbackFn) {
     let parameters = '';
     if (typeof query === 'function') {
       callback = query as any;
@@ -776,7 +776,7 @@ post(handler, callback: CallbackFn, query?: Query | Record<string, any> | string
       ipVersion: this.options.ipVersion,
       request: this.options.request,
     };
-    return postForm(params, callback);
+    return postForm(params, callback!);
   };
 
   /**

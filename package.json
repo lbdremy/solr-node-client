@@ -17,7 +17,8 @@
     "solr:legacy:start": "docker-compose -f docker-compose-solr-5.yml up --build -d solr5",
     "solr:legacy:stop": "docker-compose -f docker-compose-solr-5.yml down",
     "solr:legacy:logs": "docker logs solr-node-client_solr5_1",
-    "test:legacy": "mocha -r ts-node/register -R spec test/*-test.ts --client.port=8984 && mocha -r ts-node/register -R spec test/*-test.ts --client.port=8984"
+    "test:legacy": "mocha -r ts-node/register -R spec test/*-test.ts --client.port=8984 && mocha -r ts-node/register -R spec test/*-test.ts --client.port=8984",
+    "prepublishOnly": "npm run build"
   },
   "engines": {
     "node": ">= 12"

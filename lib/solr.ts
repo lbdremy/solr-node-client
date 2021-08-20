@@ -214,9 +214,9 @@ class Client {
    * @api public
    */
 
-  realTimeGet(ids, query, callback) {
+  realTimeGet(ids, query, callback: CallbackFn) {
     if (typeof query === 'function') {
-      callback = query;
+      callback = query as any;
       query = {};
     }
     ids = Array.isArray(ids) ? ids : [ids];
@@ -400,8 +400,8 @@ delete(field: string, text: string, options?: Record<string, any> | CallbackFn, 
     field: string,
     start: string | Date,
     stop: string | Date,
-    options: Record<string, any> | CallbackFn,
-    callback: CallbackFn
+    options?: Record<string, any> | CallbackFn,
+    callback?: CallbackFn
   ) {
     if (typeof options === 'function') {
       callback = options as any;
@@ -584,7 +584,7 @@ update(data: Record<string, any>, options: any, callback?: any) {
    * @api public
    */
 
-search(query, callback: CallbackFn) {
+search(query: Query | Record<string, any> | string, callback: CallbackFn) {
     return this.get(this.SELECT_HANDLER, query, callback);
   };
 
@@ -600,7 +600,7 @@ search(query, callback: CallbackFn) {
    * @api public
    */
 
-executeCollection(collection, callback) {
+executeCollection(collection: Query | Record<string, any> | string, callback: CallbackFn) {
     return this.get(this.COLLECTIONS_HANDLER, collection, callback);
   };
 
@@ -615,7 +615,7 @@ executeCollection(collection, callback) {
    * @api public
    */
 
-searchAll(callback: CallbackFn) {
+searchAll(callback:CallbackFn) {
     return this.search('q=*', callback);
   };
 
@@ -633,7 +633,7 @@ searchAll(callback: CallbackFn) {
    * @api public
    */
 
-spell(query, callback: CallbackFn) {
+spell(query: Query, callback: CallbackFn) {
     return this.get(this.SPELL_HANDLER, query, callback);
   };
 
@@ -651,7 +651,7 @@ spell(query, callback: CallbackFn) {
    * @api public
    */
 
-termsSearch(query, callback: CallbackFn) {
+termsSearch(query: Query | Record<string, any> | string, callback: CallbackFn) {
     return this.get(this.TERMS_HANDLER, query, callback);
   };
 

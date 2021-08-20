@@ -1,10 +1,11 @@
-import { RequestOptions } from 'https';
-
-const http = require('http')
-const https = require('https')
+import type { RequestOptions } from 'https';
+import * as http from 'http'
+import * as https from 'https'
 const JSONbig = require('json-bigint');
 
 import { SolrError } from './error/solr-error'
+import { ClientRequest } from 'http';
+import { CallbackFn } from './types';
 
 /**
  * Pick appropriate protocol based on the given `secure` flag
@@ -14,7 +15,7 @@ import { SolrError } from './error/solr-error'
  * @api private
  */
 
-function pickProtocol(secure) {
+function pickProtocol(secure): typeof http | typeof https {
   return secure ? https : http;
 }
 
@@ -86,10 +87,9 @@ function handleJSONResponse(request, bigint, callback) {
  * @param {Error} callback().err
  * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
  *
- * @return {http.ClientRequest}
  * @api private
  */
-function postJSON(params, callback) {
+function postJSON(params: Record<string, any>, callback: CallbackFn): ClientRequest {
   const headers = {
     'content-type': 'application/json; charset=utf-8',
     'content-length': Buffer.byteLength(params.json),

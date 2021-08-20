@@ -1,8 +1,10 @@
-import { RequestOptions } from 'http';
+import type { RequestOptions } from 'http';
+import type * as http from 'http'
 
-const querystring = require('querystring')
-const JSONStream = require('JSONStream')
-const duplexer = require('duplexer')
+import * as querystring from 'querystring'
+import * as JSONStream from 'JSONStream'
+import * as duplexer from 'duplexer'
+
 const request = require('request')
 const bluebird = require('bluebird');
 
@@ -11,9 +13,7 @@ import { Collection } from './collection'
 const format = require('./utils/format')
 import * as versionUtils from './utils/version'
 import { CallbackFn } from './types';
-
-// eslint-disable-next-line
-const http = require('http');
+import { ClientRequest } from 'http';
 
 const {
   handleJSONResponse,
@@ -42,16 +42,16 @@ const {
  */
 
 export function createClient(
-  host,
-  port,
-  core,
-  path,
-  agent,
-  secure,
-  bigint,
-  solrVersion,
-  ipVersion,
-  request
+  host: string | Record<string, any>,
+  port: number | string,
+  core?: string,
+  path?: string,
+  agent?: http.Agent,
+  secure?: boolean,
+  bigint?: boolean,
+  solrVersion?: string,
+  ipVersion?: number,
+  request?: Record<string, any>
 ) {
   const options =
     typeof host === 'object'
@@ -134,32 +134,23 @@ class Client {
 
   /**
    * Create credential using the basic access authentication method
-   *
-   * @param {String} username
-   * @param {String} password
-   *
-   * @return {Client}
    * @api public
    */
 
-  basicAuth (username: string, password: string) {
-    const self = this;
+  basicAuth (username: string, password: string): Client {
     this.options.authorization =
-      'Basic ' + new Buffer(username + ':' + password).toString('base64');
-    return self;
+      'Basic ' + Buffer.from(username + ':' + password).toString('base64');
+    return this;
   };
 
   /**
    * Remove authorization header
-   *
-   * @return {Client}
    * @api public
    */
 
-  unauth() {
-    const self = this;
+  unauth(): Client {
     delete this.options.authorization;
-    return self;
+    return this;
   };
 
   /**
@@ -175,9 +166,9 @@ class Client {
    * @api public
    */
 
-  add(docs: Record<string, any> | Record<string, any>[], options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
+  add(docs: Record<string, any> | Record<string, any>[], options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
     if (typeof options === 'function') {
-      callback = options as any;
+      callback = options as CallbackFn;
       options = {};
     }
     docs = format.dateISOify(docs); // format `Date` object into string understable for Solr as a date.
@@ -214,9 +205,9 @@ class Client {
    * @api public
    */
 
-  realTimeGet(ids, query, callback: CallbackFn) {
+  realTimeGet(ids, query, callback: CallbackFn): ClientRequest {
     if (typeof query === 'function') {
-      callback = query as any;
+      callback = query as CallbackFn;
       query = {};
     }
     ids = Array.isArray(ids) ? ids : [ids];
@@ -241,7 +232,7 @@ class Client {
    * @api public
    */
 
-  addRemoteResource(options, callback) {
+  addRemoteResource(options, callback: CallbackFn): ClientRequest {
     options.parameters = options.parameters || {};
     options.format = options.format === 'xml' ? '' : options.format || ''; // reason: the default route of the XmlUpdateRequestHandle is /update and not /update/xml.
     options.parameters.commit =
@@ -268,7 +259,7 @@ class Client {
    * @api public
    */
 
-  createAddStream(options) {
+  createAddStream(options: Record<string, any>) {
     const path = [
       this.options.path,
       this.options.core,
@@ -313,9 +304,9 @@ class Client {
    * @api public
    */
 
-  commit(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
+  commit(options: Record<string, any> | CallbackFn, callback: CallbackFn): ClientRequest {
     if (typeof options === 'function') {
-      callback = options as any;
+      callback = options as CallbackFn;
       options = {};
     }
     const data = {
@@ -335,7 +326,7 @@ class Client {
    * @api public
    */
 
-prepareCommit(callback) {
+prepareCommit(callback): ClientRequest {
     return this.update({}, { prepareCommit: true }, callback);
   };
 
@@ -350,7 +341,7 @@ prepareCommit(callback) {
    * @api public
    */
 
-softCommit(callback: CallbackFn) {
+softCommit(callback: CallbackFn): ClientRequest {
     return this.update({}, { softCommit: true }, callback);
   };
 
@@ -368,9 +359,9 @@ softCommit(callback: CallbackFn) {
    * @api public
    */
 
-delete(field: string, text: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
+delete(field: string, text: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
     if (typeof options === 'function') {
-      callback = options as any;
+      callback = options as CallbackFn;
       options = {};
     }
     text = format.dateISOify(text);
@@ -396,15 +387,15 @@ delete(field: string, text: string, options?: Record<string, any> | CallbackFn, 
    * @api public
    */
 
-  deleteByRange(
+deleteByRange(
     field: string,
     start: string | Date,
     stop: string | Date,
     options?: Record<string, any> | CallbackFn,
     callback?: CallbackFn
-  ) {
+  ): ClientRequest {
     if (typeof options === 'function') {
-      callback = options as any;
+      callback = options as CallbackFn;
       options = {};
     }
     start = format.dateISOify(start);
@@ -427,9 +418,9 @@ delete(field: string, text: string, options?: Record<string, any> | CallbackFn, 
    * @api public
    */
 
-deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
+deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
     if (typeof options === 'function') {
-      callback = options as any;
+      callback = options as CallbackFn;
       options = {};
     }
     const data = {
@@ -453,9 +444,9 @@ deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, call
    * @api public
    */
 
-deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
+deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
     if (typeof options === 'function') {
-      callback = options as any;
+      callback = options as CallbackFn;
       options = {};
     }
     const data = {
@@ -478,7 +469,7 @@ deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callbac
    * @api public
    */
 
-deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
+deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn): ClientRequest {
     return this.deleteByQuery('*:*', options, callback);
   };
 
@@ -494,9 +485,9 @@ deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
    * @api public
    */
 
-optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
+optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn): ClientRequest {
     if (typeof options === 'function') {
-      callback = options as any;
+      callback = options as CallbackFn;
       options = {};
     }
     const data = {
@@ -512,11 +503,10 @@ optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
    *
-   * @return {http.ClientRequest}
    * @api public
    */
 
-rollback(callback: CallbackFn) {
+rollback(callback: CallbackFn): ClientRequest {
     const data = {
       rollback: {},
     };
@@ -532,11 +522,10 @@ rollback(callback: CallbackFn) {
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
    *
-   * @return {http.ClientRequest}
    * @api private
    */
 
-update(data: Record<string, any>, options: any, callback?: any) {
+update(data: Record<string, any>, options?: Record<string, any> | CallbackFn, callback?: any): ClientRequest {
     if (typeof options === 'function') {
       callback = options;
       options = {};
@@ -580,11 +569,10 @@ update(data: Record<string, any>, options: any, callback?: any) {
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
    *
-   * @return {http.ClientRequest}
    * @api public
    */
 
-search(query: Query | Record<string, any> | string, callback: CallbackFn) {
+search(query: Query | Record<string, any> | string, callback: CallbackFn): ClientRequest {
     return this.get(this.SELECT_HANDLER, query, callback);
   };
 
@@ -596,11 +584,10 @@ search(query: Query | Record<string, any> | string, callback: CallbackFn) {
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
    *
-   * @return {http.ClientRequest}
    * @api public
    */
 
-executeCollection(collection: Query | Record<string, any> | string, callback: CallbackFn) {
+executeCollection(collection: Collection | Record<string, any> | string, callback: CallbackFn): ClientRequest {
     return this.get(this.COLLECTIONS_HANDLER, collection, callback);
   };
 
@@ -615,7 +602,7 @@ executeCollection(collection: Query | Record<string, any> | string, callback: Ca
    * @api public
    */
 
-searchAll(callback:CallbackFn) {
+searchAll(callback: CallbackFn): ClientRequest {
     return this.search('q=*', callback);
   };
 
@@ -633,7 +620,7 @@ searchAll(callback:CallbackFn) {
    * @api public
    */
 
-spell(query: Query, callback: CallbackFn) {
+spell(query: Query, callback: CallbackFn): ClientRequest {
     return this.get(this.SPELL_HANDLER, query, callback);
   };
 
@@ -668,10 +655,10 @@ termsSearch(query: Query | Record<string, any> | string, callback: CallbackFn) {
    * @api public
    */
 
-get(handler: string, query: any, callback?: any) {
+get(handler: string, query: Collection | Query | Record<string, any> | string | CallbackFn, callback?: CallbackFn): ClientRequest {
     let parameters = '';
     if (typeof query === 'function') {
-      callback = query;
+      callback = query as CallbackFn;
     } else if (query instanceof Query || query instanceof Collection) {
       parameters += query.build();
     } else if (typeof query === 'object') {
@@ -738,10 +725,10 @@ get(handler: string, query: any, callback?: any) {
    * @return {http.ClientRequest}
    * @api public
    */
-post(handler, query?: Query | Record<string, any> | string | CallbackFn, callback?: CallbackFn) {
+post(handler: string, query?: Query | Record<string, any> | string | CallbackFn, callback?: CallbackFn): ClientRequest {
     let parameters = '';
     if (typeof query === 'function') {
-      callback = query as any;
+      callback = query as CallbackFn;
     } else if (query instanceof Query) {
       parameters += query.build();
     } else if (typeof query === 'object') {
@@ -782,10 +769,9 @@ post(handler, query?: Query | Record<string, any> | string | CallbackFn, callbac
   /**
    * Create an instance of `Query`
    *
-   * @return {Query}
    * @api public
    */
-  query() {
+  query(): Query {
     return new Query(this.options);
   };
 
@@ -797,7 +783,7 @@ post(handler, query?: Query | Record<string, any> | string | CallbackFn, callbac
    * @api public
    */
 
-createQuery() {
+createQuery(): Query {
     return new Query(this.options);
   };
 
@@ -808,7 +794,7 @@ createQuery() {
    * @api public
    */
 
-collection() {
+collection(): Collection {
     return new Collection();
   };
 
@@ -855,7 +841,7 @@ escapeSpecialChars = format.escapeSpecialChars;
  * @return {http.ClientRequest}
  * @api private
  */
-function postForm(params, callback: CallbackFn) {
+function postForm(params: Record<string, any>, callback: CallbackFn): ClientRequest {
   const headers = {
     'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
     'content-length': Buffer.byteLength(params.params),
@@ -881,7 +867,7 @@ function postForm(params, callback: CallbackFn) {
     options.agent = params.agent;
   }
 
-  const request = pickProtocol(params.secure).request(options);
+  const request: ClientRequest = pickProtocol(params.secure).request(options);
 
   request.on('response', handleJSONResponse(request, params.bigint, callback));
 
@@ -915,7 +901,7 @@ function postForm(params, callback: CallbackFn) {
  * @return {http.ClientRequest}
  * @api private
  */
-function getJSON(params, callback) {
+function getJSON(params, callback): ClientRequest {
   let options: RequestOptions = {
     host: params.host,
     port: params.port,

@@ -12,7 +12,7 @@ import { Query } from './query'
 import { Collection } from './collection'
 const format = require('./utils/format')
 import * as versionUtils from './utils/version'
-import { CallbackFn } from './types';
+import { CallbackFn, Options, Params } from './types';
 import { ClientRequest } from 'http';
 
 const {
@@ -205,15 +205,15 @@ class Client {
    * @api public
    */
 
-  realTimeGet(ids, query, callback: CallbackFn): ClientRequest {
+  realTimeGet(ids: Record<string, any>[] | string, query?: Query | Record<string, any> | string, callback?: CallbackFn): ClientRequest {
     if (typeof query === 'function') {
       callback = query as CallbackFn;
       query = {};
     }
     ids = Array.isArray(ids) ? ids : [ids];
-    query.ids = ids.join(',');
+    query!.ids = ids.join(',');
 
-    return this.get(this.REAL_TIME_GET_HANDLER, query, callback);
+    return this.get(this.REAL_TIME_GET_HANDLER, query!, callback);
   };
 
   /**
@@ -232,7 +232,7 @@ class Client {
    * @api public
    */
 
-  addRemoteResource(options, callback: CallbackFn): ClientRequest {
+  addRemoteResource(options: Options, callback: CallbackFn): ClientRequest {
     options.parameters = options.parameters || {};
     options.format = options.format === 'xml' ? '' : options.format || ''; // reason: the default route of the XmlUpdateRequestHandle is /update and not /update/xml.
     options.parameters.commit =
@@ -326,7 +326,7 @@ class Client {
    * @api public
    */
 
-prepareCommit(callback): ClientRequest {
+prepareCommit(callback: CallbackFn): ClientRequest {
     return this.update({}, { prepareCommit: true }, callback);
   };
 
@@ -751,7 +751,7 @@ post(handler: string, query?: Query | Record<string, any> | string | CallbackFn,
       })
       .join('/');
 
-    const params = {
+    const params: Params = {
       host: this.options.host,
       port: this.options.port,
       fullPath: fullPath,
@@ -901,7 +901,7 @@ function postForm(params: Record<string, any>, callback: CallbackFn): ClientRequ
  * @return {http.ClientRequest}
  * @api private
  */
-function getJSON(params, callback): ClientRequest {
+function getJSON(params: Params, callback): ClientRequest {
   let options: RequestOptions = {
     host: params.host,
     port: params.port,

@@ -7,7 +7,7 @@ import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
 
 export type QueryOptions = {
-  solrVersion?: string
+  solrVersion?: number
 }
 
 /**
@@ -18,7 +18,7 @@ export type QueryOptions = {
  * @api private
  */
 export class Query {
-  public solrVersion: string | undefined;
+  public solrVersion: number | undefined;
   public parameters: any[];
 
   constructor(options?: QueryOptions) {

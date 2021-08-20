@@ -12,7 +12,7 @@ import { Query } from './query'
 import { Collection } from './collection'
 const format = require('./utils/format')
 import * as versionUtils from './utils/version'
-import { CallbackFn, Options, Params } from './types';
+import { CallbackFn, FullSolrClientParams, ResourceOptions, SolrClientParams, SolrRequestParams } from './types';
 import { ClientRequest } from 'http';
 
 const {
@@ -25,7 +25,7 @@ const {
 /**
  * Create an instance of `Client`
  *
- * @param {String|Object} [host='127.0.0.1'] - IP address or host address of the Solr server
+ * @param {String|Object} [hostOrParams='127.0.0.1'] - IP address or host address of the Solr server
  * @param {Number|String} [port='8983'] - port of the Solr server
  * @param {String} [core=''] - name of the Solr core requested
  * @param {String} [path='/solr'] - root path of all requests
@@ -42,22 +42,22 @@ const {
  */
 
 export function createClient(
-  host: string | Record<string, any>,
+  hostOrParams: string | SolrClientParams,
   port: number | string,
   core?: string,
   path?: string,
   agent?: http.Agent,
   secure?: boolean,
   bigint?: boolean,
-  solrVersion?: string,
+  solrVersion?: number,
   ipVersion?: number,
   request?: Record<string, any>
-) {
+): Client {
   const options =
-    typeof host === 'object'
-      ? host
+    typeof hostOrParams === 'object'
+      ? hostOrParams
       : {
-          host: host,
+          host: hostOrParams,
           port: port,
           core: core,
           path: path,
@@ -87,12 +87,11 @@ export function createClient(
  * @param {Object} options.request - request options
  * @param {Number} [ipVersion=4] - pass it to http/https lib's "family" option
  *
- * @return {Client}
  * @api private
  */
 
 class Client {
-  private options: Record<string, any>;
+  private options: FullSolrClientParams;
   private UPDATE_JSON_HANDLER: string;
   private UPDATE_HANDLER: string;
   private TERMS_HANDLER: string;
@@ -102,7 +101,7 @@ class Client {
   private COLLECTIONS_HANDLER: string;
   private SELECT_HANDLER: string;
 
-  constructor(options: Record<string, any>) {
+  constructor(options: SolrClientParams) {
     this.options = {
       host: options.host || '127.0.0.1',
       port: options.port === 0 ? 0 : options.port || '8983',
@@ -237,7 +236,7 @@ class Client {
    * @api public
    */
 
-  addRemoteResource(options: Options, callback: CallbackFn): ClientRequest {
+  addRemoteResource(options: ResourceOptions, callback: CallbackFn): ClientRequest {
     options.parameters = options.parameters || {};
     options.format = options.format === 'xml' ? '' : options.format || ''; // reason: the default route of the XmlUpdateRequestHandle is /update and not /update/xml.
     options.parameters.commit =
@@ -756,7 +755,7 @@ post(handler: string, query?: Query | Record<string, any> | string | CallbackFn,
       })
       .join('/');
 
-    const params: Params = {
+    const params: SolrRequestParams = {
       host: this.options.host,
       port: this.options.port,
       fullPath: fullPath,
@@ -846,10 +845,10 @@ escapeSpecialChars = format.escapeSpecialChars;
  * @return {http.ClientRequest}
  * @api private
  */
-function postForm(params: Record<string, any>, callback: CallbackFn): ClientRequest {
+function postForm(params: SolrRequestParams, callback: CallbackFn): ClientRequest {
   const headers = {
     'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-    'content-length': Buffer.byteLength(params.params),
+    'content-length': params.params ? Buffer.byteLength(params.params) : 0,
     accept: 'application/json; charset=utf-8',
   };
   if (params.authorization) {
@@ -906,7 +905,7 @@ function postForm(params: Record<string, any>, callback: CallbackFn): ClientRequ
  * @return {http.ClientRequest}
  * @api private
  */
-function getJSON(params: Params, callback): ClientRequest {
+function getJSON(params: SolrRequestParams, callback): ClientRequest {
   let options: RequestOptions = {
     host: params.host,
     port: params.port,

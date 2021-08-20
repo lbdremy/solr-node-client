@@ -730,7 +730,7 @@ get(handler: string, query: any, callback?: any) {
    * Send an arbitrary HTTP POST request to Solr on the specified `handler` (as Solr like to call it i.e path)
    *
    * @param {String} handler
-   * @param {Query|Object|String} [query]
+   * @param {Query|Object|String} [query] -//
    * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
@@ -738,10 +738,10 @@ get(handler: string, query: any, callback?: any) {
    * @return {http.ClientRequest}
    * @api public
    */
-post(handler, query, callback: CallbackFn) {
+post(handler, query?: Query | Record<string, any> | string, callback?: CallbackFn) {
     let parameters = '';
     if (typeof query === 'function') {
-      callback = query;
+      callback = query as any;
     } else if (query instanceof Query) {
       parameters += query.build();
     } else if (typeof query === 'object') {

@@ -359,7 +359,7 @@ softCommit(callback) {
    *
    * @param {String} field
    * @param {String} text
-   * @param {Object} [options] //neprivalomas parametras [ tokiuose skliasutuose]
+   * @param {Object} [options]
    * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
    * @param {Error} callback().err
    * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
@@ -397,14 +397,14 @@ delete(field: string, text: string, options?: Record<string, any> | CallbackFn, 
    */
 
   deleteByRange(
-    field,
-    start,
-    stop,
-    options,
-    callback
+    field: string,
+    start: string | Date,
+    stop: string | Date,
+    options: Record<string, any> | CallbackFn,
+    callback: CallbackFn
   ) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     start = format.dateISOify(start);
@@ -427,9 +427,9 @@ delete(field: string, text: string, options?: Record<string, any> | CallbackFn, 
    * @api public
    */
 
-deleteByID(id, options, callback) {
+deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -453,9 +453,9 @@ deleteByID(id, options, callback) {
    * @api public
    */
 
-deleteByQuery(query, options, callback) {
+deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -478,7 +478,7 @@ deleteByQuery(query, options, callback) {
    * @api public
    */
 
-deleteAll(options, callback) {
+deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
     return this.deleteByQuery('*:*', options, callback);
   };
 

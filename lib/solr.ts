@@ -142,7 +142,7 @@ class Client {
    * @api public
    */
 
-  basicAuth (username, password) {
+  basicAuth (username: string, password: string) {
     const self = this;
     this.options.authorization =
       'Basic ' + new Buffer(username + ':' + password).toString('base64');
@@ -175,9 +175,9 @@ class Client {
    * @api public
    */
 
-  add(docs, options, callback) {
+  add(docs: {} | [], options?: Record<string, any> | CallbackFn, callback?: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     docs = format.dateISOify(docs); // format `Date` object into string understable for Solr as a date.
@@ -313,9 +313,9 @@ class Client {
    * @api public
    */
 
-  commit(options, callback) {
+  commit(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -350,7 +350,7 @@ prepareCommit(callback) {
    * @api public
    */
 
-softCommit(callback) {
+softCommit(callback: CallbackFn) {
     return this.update({}, { softCommit: true }, callback);
   };
 
@@ -494,9 +494,9 @@ deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
    * @api public
    */
 
-optimize(options, callback) {
+optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn) {
     if (typeof options === 'function') {
-      callback = options;
+      callback = options as any;
       options = {};
     }
     const data = {
@@ -516,7 +516,7 @@ optimize(options, callback) {
    * @api public
    */
 
-rollback(callback) {
+rollback(callback: CallbackFn) {
     const data = {
       rollback: {},
     };
@@ -584,7 +584,7 @@ update(data: Record<string, any>, options: any, callback?: any) {
    * @api public
    */
 
-search(query, callback) {
+search(query, callback: CallbackFn) {
     return this.get(this.SELECT_HANDLER, query, callback);
   };
 
@@ -615,7 +615,7 @@ executeCollection(collection, callback) {
    * @api public
    */
 
-searchAll(callback) {
+searchAll(callback: CallbackFn) {
     return this.search('q=*', callback);
   };
 
@@ -633,7 +633,7 @@ searchAll(callback) {
    * @api public
    */
 
-spell(query, callback) {
+spell(query, callback: CallbackFn) {
     return this.get(this.SPELL_HANDLER, query, callback);
   };
 
@@ -651,7 +651,7 @@ spell(query, callback) {
    * @api public
    */
 
-termsSearch(query, callback) {
+termsSearch(query, callback: CallbackFn) {
     return this.get(this.TERMS_HANDLER, query, callback);
   };
 
@@ -738,7 +738,7 @@ get(handler: string, query: any, callback?: any) {
    * @return {http.ClientRequest}
    * @api public
    */
-post(handler, query, callback) {
+post(handler, query, callback: CallbackFn) {
     let parameters = '';
     if (typeof query === 'function') {
       callback = query;
@@ -828,7 +828,7 @@ escapeSpecialChars = format.escapeSpecialChars;
    * @api public
    */
 
-  ping(callback) {
+  ping(callback: CallbackFn) {
     return this.get(this.ADMIN_PING_HANDLER, callback);
   };
 
@@ -855,7 +855,7 @@ escapeSpecialChars = format.escapeSpecialChars;
  * @return {http.ClientRequest}
  * @api private
  */
-function postForm(params, callback) {
+function postForm(params, callback: CallbackFn) {
   const headers = {
     'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
     'content-length': Buffer.byteLength(params.params),

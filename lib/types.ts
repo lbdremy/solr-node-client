@@ -57,19 +57,12 @@ export type Options = {
   field: string
   start: string | number | Date
   end: string | number | Date
-} | [ {
-  field: string
-  start: string | number | Date
-  end: string | number | Date
-}]
+} []
 
 export type Filters = {
   field: string
   value: string | number | Date
-} | [{
-  field: string
-  value: string | number | Date
-}]
+}[]
 
 export type MltOptions = {
   on?: boolean

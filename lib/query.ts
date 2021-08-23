@@ -5,6 +5,7 @@ import * as querystring from 'querystring';
 import * as format from './utils/format';
 import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
+import { Filters, HlOptions, MltOptions, Options, TermsOptions } from './types';
 
 export type QueryOptions = {
   solrVersion?: number
@@ -36,7 +37,7 @@ export class Query {
    * @return {Query} - allow chaining
    * @api public
    */
-  set(parameter) {
+  set(parameter: string): Query {
     const self = this;
     this.parameters.push(parameter);
     return self;
@@ -50,7 +51,7 @@ export class Query {
    * @return {Query}
    * @api public
    */
-defType(type) {
+defType(type: string): Query {
     const self = this;
     const parameter = 'defType=' + type;
     this.parameters.push(parameter);
@@ -66,7 +67,7 @@ defType(type) {
    * @return {Query}
    * @api public
    */
-   requestHandler (name) {
+   requestHandler (name: string): Query {
     const self = this;
     const parameter = 'qt=' + name;
     this.parameters.push(parameter);
@@ -83,7 +84,7 @@ defType(type) {
    * @return  {Query}
    * @api public
    */
-  q(q) {
+  q(q: string | Record<string, any>): Query {
     const self = this;
     let parameter = 'q=';
     if (typeof q === 'string') {
@@ -104,7 +105,7 @@ defType(type) {
    * @api public
    */
 
-  qop(op) {
+  qop(op: string): Query {
     const self = this;
     let parameter = 'q.op=';
     parameter += op;
@@ -120,7 +121,7 @@ defType(type) {
    * @return  {Query}
    * @api public
    */
-df(df) {
+df(df: string): Query {
     const self = this;
     let parameter = 'df=';
     parameter += df;
@@ -136,7 +137,7 @@ df(df) {
    * @return {Query}
    * @api public
    */
-start(start) {
+start(start: number): Query {
     const self = this;
     const parameter = 'start=' + start;
     this.parameters.push(parameter);
@@ -151,7 +152,7 @@ start(start) {
    * @return {Query}
    * @api public
    */
-rows(rows) {
+rows(rows: number): Query {
     const self = this;
     const parameter = 'rows=' + rows;
     this.parameters.push(parameter);
@@ -167,7 +168,7 @@ rows(rows) {
    * @return {Query}
    * @api public
    */
-cursorMark(mark) {
+cursorMark(mark: string): Query {
     const self = this;
     mark = mark || '*';
     const parameter = 'cursorMark=' + encodeURIComponent(mark);
@@ -183,7 +184,7 @@ cursorMark(mark) {
    * @return {Query}
    * @api public
    */
-sort(options) {
+sort(options: Record<string, any>): Query {
     const self = this;
     let parameter = 'sort=';
     parameter += querystring.stringify(options, ',', '%20');
@@ -209,7 +210,7 @@ sort(options) {
    * query.q({ '*' : '*' }).rangeFilter([{ field : 'id', start : 100, end : 200},{ field : 'date', start : new Date(), end : new Date() - 3600}]);
    */
 
-rangeFilter(options) {
+rangeFilter(options: Options): Query {
     const self = this;
     options = format.dateISOify(options);
     let parameter = 'fq=';
@@ -257,7 +258,7 @@ rangeFilter(options) {
    * query.q({ '*' : '*' }).matchFilter('id', 100)
    */
 
-matchFilter(field, value) {
+matchFilter(field: string, value: string | number | Date): Query {
     const self = this;
     value = format.dateISOify(value);
     let parameter = 'fq=';
@@ -282,7 +283,7 @@ matchFilter(field, value) {
    * query.q({ '*' : '*' }).fq({field: 'id', value: 100})
    * query.q({ '*' : '*' }).fq([{field: 'id', value: 100}, {field: 'name', value: 'John'}])
    */
-fq(filters) {
+fq(filters: Filters ): Query {
     const self = this
     if (Array.isArray(filters)) {
       filters.map(f => this.matchFilter(f.field, f.value))
@@ -302,7 +303,7 @@ fq(filters) {
    * @return {Query}
    * @api public
    */
-fl(fields) {
+fl(fields: Record<string, any> | Record<string, any>[]): Query {
     const self = this;
     let parameter = 'fl=';
     if (typeof fields === 'string') {
@@ -341,7 +342,7 @@ fl(fields) {
    * @api public
    */
 
-groupBy(field) {
+groupBy(field: string): Query {
     const self = this;
     this.group({
       field: field,
@@ -439,7 +440,7 @@ group(options) {
    * @return {Query}
    * @api public
    */
-facet(options) {
+facet(options): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('facet=false');
@@ -516,7 +517,7 @@ facet(options) {
    * @return {Query}
    * @api public
    */
-  mlt(options) {
+  mlt(options: MltOptions): Query {
     let parameter;
     const self = this;
     if (options.on === false) {
@@ -574,7 +575,7 @@ facet(options) {
    * @return {Query}
    * @api public
    */
-dismax() {
+dismax(): Query {
     const self = this;
     this.defType('dismax');
     return self;
@@ -592,7 +593,7 @@ dismax() {
    * @api public
    */
 
-edismax() {
+edismax(): Query {
     const self = this;
     this.defType('edismax');
     return self;
@@ -606,7 +607,7 @@ edismax() {
    * @api public
    */
 
-debugQuery() {
+debugQuery(): Query {
     const self = this;
     this.parameters.push('debugQuery=true');
     return self;
@@ -625,7 +626,7 @@ debugQuery() {
    * query.qf({title : 2.2, description : 0.5 });
    */
 
-  qf(options) {
+  qf(options: Record<string, any>): Query {
     const self = this;
     let parameter = 'qf=';
     parameter += querystring.stringify(options, '%20', '^');
@@ -646,7 +647,7 @@ debugQuery() {
    * query.mm(2); // or query.mm('75%');
    */
 
-mm(minimum) {
+mm(minimum: string | number): Query {
     const self = this;
     const parameter = 'mm=' + minimum;
     this.parameters.push(parameter);
@@ -664,7 +665,7 @@ mm(minimum) {
    * @api public
    */
 
-pf(options) {
+pf(options: Record<string, any>): Query {
     const self = this;
     let parameter = 'pf=';
     parameter += querystring.stringify(options, '%20', '^');
@@ -681,7 +682,7 @@ pf(options) {
    * @api public
    */
 
-ps(slop) {
+ps(slop: number): Query {
     const self = this;
     const parameter = 'ps=' + slop;
     this.parameters.push(parameter);
@@ -696,7 +697,7 @@ ps(slop) {
    * @return {Query}
    * @api public
    */
-qs(slop) {
+qs(slop: number): Query {
     const self = this;
     const parameter = 'qs=' + slop;
     this.parameters.push(parameter);
@@ -712,7 +713,7 @@ qs(slop) {
    * @api public
    */
 
-tie(tiebreaker) {
+tie(tiebreaker: number): Query {
     const self = this;
     const parameter = 'tie=' + tiebreaker;
     this.parameters.push(parameter);
@@ -728,7 +729,7 @@ tie(tiebreaker) {
    * @return {Query}
    * @api public
    */
-bq(options) {
+bq(options: Record<string, any>): Query {
     const self = this;
     let parameter = 'bq=';
     parameter += querystring.stringify(options, '%20', '^');
@@ -743,7 +744,7 @@ bq(options) {
    * @return {Query}
    * @api public
    */
-bf(functions) {
+bf(functions: string): Query {
     const self = this;
     const parameter = 'bf=' + functions;
     this.parameters.push(parameter);
@@ -758,7 +759,7 @@ bf(functions) {
    * @api public
    */
 
-boost(functions) {
+boost(functions: string): Query {
     const self = this;
     const parameter = 'boost=' + encodeURIComponent(functions);
     this.parameters.push(parameter);
@@ -771,7 +772,7 @@ boost(functions) {
    * @return {String}
    * @api private
    */
-build() {
+build(): string {
     return this.parameters.join('&');
   };
 
@@ -808,7 +809,7 @@ build() {
    * @return {Query}
    * @api public
    */
-hl(options) {
+hl(options: HlOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('hl=false');
@@ -963,7 +964,7 @@ hl(options) {
    * @return {Query}
    * @api public
    */
-terms(options) {
+terms(options: TermsOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('terms=false');

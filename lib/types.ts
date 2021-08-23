@@ -63,6 +63,37 @@ export type Filters = {
   field: string
   value: string | number | Date
 }
+export type GroupOptions = {
+  on?: boolean
+  field: Record<string, any>
+  query: Record<string, any> | Record<string, any>[]
+  limit?: number
+  offset: number
+  sort?: string
+  format: string
+  main: boolean
+  ngroups: boolean
+  truncate: boolean
+  cache?: number
+}
+
+export type FacetOptions = {
+  on?: boolean
+  query?: string
+  field: string | string[]
+  prefix?: string
+  sort?: string
+  limit?: number
+  offset?: number
+  mincount?: number
+  missing?: boolean
+  method?: string
+  pivot: Pivot
+}
+export type Pivot = {
+  mincount?: string
+  fields
+}
 
 export type MltOptions = {
   on?: boolean

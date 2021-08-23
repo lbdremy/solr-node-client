@@ -5,7 +5,7 @@ import * as querystring from 'querystring';
 import * as format from './utils/format';
 import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
-import { Filters, HlOptions, MltOptions, DateOptions, TermsOptions } from './types';
+import { Filters, HlOptions, MltOptions, DateOptions, TermsOptions, GroupOptions, FacetOptions } from './types';
 
 export type QueryOptions = {
   solrVersion?: number
@@ -303,7 +303,7 @@ fq(filters: Filters | Filters[] ): Query {
    * @return {Query}
    * @api public
    */
-fl(fields: Record<string, any> | Record<string, any>[]): Query {
+fl(fields: string | string[]): Query {
     const self = this;
     let parameter = 'fl=';
     if (typeof fields === 'string') {
@@ -326,7 +326,7 @@ fl(fields: Record<string, any> | Record<string, any>[]): Query {
    * @return {Query}
    * @api public
    */
-  timeout(time) {
+  timeout(time: string | number): Query {
     const self = this;
     const parameter = 'timeAllowed=' + time;
     this.parameters.push(parameter);
@@ -345,8 +345,8 @@ fl(fields: Record<string, any> | Record<string, any>[]): Query {
 groupBy(field: string): Query {
     const self = this;
     this.group({
-      field: field,
-    });
+      field: field
+    })
     return self;
   };
 
@@ -372,7 +372,7 @@ groupBy(field: string): Query {
    * @api public
    */
 
-group(options) {
+group(options: GroupOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('group=false');
@@ -440,7 +440,7 @@ group(options) {
    * @return {Query}
    * @api public
    */
-facet(options): Query {
+facet(options: FacetOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('facet=false');

@@ -195,7 +195,7 @@ sort(options: Record<string, any>): Query {
   /**
    * Filter the set of documents found before to return the result with the given range determined by `field`, `start` and `end`.
    *
-   * @param {Array|Object} options2 -
+   * @param {Array|Object} options -
    * @param {String} options2.field - the name of the field where the range is applied
    * @param {String|Number|Date} options2.start - the offset where the range starts
    * @param {String|Number|Date} options2.end - the offset where the range ends
@@ -342,7 +342,7 @@ fl(fields: string | string[]): Query {
    * @api public
    */
 
-groupBy(field: string | Partial<GroupOptions>): Query {
+groupBy(field: string): Query {
     const self = this;
     this.group({
       field: field

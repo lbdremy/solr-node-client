@@ -65,15 +65,15 @@ export type Filters = {
 }
 export type GroupOptions = {
   on?: boolean
-  field: string | string[]
-  query: Record<string, any> | Record<string, any>[]
+  field?: string | string[]
+  query?: Record<string, any> | Record<string, any>[]
   limit?: number
-  offset: number
+  offset?: number
   sort?: string
-  format: string
-  main: boolean
-  ngroups: boolean
-  truncate: boolean
+  format?: string
+  main?: boolean
+  ngroups?: boolean
+  truncate?: boolean
   cache?: number
 }
 

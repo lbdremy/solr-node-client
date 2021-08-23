@@ -53,16 +53,16 @@ export type FullSolrClientParams = {
   authorization?: string
 }
 
-export type Options = {
+export type DateOptions = {
   field: string
   start: string | number | Date
   end: string | number | Date
-} []
+}
 
 export type Filters = {
   field: string
   value: string | number | Date
-}[]
+}
 
 export type MltOptions = {
   on?: boolean
@@ -80,9 +80,9 @@ export type MltOptions = {
 
 export type HlOptions = {
   on?: boolean
-  q?: Record<string, any> | Record<string, any>[]
+  q?: Record<string, any>
   qparser?: string
-  fl?: Record<string, any> | Record<string, any>[]
+  fl?: Record<string, any>
   snippets?: number
   fragsize?: number
   mergeContiguous?: boolean

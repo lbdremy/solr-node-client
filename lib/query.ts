@@ -5,7 +5,7 @@ import * as querystring from 'querystring';
 import * as format from './utils/format';
 import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
-import { Filters, HlOptions, MltOptions, Options, TermsOptions } from './types';
+import { Filters, HlOptions, MltOptions, DateOptions, TermsOptions } from './types';
 
 export type QueryOptions = {
   solrVersion?: number
@@ -195,10 +195,10 @@ sort(options: Record<string, any>): Query {
   /**
    * Filter the set of documents found before to return the result with the given range determined by `field`, `start` and `end`.
    *
-   * @param {Array|Object} options -
-   * @param {String} options.field - the name of the field where the range is applied
-   * @param {String|Number|Date} options.start - the offset where the range starts
-   * @param {String|Number|Date} options.end - the offset where the range ends
+   * @param {Array|Object} options2 -
+   * @param {String} options2.field - the name of the field where the range is applied
+   * @param {String|Number|Date} options2.start - the offset where the range starts
+   * @param {String|Number|Date} options2.end - the offset where the range ends
    *
    * @return {Query}
    * @api public
@@ -210,33 +210,33 @@ sort(options: Record<string, any>): Query {
    * query.q({ '*' : '*' }).rangeFilter([{ field : 'id', start : 100, end : 200},{ field : 'date', start : new Date(), end : new Date() - 3600}]);
    */
 
-rangeFilter(options: Options): Query {
+rangeFilter(options: DateOptions | DateOptions[]): Query {
     const self = this;
-    options = format.dateISOify(options);
+    const options2 = format.dateISOify(options);
     let parameter = 'fq=';
-    if (Array.isArray(options)) {
+    if (Array.isArray(options2)) {
       parameter += '(';
-      const filters = options.map(function(option) {
+      const filters = options2.map(function(option) {
         const key = option.field;
         const filter = {};
         filter[key] =
           '[' +
-          encodeURIComponent(option.start) +
+          encodeURIComponent(option.start.toString()) +
           '%20TO%20' +
-          encodeURIComponent(option.end) +
+          encodeURIComponent(option.end.toString()) +
           ']';
         return format.stringify(filter, '', ':');
       });
       parameter += filters.join('%20AND%20');
       parameter += ')';
     } else {
-      const key = options.field;
+      const key = options2.field;
       const filter = {};
       filter[key] =
         '[' +
-        encodeURIComponent(options.start) +
+        encodeURIComponent(options2.start.toString()) +
         '%20TO%20' +
-        encodeURIComponent(options.end) +
+        encodeURIComponent(options2.end.toString()) +
         ']';
       parameter += format.stringify(filter, '', ':');
     }
@@ -283,7 +283,7 @@ matchFilter(field: string, value: string | number | Date): Query {
    * query.q({ '*' : '*' }).fq({field: 'id', value: 100})
    * query.q({ '*' : '*' }).fq([{field: 'id', value: 100}, {field: 'name', value: 'John'}])
    */
-fq(filters: Filters ): Query {
+fq(filters: Filters | Filters[] ): Query {
     const self = this
     if (Array.isArray(filters)) {
       filters.map(f => this.matchFilter(f.field, f.value))

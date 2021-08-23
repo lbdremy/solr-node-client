@@ -342,7 +342,7 @@ fl(fields: string | string[]): Query {
    * @api public
    */
 
-groupBy(field: string): Query {
+groupBy(field: string | Partial<GroupOptions>): Query {
     const self = this;
     this.group({
       field: field

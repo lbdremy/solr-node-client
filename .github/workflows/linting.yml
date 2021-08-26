@@ -14,7 +14,7 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    name: Linting
+    name: Linting and types
 
     strategy:
       matrix:
@@ -35,7 +35,8 @@ jobs:
       - name: Run npm install
         run: npm install
 
+      - name: Build TS
+        run: npm run build
+
       - name: Run lint
         run: npm run lint
-        env:
-          CI: true

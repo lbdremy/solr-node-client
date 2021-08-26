@@ -3,7 +3,7 @@
   "main": "dist/main.js",
   "types": "dist/main.d.ts",
   "description": " A Solr client library for indexing, adding, deleting, committing, optimizing and searching documents within an Apache Solr installation (version>=3.2)",
-  "version": "0.10.0-rc3",
+  "version": "0.10.0-rc4",
   "scripts": {
     "build": "tsc",
     "format": "prettier --write \"{lib,examples,test}/**/*.js\"",

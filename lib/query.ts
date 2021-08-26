@@ -213,6 +213,8 @@ sort(options: Record<string, any>): Query {
 rangeFilter(options: DateOptions | DateOptions[]): Query {
     const self = this;
     const options2 = format.dateISOify(options);
+    const startParam = options.start ? options.start.toString() : '*'
+    const endParam = options.end ? options.end.toString() : '*'
     let parameter = 'fq=';
     if (Array.isArray(options2)) {
       parameter += '(';
@@ -221,9 +223,9 @@ rangeFilter(options: DateOptions | DateOptions[]): Query {
         const filter = {};
         filter[key] =
           '[' +
-          encodeURIComponent(option.start.toString()) +
+          startParam +
           '%20TO%20' +
-          encodeURIComponent(option.end.toString()) +
+          endParam +
           ']';
         return format.stringify(filter, '', ':');
       });

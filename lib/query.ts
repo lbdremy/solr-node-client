@@ -258,7 +258,7 @@ rangeFilter(options: DateOptions | DateOptions[]): Query {
    * query.q({ '*' : '*' }).matchFilter('id', 100)
    */
 
-matchFilter(field: string, value: string | number | Date): Query {
+matchFilter(field: string, value: string | number | Date | boolean): Query {
     const self = this;
     value = format.dateISOify(value);
     let parameter = 'fq=';

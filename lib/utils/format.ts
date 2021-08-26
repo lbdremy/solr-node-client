@@ -3,7 +3,7 @@ import { DateOptions } from '../types';
 export function dateISOify(obj: Record<string, Date>): Record<string, string>
 export function dateISOify(obj: Date[]): string[]
 export function dateISOify (obj: DateOptions  | DateOptions[]): DateOptions | DateOptions[]
-export function dateISOify (obj: string | number | Date): string
+export function dateISOify (obj: string | number | Date | boolean): string
 
   /**
  * ISOify `Date` objects (possibly in collections)

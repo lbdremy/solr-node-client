@@ -1,12 +1,15 @@
+import { DateOptions } from '../types';
+
 export function dateISOify(obj: Record<string, Date>): Record<string, string>
-export function dateISOify(obj: Date): string
 export function dateISOify(obj: Date[]): string[]
+export function dateISOify (obj: DateOptions  | DateOptions[]): DateOptions | DateOptions[]
+export function dateISOify (obj: string | number | Date | boolean): string
 
   /**
  * ISOify `Date` objects (possibly in collections)
  * @api private
  */
-export function dateISOify(obj: any | any[]): string | Record<string, string> | string[] {
+export function dateISOify(obj: any | any[]): any | any[] {
   if (obj instanceof Array) {
     for (let i = 0; i < obj.length; i++) {
       obj[i] = dateISOify(obj[i]);

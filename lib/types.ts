@@ -61,7 +61,7 @@ export type DateOptions = {
 
 export type Filters = {
   field: string
-  value: string | number | Date
+  value: string | number | Date | boolean
 }
 export type GroupOptions = {
   on?: boolean

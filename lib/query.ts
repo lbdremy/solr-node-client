@@ -5,7 +5,7 @@ import * as querystring from 'querystring';
 import * as format from './utils/format';
 import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
-import { Filters, HlOptions, MltOptions, DateOptions, TermsOptions, GroupOptions, FacetOptions } from './types';
+import { Filters, HlOptions, MltOptions, TermsOptions, GroupOptions, FacetOptions, DateOptions } from './types';
 
 export type QueryOptions = {
   solrVersion?: number

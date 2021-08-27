@@ -48,5 +48,41 @@ describe('Client#createQuery', function () {
         done();
       });
     });
+    it('should filter a query using a range when start and end values are not set', function (done) {
+      const query = client
+        .createQuery()
+        .q('test')
+        .rangeFilter({ field: 'id'});
+
+      client.search(query, function (err, data) {
+        sassert.ok(err, data);
+        assert.equal('id:[* TO *]', data.responseHeader.params.fq);
+        done();
+      });
+    });
+    it('should filter a query using a range when start value is not set', function (done) {
+      const query = client
+        .createQuery()
+        .q('test')
+        .rangeFilter({ field: 'id', end: 200});
+
+      client.search(query, function (err, data) {
+        sassert.ok(err, data);
+        assert.equal('id:[* TO 200]', data.responseHeader.params.fq);
+        done();
+      });
+    });
+    it('should filter a query using a range when end value is not set', function (done) {
+      const query = client
+        .createQuery()
+        .q('test')
+        .rangeFilter({ field: 'id', start: 200});
+
+      client.search(query, function (err, data) {
+        sassert.ok(err, data);
+        assert.equal('id:[200 TO *]', data.responseHeader.params.fq);
+        done();
+      });
+    });
   });
 });

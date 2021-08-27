@@ -210,16 +210,16 @@ sort(options: Record<string, any>): Query {
    * query.q({ '*' : '*' }).rangeFilter([{ field : 'id', start : 100, end : 200},{ field : 'date', start : new Date(), end : new Date() - 3600}]);
    */
 
-rangeFilter(options: DateOptions | DateOptions[]): Query {
+  rangeFilter(options: DateOptions | DateOptions[]): Query {
     const self = this;
     const options2 = format.dateISOify(options);
-    const startParam = options.start ? options.start.toString() : '*'
-    const endParam = options.end ? options.end.toString() : '*'
     let parameter = 'fq=';
     if (Array.isArray(options2)) {
       parameter += '(';
       const filters = options2.map(function(option) {
         const key = option.field;
+        const startParam = option.start ? option.start.toString() : '*'
+        const endParam = option.end ? option.end.toString() : '*'
         const filter = {};
         filter[key] =
           '[' +
@@ -233,12 +233,14 @@ rangeFilter(options: DateOptions | DateOptions[]): Query {
       parameter += ')';
     } else {
       const key = options2.field;
+      const startParam = options2.start ? options2.start.toString() : '*'
+      const endParam = options2.end ? options2.end.toString() : '*'
       const filter = {};
       filter[key] =
         '[' +
-        encodeURIComponent(options2.start.toString()) +
+        startParam +
         '%20TO%20' +
-        encodeURIComponent(options2.end.toString()) +
+        endParam +
         ']';
       parameter += format.stringify(filter, '', ':');
     }

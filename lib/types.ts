@@ -199,3 +199,52 @@ export type AddReplica = {
   node: string
   async: string
 }
+
+export type ClusterProp = {
+  name: string
+  val: string
+}
+
+export type Migrate = {
+  collection: string
+  targetCollection: string
+  splitKey: string
+  forwardTimeout?: number
+  async?: string
+}
+
+export type Role = {
+  role: string
+  node: string
+}
+
+export type AddReplicaProp = {
+  collection: string
+  shard: string
+  replica: string
+  property: string
+  propertyValue: string
+  shardUnique?: boolean
+}
+
+export type DeleteReplicaProp = {
+  collection: string
+  shard: string
+  replica: string
+  property: string
+}
+
+
+
+export type BalanceShardUnique = {
+  collection: string
+  property: string
+  onlyActiveNodes?: boolean
+  shardUnique?: boolean
+}
+
+export type RebalanceLeaders = {
+  collection : string
+  maxAtOnce?: number
+  maxWaitSeconds?: number
+}

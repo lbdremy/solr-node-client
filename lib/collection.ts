@@ -5,6 +5,14 @@
  * @return {Collection}
  * @api private
  */
+import {
+  AddReplica,
+  Alias,
+  CreateOptions,
+  DeleteReplica,
+  ShardOptions,
+  SplitShard,
+} from './types';
 
 export class Collection {
   private parameters: any[];
@@ -23,7 +31,7 @@ export class Collection {
    * @return {Collection} - allow chaining
    * @api public
    */
-set(parameter) {
+set(parameter: string): Collection {
     const self = this;
     this.parameters.push(parameter);
     return self;
@@ -49,7 +57,7 @@ set(parameter) {
    * @return {Collection}
    * @api public
    */
-create(options) {
+create(options: CreateOptions): Collection {
     const self = this;
     this.parameters.push('action=CREATE');
     if (options.name) {
@@ -112,7 +120,7 @@ create(options) {
    * @return {Collection}
    * @api public
    */
-reload(name) {
+reload(name: string): Collection {
     const self = this;
     this.parameters.push('action=RELOAD');
     if (name) {
@@ -135,7 +143,7 @@ reload(name) {
    * @return {Collection}
    * @api public
    */
-splitShard(options) {
+splitShard(options: SplitShard): Collection {
     const self = this;
     this.parameters.push('action=SPLITSHARD');
     if (options.collection) {
@@ -172,7 +180,7 @@ splitShard(options) {
    * @return {Collection}
    * @api public
    */
-createShard(options) {
+createShard(options: ShardOptions): Collection {
     const self = this;
     this.parameters.push('action=CREATESHARD');
     if (options.collection) {
@@ -195,7 +203,7 @@ createShard(options) {
    * @return {Collection}
    * @api public
    */
-deleteShard(options) {
+deleteShard(options: ShardOptions): Collection {
     const self = this;
     this.parameters.push('action=DELETESHARD');
     if (options.collection) {
@@ -218,7 +226,7 @@ deleteShard(options) {
    * @return {Collection}
    * @api public
    */
-createAlias(options) {
+createAlias(options: Alias): Collection {
     const self = this;
     this.parameters.push('action=CREATEALIAS');
     if (options.name) {
@@ -243,7 +251,7 @@ createAlias(options) {
    * @return {Collection}
    * @api public
    */
-deleteAlias(name) {
+deleteAlias(name: string): Collection {
     const self = this;
     this.parameters.push('action=DELETEALIAS');
     if (name) {
@@ -261,7 +269,7 @@ deleteAlias(name) {
    * @return {Collection}
    * @api public
    */
-delete(name) {
+delete(name: string): Collection {
     const self = this;
     this.parameters.push('action=DELETE');
     if (name) {
@@ -283,7 +291,7 @@ delete(name) {
    * @return {Collection}
    * @api public
    */
-deleteReplica(options) {
+deleteReplica(options: DeleteReplica): Collection {
     const self = this;
     this.parameters.push('action=DELETEREPLICA');
     if (options.collection) {
@@ -315,7 +323,7 @@ deleteReplica(options) {
    * @return {Collection}
    * @api public
    */
-addReplica(options) {
+addReplica(options: AddReplica): Collection {
     const self = this;
     this.parameters.push('action=ADDREPLICA');
     if (options.collection) {

@@ -152,3 +152,50 @@ export type TermsOptions = {
   raw?: boolean
   sort?: string
 }
+
+export type CreateOptions = {
+  name: string
+  routerName?: string
+  numShards?: number
+  shards?: string | string[]
+  replicationFactor?: number
+  maxShardsPerNode?: number
+  createNodeSet?: string | string[]
+  createNodeSetShuffle?: boolean
+  collectionConfigName?: string
+  routerField?: string
+  autoAddReplicas?: boolean
+  async?: string
+}
+
+export type SplitShard = {
+  collection: string
+  shard: string
+  ranges?: string | string[]
+  splitKey?: string
+  async?: string
+}
+export type ShardOptions = {
+  collection: string
+  shard: string
+}
+
+export type Alias = {
+  name: string
+  collections: string | string[]
+}
+
+export type DeleteReplica = {
+  collection: string
+  shard: string
+  replica: string
+  onlyIfDown: boolean
+}
+
+export type AddReplica = {
+  collection: string
+  shard: string
+  route: string
+  node: string
+  async: string
+}

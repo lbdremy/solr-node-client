@@ -152,3 +152,99 @@ export type TermsOptions = {
   raw?: boolean
   sort?: string
 }
+
+export type CreateOptions = {
+  name: string
+  routerName?: string
+  numShards?: number
+  shards?: string | string[]
+  replicationFactor?: number
+  maxShardsPerNode?: number
+  createNodeSet?: string | string[]
+  createNodeSetShuffle?: boolean
+  collectionConfigName?: string
+  routerField?: string
+  autoAddReplicas?: boolean
+  async?: string
+}
+
+export type SplitShard = {
+  collection: string
+  shard: string
+  ranges?: string | string[]
+  splitKey?: string
+  async?: string
+}
+export type ShardOptions = {
+  collection: string
+  shard: string
+}
+
+export type Alias = {
+  name: string
+  collections: string | string[]
+}
+
+export type DeleteReplica = {
+  collection: string
+  shard: string
+  replica: string
+  onlyIfDown: boolean
+}
+
+export type AddReplica = {
+  collection: string
+  shard: string
+  route: string
+  node: string
+  async: string
+}
+
+export type ClusterProp = {
+  name: string
+  val: string
+}
+
+export type Migrate = {
+  collection: string
+  targetCollection: string
+  splitKey: string
+  forwardTimeout?: number
+  async?: string
+}
+
+export type Role = {
+  role: string
+  node: string
+}
+
+export type AddReplicaProp = {
+  collection: string
+  shard: string
+  replica: string
+  property: string
+  propertyValue: string
+  shardUnique?: boolean
+}
+
+export type DeleteReplicaProp = {
+  collection: string
+  shard: string
+  replica: string
+  property: string
+}
+
+
+
+export type BalanceShardUnique = {
+  collection: string
+  property: string
+  onlyActiveNodes?: boolean
+  shardUnique?: boolean
+}
+
+export type RebalanceLeaders = {
+  collection : string
+  maxAtOnce?: number
+  maxWaitSeconds?: number
+}

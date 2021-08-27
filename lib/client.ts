@@ -2,7 +2,6 @@ import type { RequestOptions } from 'https';
 import * as http from 'http'
 import * as https from 'https'
 const JSONbig = require('json-bigint');
-
 import { SolrError } from './error/solr-error'
 import { ClientRequest } from 'http';
 import { CallbackFn } from './types';
@@ -15,7 +14,7 @@ import { CallbackFn } from './types';
  * @api private
  */
 
-function pickProtocol(secure): typeof http | typeof https {
+function pickProtocol(secure: boolean): typeof http | typeof https {
   return secure ? https : http;
 }
 
@@ -26,7 +25,7 @@ function pickProtocol(secure): typeof http | typeof https {
  * @api private
  */
 
-function pickJSON(bigint) {
+function pickJSON(bigint: boolean): typeof JSON | typeof JSONbig {
   return bigint ? JSONbig : JSON;
 }
 

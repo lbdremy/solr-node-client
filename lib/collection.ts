@@ -5,6 +5,14 @@
  * @return {Collection}
  * @api private
  */
+import {
+  AddReplica, AddReplicaProp,
+  Alias, BalanceShardUnique, ClusterProp,
+  CreateOptions,
+  DeleteReplica, DeleteReplicaProp, Migrate, RebalanceLeaders, Role,
+  ShardOptions,
+  SplitShard,
+} from './types';
 
 export class Collection {
   private parameters: any[];
@@ -23,7 +31,7 @@ export class Collection {
    * @return {Collection} - allow chaining
    * @api public
    */
-set(parameter) {
+set(parameter: string): Collection {
     const self = this;
     this.parameters.push(parameter);
     return self;
@@ -49,7 +57,7 @@ set(parameter) {
    * @return {Collection}
    * @api public
    */
-create(options) {
+create(options: CreateOptions): Collection {
     const self = this;
     this.parameters.push('action=CREATE');
     if (options.name) {
@@ -112,7 +120,7 @@ create(options) {
    * @return {Collection}
    * @api public
    */
-reload(name) {
+reload(name: string): Collection {
     const self = this;
     this.parameters.push('action=RELOAD');
     if (name) {
@@ -135,7 +143,7 @@ reload(name) {
    * @return {Collection}
    * @api public
    */
-splitShard(options) {
+splitShard(options: SplitShard): Collection {
     const self = this;
     this.parameters.push('action=SPLITSHARD');
     if (options.collection) {
@@ -172,7 +180,7 @@ splitShard(options) {
    * @return {Collection}
    * @api public
    */
-createShard(options) {
+createShard(options: ShardOptions): Collection {
     const self = this;
     this.parameters.push('action=CREATESHARD');
     if (options.collection) {
@@ -195,7 +203,7 @@ createShard(options) {
    * @return {Collection}
    * @api public
    */
-deleteShard(options) {
+deleteShard(options: ShardOptions): Collection {
     const self = this;
     this.parameters.push('action=DELETESHARD');
     if (options.collection) {
@@ -218,7 +226,7 @@ deleteShard(options) {
    * @return {Collection}
    * @api public
    */
-createAlias(options) {
+createAlias(options: Alias): Collection {
     const self = this;
     this.parameters.push('action=CREATEALIAS');
     if (options.name) {
@@ -243,7 +251,7 @@ createAlias(options) {
    * @return {Collection}
    * @api public
    */
-deleteAlias(name) {
+deleteAlias(name: string): Collection {
     const self = this;
     this.parameters.push('action=DELETEALIAS');
     if (name) {
@@ -261,7 +269,7 @@ deleteAlias(name) {
    * @return {Collection}
    * @api public
    */
-delete(name) {
+delete(name: string): Collection {
     const self = this;
     this.parameters.push('action=DELETE');
     if (name) {
@@ -283,7 +291,7 @@ delete(name) {
    * @return {Collection}
    * @api public
    */
-deleteReplica(options) {
+deleteReplica(options: DeleteReplica): Collection {
     const self = this;
     this.parameters.push('action=DELETEREPLICA');
     if (options.collection) {
@@ -315,7 +323,7 @@ deleteReplica(options) {
    * @return {Collection}
    * @api public
    */
-addReplica(options) {
+addReplica(options: AddReplica): Collection {
     const self = this;
     this.parameters.push('action=ADDREPLICA');
     if (options.collection) {
@@ -347,7 +355,7 @@ addReplica(options) {
    * @return {Collection}
    * @api public
    */
-clusterProp(options) {
+clusterProp(options: ClusterProp): Collection {
     const self = this;
     this.parameters.push('action=CLUSTERPROP');
     if (options.name) {
@@ -373,7 +381,7 @@ clusterProp(options) {
    * @return {Collection}
    * @api public
    */
-migrate(options) {
+migrate(options: Migrate): Collection {
     const self = this;
     this.parameters.push('action=MIGRATE');
     if (options.collection) {
@@ -405,7 +413,7 @@ migrate(options) {
    * @return {Collection}
    * @api public
    */
- addRole(options) {
+ addRole(options: Role): Collection {
     const self = this;
     this.parameters.push('action=ADDROLE');
     if (options.role) {
@@ -429,7 +437,7 @@ migrate(options) {
    * @return {Collection}
    * @api public
    */
-removeRole(options) {
+removeRole(options: Role): Collection {
     const self = this;
     this.parameters.push('action=REMOVEROLE');
     if (options.role) {
@@ -448,7 +456,7 @@ removeRole(options) {
    * @return {Collection}
    * @api public
    */
-overseerStatus() {
+overseerStatus(): Collection {
     const self = this;
     this.parameters.push('action=OVERSEERSTATUS');
 
@@ -461,7 +469,7 @@ overseerStatus() {
    * @return {Collection}
    * @api public
    */
-clusterStatus() {
+clusterStatus(): Collection {
     const self = this;
     this.parameters.push('action=CLUSTERSTATUS');
 
@@ -477,7 +485,7 @@ clusterStatus() {
    * @return {Collection}
    * @api public
    */
-requestStatus(requestid) {
+requestStatus(requestid: string): Collection {
     const self = this;
     this.parameters.push('action=REQUESTSTATUS');
     if (requestid) {
@@ -493,7 +501,7 @@ requestStatus(requestid) {
    * @return {Collection}
    * @api public
    */
-list() {
+list(): Collection {
     const self = this;
     this.parameters.push('action=LIST');
 
@@ -514,7 +522,7 @@ list() {
    * @return {Collection}
    * @api public
    */
- addReplicaProp(options) {
+ addReplicaProp(options: AddReplicaProp): Collection {
     const self = this;
     this.parameters.push('action=ADDREPLICAPROP');
     if (options.collection) {
@@ -551,7 +559,7 @@ list() {
    * @return {Collection}
    * @api public
    */
-deleteReplicaProp(options) {
+deleteReplicaProp(options: DeleteReplicaProp): Collection {
     const self = this;
     this.parameters.push('action=DELETEREPLICAPROP');
     if (options.collection) {
@@ -583,7 +591,7 @@ deleteReplicaProp(options) {
    * @return {Collection}
    * @api public
    */
-balanceShardUnique(options) {
+balanceShardUnique(options: BalanceShardUnique): Collection {
     const self = this;
     this.parameters.push('action=BALANCESHARDUNIQUE');
     if (options.collection) {
@@ -613,7 +621,7 @@ balanceShardUnique(options) {
    * @return {Collection}
    * @api public
    */
-rebalanceLeaders(options) {
+rebalanceLeaders(options: RebalanceLeaders): Collection {
     const self = this;
     this.parameters.push('action=REBALANCELEADERS');
     if (options.collection) {
@@ -635,7 +643,7 @@ rebalanceLeaders(options) {
    * @return {String}
    * @api private
    */
-build() {
+build(): string {
     return this.parameters.join('&');
   };
 }

@@ -59,7 +59,7 @@ function handleJSONResponse(request, bigint, callback) {
       } else {
         try {
           data = pickJSON(bigint).parse(text);
-        } catch (error) {
+        } catch (error: any) {
           err = error;
         } finally {
           if (callback) callback(err, data);

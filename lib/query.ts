@@ -5,7 +5,7 @@ import * as querystring from 'querystring';
 import * as format from './utils/format';
 import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
-import { Filters, HlOptions, MltOptions, DateOptions, TermsOptions, GroupOptions, FacetOptions } from './types';
+import { Filters, HlOptions, MltOptions, TermsOptions, GroupOptions, FacetOptions, DateOptions } from './types';
 
 export type QueryOptions = {
   solrVersion?: number
@@ -210,7 +210,7 @@ sort(options: Record<string, any>): Query {
    * query.q({ '*' : '*' }).rangeFilter([{ field : 'id', start : 100, end : 200},{ field : 'date', start : new Date(), end : new Date() - 3600}]);
    */
 
-rangeFilter(options: DateOptions | DateOptions[]): Query {
+  rangeFilter(options: DateOptions | DateOptions[]): Query {
     const self = this;
     const options2 = format.dateISOify(options);
     let parameter = 'fq=';
@@ -218,12 +218,14 @@ rangeFilter(options: DateOptions | DateOptions[]): Query {
       parameter += '(';
       const filters = options2.map(function(option) {
         const key = option.field;
+        const startParam = option.start ? option.start.toString() : '*'
+        const endParam = option.end ? option.end.toString() : '*'
         const filter = {};
         filter[key] =
           '[' +
-          encodeURIComponent(option.start.toString()) +
+          startParam +
           '%20TO%20' +
-          encodeURIComponent(option.end.toString()) +
+          endParam +
           ']';
         return format.stringify(filter, '', ':');
       });
@@ -231,12 +233,14 @@ rangeFilter(options: DateOptions | DateOptions[]): Query {
       parameter += ')';
     } else {
       const key = options2.field;
+      const startParam = options2.start ? options2.start.toString() : '*'
+      const endParam = options2.end ? options2.end.toString() : '*'
       const filter = {};
       filter[key] =
         '[' +
-        encodeURIComponent(options2.start.toString()) +
+        startParam +
         '%20TO%20' +
-        encodeURIComponent(options2.end.toString()) +
+        endParam +
         ']';
       parameter += format.stringify(filter, '', ':');
     }

@@ -12,7 +12,6 @@ import {
   FullSolrClientParams,
   ResourceOptions,
   SolrClientParams,
-  SolrRequestParams,
 } from './types';
 
 const request = require('request');
@@ -813,33 +812,35 @@ export class Client {
   }
 
   /**
-   * Send an arbitrary HTTP POST request to Solr on the specified `handler` (as Solr like to call it i.e path)
+   * Perform an arbitrary query on a Solr handler (a.k.a. 'path').
    *
-   * @param {String} handler
-   * @param {Query|Object|String} [query] -//
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
+   * This serves the same purpose as the `get` method, except it uses POST to
+   * transfer the data instead of putting all of the data in the URL.
    *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param handler
+   *   The name of the handler (or 'path' in Solr terminology).
+   * @param query
+   *   A function, Query object, Collection object, plain object, or string
+   *   describing the query to perform.
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
   post(
     handler: string,
-    query?: Query | Record<string, any> | string | CallbackFn,
+    query: Collection | Query | Record<string, any> | string | CallbackFn,
     callback?: CallbackFn
   ): ClientRequest {
     let parameters = '';
     if (typeof query === 'function') {
       callback = query as CallbackFn;
-    } else if (query instanceof Query) {
+    } else if (query instanceof Query || query instanceof Collection) {
       parameters += query.build();
     } else if (typeof query === 'object') {
       parameters += querystring.stringify(query);
-    } else if (typeof query === 'string') {
+    } else {
+      // query is a string.
       parameters += query;
     }
-
     let pathArray;
 
     if (handler != 'admin/collections') {
@@ -854,19 +855,44 @@ export class Client {
       })
       .join('/');
 
-    const params: SolrRequestParams = {
+    const requestOptions: RequestOptions = {
       host: this.options.host,
       port: this.options.port,
-      fullPath: fullPath,
-      params: parameters,
-      secure: this.options.secure,
-      bigint: this.options.bigint,
-      authorization: this.options.authorization,
-      agent: this.options.agent,
-      ipVersion: this.options.ipVersion,
-      request: this.options.request,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+        'content-length': Buffer.byteLength(parameters),
+        accept: 'application/json; charset=utf-8',
+      },
+      path: fullPath,
+      family: this.options.ipVersion,
+
+      // Allow these to override (not merge with) previous values.
+      ...this.options.request,
     };
-    return postForm(params, callback!);
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).request(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function onError(err) {
+      if (callback) callback(err, null);
+    });
+
+    request.write(parameters);
+    request.end();
+
+    return request;
   }
 
   /**
@@ -984,70 +1010,6 @@ export class Client {
 
     return request;
   }
-}
-
-/**
- * HTTP POST request. Send update commands to the Solr server using form encoding (e.g. search)
- *
- * @param {Object} params
- * @param {String} params.host - IP address or host address of the Solr server
- * @param {Number|String} params.port - port of the Solr server
- * @param {String} params.core - name of the Solr core requested
- * @param {String} params.authorization - value of the authorization header
- * @param {String} params.fullPath - full path of the request
- * @param {String} params.params - form params
- * @param {Boolean} params.secure -
- * @param {Boolean} params.bigint -
- * @param {http.Agent} [params.agent] -
- * @param {Object} params.request - request options
- * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
- * @param {Error} callback().err
- * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
- *
- * @return {http.ClientRequest}
- * @api private
- */
-function postForm(
-  params: SolrRequestParams,
-  callback: CallbackFn
-): ClientRequest {
-  const headers = {
-    'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-    'content-length': params.params ? Buffer.byteLength(params.params) : 0,
-    accept: 'application/json; charset=utf-8',
-  };
-  if (params.authorization) {
-    headers['authorization'] = params.authorization;
-  }
-  let options: RequestOptions = {
-    host: params.host,
-    port: params.port,
-    method: 'POST',
-    headers: headers,
-    path: params.fullPath,
-    family: params.ipVersion,
-  };
-
-  if (params.request) {
-    options = Object.assign(options, params.request);
-  }
-
-  if (params.agent !== undefined) {
-    options.agent = params.agent;
-  }
-
-  const request: ClientRequest = pickProtocol(params.secure).request(options);
-
-  request.on('response', handleJSONResponse(request, params.bigint, callback));
-
-  request.on('error', function onError(err) {
-    if (callback) callback(err, null);
-  });
-
-  request.write(params.params);
-  request.end();
-
-  return request;
 }
 
 bluebird.promisifyAll(Client.prototype);

@@ -10,20 +10,6 @@ export type ResourceOptions = {
   path: string;
 };
 
-export type SolrRequestParams = {
-  host: string;
-  port: string | number;
-  core?: string;
-  authorization?: string;
-  fullPath: string;
-  secure: boolean;
-  bigint: boolean;
-  agent?: HttpAgent | HttpsAgent;
-  request?: Record<string, any> | null;
-  ipVersion: number;
-  params?: string;
-};
-
 export type SolrClientParams = {
   host?: string;
   port?: string | number;

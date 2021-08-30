@@ -221,7 +221,7 @@ export class Client {
       query['ids'] = ids.join(',');
     }
 
-    return this.get(this.REAL_TIME_GET_HANDLER, query, callback);
+    return this.doQuery(this.REAL_TIME_GET_HANDLER, query, callback);
   }
 
   /**
@@ -260,7 +260,7 @@ export class Client {
 
     const handler = this.UPDATE_HANDLER + '/' + options.format.toLowerCase();
     const query = querystring.stringify(options.parameters);
-    return this.get(handler, query, callback);
+    return this.doQuery(handler, query, callback);
   }
 
   /**
@@ -640,7 +640,7 @@ export class Client {
     query: Query | Record<string, any> | string,
     callback: CallbackFn
   ): ClientRequest {
-    return this.get(this.SELECT_HANDLER, query, callback);
+    return this.doQuery(this.SELECT_HANDLER, query, callback);
   }
 
   /**
@@ -658,7 +658,7 @@ export class Client {
     collection: Collection | Record<string, any> | string,
     callback: CallbackFn
   ): ClientRequest {
-    return this.get(this.COLLECTIONS_HANDLER, collection, callback);
+    return this.doQuery(this.COLLECTIONS_HANDLER, collection, callback);
   }
 
   /**
@@ -691,7 +691,7 @@ export class Client {
    */
 
   spell(query: Query, callback: CallbackFn): ClientRequest {
-    return this.get(this.SPELL_HANDLER, query, callback);
+    return this.doQuery(this.SPELL_HANDLER, query, callback);
   }
 
   /**
@@ -712,7 +712,7 @@ export class Client {
     query: Query | Record<string, any> | string,
     callback: CallbackFn
   ) {
-    return this.get(this.TERMS_HANDLER, query, callback);
+    return this.doQuery(this.TERMS_HANDLER, query, callback);
   }
 
   /**
@@ -726,7 +726,7 @@ export class Client {
    * @param callback
    *   A function to execute when the Solr server responds or an error occurs.
    */
-  get(
+  doQuery(
     handler: string,
     query: Collection | Query | Record<string, any> | string | CallbackFn,
     callback?: CallbackFn
@@ -944,7 +944,7 @@ export class Client {
    */
 
   ping(callback: CallbackFn) {
-    return this.get(this.ADMIN_PING_HANDLER, callback);
+    return this.doQuery(this.ADMIN_PING_HANDLER, callback);
   }
 
   createSchemaField(

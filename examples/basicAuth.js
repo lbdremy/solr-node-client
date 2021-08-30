@@ -11,7 +11,7 @@ client.basicAuth('admin', 'passtest');
 
 // You can now search documents using your credentials
 const query = client
-  .createQuery()
+  .query()
   .q('laptop')
   .dismax()
   .qf({ title_t: 0.2, description_t: 3.3 })

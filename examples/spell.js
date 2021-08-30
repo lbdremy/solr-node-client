@@ -4,7 +4,7 @@
 const solr = require('../lib/solr');
 
 const client = solr.createClient();
-const query = client.createQuery().q('laptop');
+const query = client.query().q('laptop');
 client.spell(query, function (err, obj) {
   if (err) {
     console.log(err);

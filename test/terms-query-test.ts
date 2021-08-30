@@ -26,7 +26,7 @@ describe('Client#createQuery', function () {
         sort: 'index',
       };
 
-      const query = client.createQuery().terms(options).debugQuery();
+      const query = client.query().terms(options).debugQuery();
 
       client.termsSearch(query, function (err, data) {
         sassert.ok(err, data);

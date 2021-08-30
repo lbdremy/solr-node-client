@@ -15,7 +15,7 @@ const client = solr.createClient(config.client);
 describe('Client#createQuery()', function () {
   describe('.dismax().q("test")', function () {
     it('should create a dismax query', function (done) {
-      const query = client.createQuery().dismax().q('test').debugQuery();
+      const query = client.query().dismax().q('test').debugQuery();
       client.search(query, function (err, data) {
         sassert.ok(err, data);
         assert.deepEqual(data.responseHeader.params, {

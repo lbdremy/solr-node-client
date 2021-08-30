@@ -27,7 +27,7 @@ describe('Client#createQuery', function () {
   describe('query() with various query options', function () {
     it('basic query with multiple fields', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q({ title: 'name', author: 'me' })
         .debugQuery();
 
@@ -44,7 +44,7 @@ describe('Client#createQuery', function () {
 
     it('query sorted', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .sort({ author: 'asc' })
         .debugQuery(); // remove ', "category":"desc"' as newer solr doesn't support
@@ -62,12 +62,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query with paging', function (done) {
-      const query = client
-        .createQuery()
-        .q('*:*')
-        .start(21)
-        .rows(20)
-        .debugQuery();
+      const query = client.query().q('*:*').start(21).rows(20).debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -84,7 +79,7 @@ describe('Client#createQuery', function () {
 
     it('query paged with cursorMark', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .start(0)
         .sort({ id: 'asc' })
@@ -106,11 +101,7 @@ describe('Client#createQuery', function () {
     });
 
     it('custom parameter setting - allows for any Filterquery(fq)', function (done) {
-      const query = client
-        .createQuery()
-        .q('*:*')
-        .set('fq=sqrt(id)')
-        .debugQuery();
+      const query = client.query().q('*:*').set('fq=sqrt(id)').debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -126,7 +117,7 @@ describe('Client#createQuery', function () {
 
     it('listing fields with fl', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .fl(['id', 'title*', 'score'])
         .debugQuery();
@@ -146,7 +137,7 @@ describe('Client#createQuery', function () {
     it('escapes fl parameter', function (done) {
       // if it's not escaped correctly, SOLR returns HTTP 400
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .fl(['id', 'score', "found_words:exists(query({!v='name:word'}))"]);
       client.search(query, function (err, data) {
@@ -161,11 +152,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query with deftype', function (done) {
-      const query = client
-        .createQuery()
-        .q('*:*')
-        .defType('lucene')
-        .debugQuery();
+      const query = client.query().q('*:*').defType('lucene').debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -180,7 +167,7 @@ describe('Client#createQuery', function () {
     });
 
     it('query with time-allowed', function (done) {
-      const query = client.createQuery().q('*:*').timeout(1000).debugQuery();
+      const query = client.query().q('*:*').timeout(1000).debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -196,7 +183,7 @@ describe('Client#createQuery', function () {
 
     it('q.op - Default query-operator', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('author:ali remy marc')
         .qop('OR')
         .debugQuery();
@@ -214,7 +201,7 @@ describe('Client#createQuery', function () {
     });
 
     it('df - Default field query', function (done) {
-      const query = client.createQuery().q('ali').df('author').debugQuery();
+      const query = client.query().q('ali').df('author').debugQuery();
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -230,7 +217,7 @@ describe('Client#createQuery', function () {
 
     it('query with range-filter', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .rangeFilter({ field: 'id', start: 100, end: 200 })
         .debugQuery();
@@ -249,7 +236,7 @@ describe('Client#createQuery', function () {
 
     it('query with match-filter', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .matchFilter('id', '19700506.173.85')
         .debugQuery();
@@ -268,7 +255,7 @@ describe('Client#createQuery', function () {
 
     it('query with multiple match-filters', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .fq([
           { field: 'id', value: '19700506.173.85' },
@@ -290,7 +277,7 @@ describe('Client#createQuery', function () {
 
     it('query with object match-filter', function (done) {
       const query = client
-        .createQuery()
+        .query()
         .q('*:*')
         .fq({ field: 'id', value: '19700506.173.85' })
         .debugQuery();

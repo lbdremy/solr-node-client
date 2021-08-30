@@ -60,7 +60,7 @@ describe('Client#createQuery()', function () {
         },
       };
       const query = client
-        .createQuery()
+        .query()
         .facet(facetOptions)
         .q({ title_t: 'test' })
         .debugQuery();
@@ -133,7 +133,7 @@ describe('Client#createQuery()', function () {
         },
       };
       const query = client
-        .createQuery()
+        .query()
         .facet(facetOptions)
         .q({ title_t: 'test' })
         .debugQuery();

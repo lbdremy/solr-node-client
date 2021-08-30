@@ -42,7 +42,7 @@ describe('Client', function () {
   });
   describe('#doQuery("select", query, callback)', function () {
     it('should find documents describe in the `query` instance of `Query`', function (done) {
-      const query = client.createQuery().q({
+      const query = client.query().q({
         title_t: 'test',
       });
       client.doQuery('select', query, function (err, data) {

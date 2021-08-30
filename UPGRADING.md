@@ -36,15 +36,15 @@ The only breaking change introduced in `0.5.x` is introduced in this commit [3cb
 For example, for some weird reason you wanted to escape the special char `*`, don't ask me ;)
 
 ```js
-const query = client.createQuery();
-query.q({ '*' : '*' }).rangeFilter({ field : 'id', start : 100, end : '*'})
+const query = client.query();
+query.q({ '*': '*' }).rangeFilter({ field: 'id', start: 100, end: '*' })
 ```
 
 You still can:
 
 ```js
-const query = client.createQuery();
-query.q({ '*' : '*' }).rangeFilter({ field : 'id', start : 100, end : solr.escapeSpecialChars('*')})
+const query = client.query();
+query.q({ '*': '*' }).rangeFilter({ field: 'id', start: 100, end: solr.escapeSpecialChars('*') })
 ```
 
 Post an issue if you have troubles migrating to v0.5.0.

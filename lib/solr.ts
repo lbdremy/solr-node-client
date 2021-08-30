@@ -666,14 +666,6 @@ export class Client {
   }
 
   /**
-   * Create an instance of `Query`.
-   * NOTE: This method will be deprecated in the v0.6 release. Please use `Client.query()` instead.
-   */
-  createQuery(): Query {
-    return new Query(this.options);
-  }
-
-  /**
    * Create an instance of `Collection`.
    */
   collection(): Collection {

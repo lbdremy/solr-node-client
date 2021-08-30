@@ -39,7 +39,7 @@ describe('Client#createQuery()', function () {
         payloads: false,
       };
       const query = client
-        .createQuery()
+        .query()
         .hl(highlightOptions)
         .q({ title_t: 'test' })
         .debugQuery();
@@ -86,7 +86,7 @@ describe('Client#createQuery()', function () {
         regexMaxAnalyzedChars: 10000,
       };
       const query = client
-        .createQuery()
+        .query()
         .hl(highlightOptions)
         .q({ title_t: 'test' })
         .debugQuery();

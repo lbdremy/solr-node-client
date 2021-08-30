@@ -15,7 +15,7 @@ const client = solr.createClient(config.client);
 describe('Client', function () {
   describe('#spell', function () {
     it('should test the "/spell" query handler/ spellchecker', function (done) {
-      const query = client.createQuery().q('test');
+      const query = client.query().q('test');
       client.spell(query, function (err, data) {
         sassert.ok(err, data);
         assert.equal(0, data.responseHeader.status);

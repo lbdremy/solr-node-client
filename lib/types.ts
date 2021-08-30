@@ -4,9 +4,26 @@ import type { Agent as HttpsAgent } from 'https';
 export type CallbackFn = (error: Error | undefined, result: any) => void;
 
 export type ResourceOptions = {
+  /**
+   * Set of extras parameters pass along in the query.
+   */
   parameters?: Record<string, any>;
+
+  /**
+   * Format of the resource. XML, CSV or JSON formats must be used.
+   */
   format?: string;
+
+  /**
+   * Content type of the resource. E.g. 'text/plain;charset=utf-8'.
+   */
   contentType?: string;
+
+  /**
+   * File path or HTTP URL to a remote resource.
+   *
+   * A full path or a path relative to the CWD of the running solr server must be used.
+   */
   path: string;
 };
 

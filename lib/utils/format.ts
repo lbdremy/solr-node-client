@@ -1,11 +1,13 @@
 import { DateOptions } from '../types';
 
-export function dateISOify(obj: Record<string, Date>): Record<string, string>
-export function dateISOify(obj: Date[]): string[]
-export function dateISOify (obj: DateOptions  | DateOptions[]): DateOptions | DateOptions[]
-export function dateISOify (obj: string | number | Date | boolean): string
+export function dateISOify(obj: Record<string, Date>): Record<string, string>;
+export function dateISOify(obj: Date[]): string[];
+export function dateISOify(
+  obj: DateOptions | DateOptions[]
+): DateOptions | DateOptions[];
+export function dateISOify(obj: string | number | Date | boolean): string;
 
-  /**
+/**
  * ISOify `Date` objects (possibly in collections)
  * @api private
  */
@@ -16,7 +18,8 @@ export function dateISOify(obj: any | any[]): any | any[] {
     }
   } else if (obj instanceof Object && !(obj instanceof Date)) {
     for (const key in obj) {
-      if (obj[key] instanceof Date) obj[key] = toISOString(obj[key] as any) as any;
+      if (obj[key] instanceof Date)
+        obj[key] = toISOString(obj[key] as any) as any;
     }
   } else {
     if (obj instanceof Date) {
@@ -47,7 +50,12 @@ export function toISOString(date: Date): string | null {
  * @api private
  */
 
-export function stringify(obj: Record<string, any> | null | undefined, sep?: string, eq?: string, name?: string): string {
+export function stringify(
+  obj: Record<string, any> | null | undefined,
+  sep?: string,
+  eq?: string,
+  name?: string
+): string {
   sep = sep || '&';
   eq = eq || '=';
   obj = obj === null ? undefined : obj;
@@ -68,8 +76,8 @@ export function stringify(obj: Record<string, any> | null | undefined, sep?: str
       .join(sep);
   }
 
-    if (!name) return '';
-    return stringifyPrimitive(name) + eq + stringifyPrimitive(obj);
+  if (!name) return '';
+  return stringifyPrimitive(name) + eq + stringifyPrimitive(obj);
 }
 
 /**

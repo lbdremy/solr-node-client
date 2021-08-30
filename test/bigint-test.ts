@@ -7,9 +7,9 @@
 const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr')
-  const BigNumber = require('bignumber.js');
-import * as sassert from './sassert'
+  solr = require(libPath + '/solr');
+const BigNumber = require('bignumber.js');
+import * as sassert from './sassert';
 
 // Test suite
 const config = figc(__dirname + '/config.json');

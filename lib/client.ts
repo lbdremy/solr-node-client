@@ -1,8 +1,8 @@
 import type { RequestOptions } from 'https';
-import * as http from 'http'
-import * as https from 'https'
+import * as http from 'http';
+import * as https from 'https';
 const JSONbig = require('json-bigint');
-import { SolrError } from './error/solr-error'
+import { SolrError } from './error/solr-error';
 import { ClientRequest } from 'http';
 import { CallbackFn } from './types';
 
@@ -88,7 +88,10 @@ function handleJSONResponse(request, bigint, callback) {
  *
  * @api private
  */
-function postJSON(params: Record<string, any>, callback: CallbackFn): ClientRequest {
+function postJSON(
+  params: Record<string, any>,
+  callback: CallbackFn
+): ClientRequest {
   const headers = {
     'content-type': 'application/json; charset=utf-8',
     'content-length': Buffer.byteLength(params.json),

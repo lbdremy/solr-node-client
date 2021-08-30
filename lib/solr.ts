@@ -890,7 +890,7 @@ export class Client {
    * @param {Function} cb
    *   A callback to run when completed.
    */
-  private createSchemaField(
+  public createSchemaField(
     fieldName: string,
     fieldType: string,
     cb: CallbackFn

@@ -553,19 +553,19 @@ export class Client {
    *
    * @param data
    *   The data to stringify in the body.
-   * @param options
+   * @param queryParameters
    *   Query parameters to include in the URL.
    * @param callback
    *   A function to execute when the Solr server responds or an error occurs.
    */
   update(
     data: Record<string, any>,
-    options?: Record<string, any> | CallbackFn,
+    queryParameters?: Record<string, any> | CallbackFn,
     callback?: any
   ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options;
-      options = {};
+    if (typeof queryParameters === 'function') {
+      callback = queryParameters;
+      queryParameters = {};
     }
 
     const json = pickJSON(this.options.bigint).stringify(data);
@@ -574,7 +574,7 @@ export class Client {
       this.options.core,
       this.UPDATE_JSON_HANDLER +
         '?' +
-        querystring.stringify({ ...options, wt: 'json' }),
+        querystring.stringify({ ...queryParameters, wt: 'json' }),
     ]
       .filter(function (element) {
         return element;

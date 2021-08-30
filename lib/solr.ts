@@ -698,18 +698,16 @@ export class Client {
   }
 
   /**
-   * Send an arbitrary HTTP GET request to Solr on the specified `handler` (as Solr like to call it i.e path)
+   * Perform an arbitrary query on a Solr handler (a.k.a. 'path').
    *
-   * @param {String} handler
-   * @param {Query|Object|String} [query]
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param handler
+   *   The name of the handler (or 'path' in Solr terminology).
+   * @param query
+   *   A function, Query object, Collection object, plain object, or string
+   *   describing the query to perform.
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   get(
     handler: string,
     query: Collection | Query | Record<string, any> | string | CallbackFn,
@@ -722,7 +720,8 @@ export class Client {
       parameters += query.build();
     } else if (typeof query === 'object') {
       parameters += querystring.stringify(query);
-    } else if (typeof query === 'string') {
+    } else {
+      // query is a string.
       parameters += query;
     }
     let pathArray;
@@ -750,26 +749,48 @@ export class Client {
       Buffer.byteLength(fullPath); // Buffer (10) accounts for protocol and special characters like ://, port colon, and initial slash etc
 
     if (
-      this.options.get_max_request_entity_size === false ||
-      approxUrlLength <= this.options.get_max_request_entity_size
+      !(
+        this.options.get_max_request_entity_size === false ||
+        approxUrlLength <= this.options.get_max_request_entity_size
+      )
     ) {
-      const params = {
-        host: this.options.host,
-        port: this.options.port,
-        fullPath: fullPath,
-        secure: this.options.secure,
-        bigint: this.options.bigint,
-        authorization: this.options.authorization,
-        agent: this.options.agent,
-        ipVersion: this.options.ipVersion,
-        request: this.options.request,
-      };
-
-      return getJSON(params, callback);
-    } else {
       // Funnel this through a POST because it's too large
       return this.post(handler, query, callback);
     }
+
+    const requestOptions: RequestOptions = {
+      host: this.options.host,
+      port: this.options.port,
+      path: fullPath,
+      headers: {
+        accept: 'application/json; charset=utf-8',
+      },
+      family: this.options.ipVersion,
+
+      // Allow these to override (not merge with) previous values.
+      ...this.options.request,
+    };
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).get(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function (err) {
+      if (callback) {
+        callback(err, null);
+      }
+    });
+    return request;
   }
 
   /**
@@ -981,62 +1002,6 @@ function postForm(
   request.write(params.params);
   request.end();
 
-  return request;
-}
-
-/**
- * HTTP GET request.  Send a query command to the Solr server (query)
- *
- * @param {Object} params
- * @param {String} params.host - IP address or host address of the Solr server
- * @param {Number|String} params.port - port of the Solr server
- * @param {String} params.core - name of the Solr core requested
- * @param {String} params.authorization - value of the authorization header
- * @param {String} params.fullPath - full path of the request, contains query parameters
- * @param {Boolean} params.secure -
- * @param {Boolean} params.bigint -
- * @param {http.Agent} [params.agent] -
- * @param {Object} params.request - request options
- * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
- * @param {Error} callback().err
- * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
- *
- * @return {http.ClientRequest}
- * @api private
- */
-function getJSON(params: SolrRequestParams, callback): ClientRequest {
-  let options: RequestOptions = {
-    host: params.host,
-    port: params.port,
-    path: params.fullPath,
-    headers: {
-      accept: 'application/json; charset=utf-8',
-    },
-    family: params.ipVersion,
-  };
-
-  if (params.request) {
-    options = Object.assign(options, params.request);
-  }
-
-  if (params.agent !== undefined) {
-    options.agent = params.agent;
-  }
-
-  if (params.authorization) {
-    if (!options.headers) {
-      options.headers = {};
-    }
-    options.headers.authorization = params.authorization;
-  }
-
-  const request = pickProtocol(params.secure).get(options);
-
-  request.on('response', handleJSONResponse(request, params.bigint, callback));
-
-  request.on('error', function (err) {
-    if (callback) callback(err, null);
-  });
   return request;
 }
 

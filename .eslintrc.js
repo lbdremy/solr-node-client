@@ -1,5 +1,3 @@
-const warning = process.env['CI'] ? 2 : 1;
-
 module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
@@ -7,9 +5,9 @@ module.exports = {
   },
   extends: [
     'plugin:@typescript-eslint/recommended',
-    'prettier',
+    'plugin:prettier/recommended',
   ],
-  plugins: ['@typescript-eslint', 'prettier'],
+  plugins: ['@typescript-eslint'],
   rules: {
     '@typescript-eslint/no-non-null-assertion': 'off',
     '@typescript-eslint/no-empty-function': 'off',
@@ -17,12 +15,6 @@ module.exports = {
     '@typescript-eslint/explicit-module-boundary-types': 'off',
     '@typescript-eslint/no-this-alias': 'off',
     '@typescript-eslint/no-var-requires': 'off',
-    'no-unused-vars': [warning, { vars: 'all', args: 'none' }],
-    'no-console': 'off',
-    'no-var': 2,
-    'no-debugger': warning,
-    'prefer-const': warning,
-    'no-fallthrough': warning
   },
   env: {
     node: true,

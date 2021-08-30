@@ -4,9 +4,9 @@
 const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr')
-  import * as sassert from './sassert';
-  import * as versionUtils from '../lib/utils/version'
+  solr = require(libPath + '/solr');
+import * as sassert from './sassert';
+import * as versionUtils from '../lib/utils/version';
 
 //TODO support all stuff describe there
 // http://wiki.apache.org/solr/SimpleFacetParameters#Retrieve_docs_with_facets_missing

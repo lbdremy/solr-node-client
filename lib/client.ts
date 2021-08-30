@@ -1,11 +1,7 @@
-import type { RequestOptions } from 'https';
-import * as http from 'http'
-import * as https from 'https'
+import * as http from 'http';
+import * as https from 'https';
 const JSONbig = require('json-bigint');
-
-import { SolrError } from './error/solr-error'
-import { ClientRequest } from 'http';
-import { CallbackFn } from './types';
+import { SolrError } from './error/solr-error';
 
 /**
  * Pick appropriate protocol based on the given `secure` flag
@@ -15,7 +11,7 @@ import { CallbackFn } from './types';
  * @api private
  */
 
-function pickProtocol(secure): typeof http | typeof https {
+function pickProtocol(secure: boolean): typeof http | typeof https {
   return secure ? https : http;
 }
 
@@ -26,7 +22,7 @@ function pickProtocol(secure): typeof http | typeof https {
  * @api private
  */
 
-function pickJSON(bigint) {
+function pickJSON(bigint: boolean): typeof JSON | typeof JSONbig {
   return bigint ? JSONbig : JSON;
 }
 
@@ -70,64 +66,8 @@ function handleJSONResponse(request, bigint, callback) {
   };
 }
 
-/**
- * HTTP POST request. Send update commands to the Solr server (commit, add, delete, optimize)
- *
- * @param {Object} params
- * @param {String} params.host - IP address or host address of the Solr server
- * @param {Number|String} params.port - port of the Solr server
- * @param {String} params.core - name of the Solr core requested
- * @param {String} params.authorization - value of the authorization header
- * @param {String} params.fullPath - full path of the request
- * @param {String} params.json -
- * @param {Boolean} params.secure -
- * @param {Boolean} params.bigint -
- * @param {http.Agent} [params.agent] -
- * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
- * @param {Error} callback().err
- * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
- *
- * @api private
- */
-function postJSON(params: Record<string, any>, callback: CallbackFn): ClientRequest {
-  const headers = {
-    'content-type': 'application/json; charset=utf-8',
-    'content-length': Buffer.byteLength(params.json),
-    accept: 'application/json; charset=utf-8',
-  };
-  if (params.authorization) {
-    headers['authorization'] = params.authorization;
-  }
-  const options: RequestOptions = {
-    host: params.host,
-    port: params.port,
-    method: 'POST',
-    headers: headers,
-    path: params.fullPath,
-    family: params.ipversion,
-  };
-
-  if (params.agent !== undefined) {
-    options.agent = params.agent;
-  }
-
-  const request = pickProtocol(params.secure).request(options);
-
-  request.on('response', handleJSONResponse(request, params.bigint, callback));
-
-  request.on('error', function onError(err) {
-    if (callback) callback(err, null);
-  });
-
-  request.write(params.json);
-  request.end();
-
-  return request;
-}
-
 module.exports = {
   handleJSONResponse,
   pickJSON,
   pickProtocol,
-  postJSON,
 };

@@ -1,26 +1,23 @@
+import type * as http from 'http';
 import type { RequestOptions } from 'http';
-import type * as http from 'http'
-
-import * as querystring from 'querystring'
-import * as JSONStream from 'JSONStream'
-import * as duplexer from 'duplexer'
-
-const request = require('request')
-const bluebird = require('bluebird');
-
-import { Query } from './query'
-import { Collection } from './collection'
-const format = require('./utils/format')
-import * as versionUtils from './utils/version'
-import { CallbackFn, FullSolrClientParams, ResourceOptions, SolrClientParams, SolrRequestParams } from './types';
 import { ClientRequest } from 'http';
+import * as querystring from 'querystring';
+import * as JSONStream from 'JSONStream';
+import * as duplexer from 'duplexer';
+import { Query } from './query';
+import { Collection } from './collection';
+import * as versionUtils from './utils/version';
+import {
+  CallbackFn,
+  FullSolrClientParams,
+  ResourceOptions,
+  SolrClientParams,
+} from './types';
 
-const {
-  handleJSONResponse,
-  pickJSON,
-  pickProtocol,
-  postJSON,
-} = require('./client');
+const request = require('request');
+const bluebird = require('bluebird');
+const format = require('./utils/format');
+const { handleJSONResponse, pickJSON, pickProtocol } = require('./client');
 
 /**
  * Create an instance of `Client`
@@ -130,17 +127,16 @@ export class Client {
     this.TERMS_HANDLER = 'terms';
   }
 
-
   /**
    * Create credential using the basic access authentication method
    * @api public
    */
 
-  basicAuth (username: string, password: string): Client {
+  basicAuth(username: string, password: string): Client {
     this.options.authorization =
       'Basic ' + Buffer.from(username + ':' + password).toString('base64');
     return this;
-  };
+  }
 
   /**
    * Remove authorization header
@@ -150,7 +146,7 @@ export class Client {
   unauth(): Client {
     delete this.options.authorization;
     return this;
-  };
+  }
 
   /**
    * Add a document or a list of documents
@@ -165,7 +161,11 @@ export class Client {
    * @api public
    */
 
-  add(docs: Record<string, any> | Record<string, any>[], options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
+  add(
+    docs: Record<string, any> | Record<string, any>[],
+    options?: Record<string, any> | CallbackFn,
+    callback?: CallbackFn
+  ): ClientRequest {
     if (typeof options === 'function') {
       callback = options as CallbackFn;
       options = {};
@@ -173,7 +173,7 @@ export class Client {
     docs = format.dateISOify(docs); // format `Date` object into string understable for Solr as a date.
     docs = Array.isArray(docs) ? docs : [docs];
     return this.update(docs, options, callback);
-  };
+  }
 
   /**
    * Updates a document or a list of documents Solr 4.0+
@@ -204,7 +204,11 @@ export class Client {
    * @api public
    */
 
-  realTimeGet(ids: string | string[], query?: Query | Record<string, any> | string, callback?: CallbackFn): ClientRequest {
+  realTimeGet(
+    ids: string | string[],
+    query?: Query | Record<string, any> | string,
+    callback?: CallbackFn
+  ): ClientRequest {
     if (typeof query === 'function') {
       callback = query as CallbackFn;
     }
@@ -218,7 +222,7 @@ export class Client {
     }
 
     return this.get(this.REAL_TIME_GET_HANDLER, query, callback);
-  };
+  }
 
   /**
    * Add the remote resource located at the given path `options.path` into the Solr database.
@@ -236,11 +240,16 @@ export class Client {
    * @api public
    */
 
-  addRemoteResource(options: ResourceOptions, callback: CallbackFn): ClientRequest {
+  addRemoteResource(
+    options: ResourceOptions,
+    callback: CallbackFn
+  ): ClientRequest {
     options.parameters = options.parameters || {};
     options.format = options.format === 'xml' ? '' : options.format || ''; // reason: the default route of the XmlUpdateRequestHandle is /update and not /update/xml.
     options.parameters.commit =
-      options.parameters.commit === undefined ? false : options.parameters.commit;
+      options.parameters.commit === undefined
+        ? false
+        : options.parameters.commit;
     options.parameters['stream.contentType'] =
       options.contentType || 'text/plain;charset=utf-8';
     if (options.path.match(/^https?:\/\//)) {
@@ -252,7 +261,7 @@ export class Client {
     const handler = this.UPDATE_HANDLER + '/' + options.format.toLowerCase();
     const query = querystring.stringify(options.parameters);
     return this.get(handler, query, callback);
-  };
+  }
 
   /**
    * Create a writable/readable `Stream` to add documents into the Solr database
@@ -268,11 +277,11 @@ export class Client {
       this.options.path,
       this.options.core,
       this.UPDATE_JSON_HANDLER +
-      '?' +
-      querystring.stringify(options) +
-      '&wt=json',
+        '?' +
+        querystring.stringify(options) +
+        '&wt=json',
     ]
-      .filter(function(element) {
+      .filter(function (element) {
         return element;
       })
       .join('/');
@@ -285,7 +294,8 @@ export class Client {
     }
     const protocol = this.options.secure ? 'https' : 'http';
     const optionsRequest = {
-      url: protocol + '://' + this.options.host + ':' + this.options.port + path,
+      url:
+        protocol + '://' + this.options.host + ':' + this.options.port + path,
       method: 'POST',
       headers: headers,
     };
@@ -294,7 +304,7 @@ export class Client {
     jsonStreamStringify.pipe(postRequest);
     const duplex = duplexer(jsonStreamStringify, postRequest);
     return duplex;
-  };
+  }
 
   /**
    * Commit last added and removed documents, that means your documents are now indexed.
@@ -308,7 +318,10 @@ export class Client {
    * @api public
    */
 
-  commit(options: Record<string, any> | CallbackFn, callback: CallbackFn): ClientRequest {
+  commit(
+    options: Record<string, any> | CallbackFn,
+    callback: CallbackFn
+  ): ClientRequest {
     if (typeof options === 'function') {
       callback = options as CallbackFn;
       options = {};
@@ -317,7 +330,7 @@ export class Client {
       commit: options || {},
     };
     return this.update(data, callback);
-  };
+  }
 
   /**
    * Call Lucene's IndexWriter.prepareCommit, the changes won't be visible in the index.
@@ -330,9 +343,9 @@ export class Client {
    * @api public
    */
 
-prepareCommit(callback: CallbackFn): ClientRequest {
+  prepareCommit(callback: CallbackFn): ClientRequest {
     return this.update({}, { prepareCommit: true }, callback);
-  };
+  }
 
   /**
    * Soft commit all changes
@@ -345,9 +358,9 @@ prepareCommit(callback: CallbackFn): ClientRequest {
    * @api public
    */
 
-softCommit(callback: CallbackFn): ClientRequest {
+  softCommit(callback: CallbackFn): ClientRequest {
     return this.update({}, { softCommit: true }, callback);
-  };
+  }
 
   /**
    * Delete documents based on the given `field` and `text`.
@@ -363,7 +376,12 @@ softCommit(callback: CallbackFn): ClientRequest {
    * @api public
    */
 
-delete(field: string, text: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
+  delete(
+    field: string,
+    text: string,
+    options?: Record<string, any> | CallbackFn,
+    callback?: CallbackFn
+  ): ClientRequest {
     if (typeof options === 'function') {
       callback = options as CallbackFn;
       options = {};
@@ -375,7 +393,7 @@ delete(field: string, text: string, options?: Record<string, any> | CallbackFn, 
       },
     };
     return this.update(data, options, callback);
-  };
+  }
 
   /**
    * Delete a range of documents based on the given `field`, `start` and `stop` arguments.
@@ -391,7 +409,7 @@ delete(field: string, text: string, options?: Record<string, any> | CallbackFn, 
    * @api public
    */
 
-deleteByRange(
+  deleteByRange(
     field: string,
     start: string | Date,
     stop: string | Date,
@@ -407,7 +425,7 @@ deleteByRange(
 
     const query = field + ':[' + start + ' TO ' + stop + ']';
     return this.deleteByQuery(query, options, callback);
-  };
+  }
 
   /**
    * Delete the document with the given `id`
@@ -422,7 +440,11 @@ deleteByRange(
    * @api public
    */
 
-deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
+  deleteByID(
+    id: string | number,
+    options?: Record<string, any> | CallbackFn,
+    callback?: CallbackFn
+  ): ClientRequest {
     if (typeof options === 'function') {
       callback = options as CallbackFn;
       options = {};
@@ -433,7 +455,7 @@ deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, call
       },
     };
     return this.update(data, options, callback);
-  };
+  }
 
   /**
    * Delete documents matching the given `query`
@@ -448,7 +470,11 @@ deleteByID(id: string | number, options?: Record<string, any> | CallbackFn, call
    * @api public
    */
 
-deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callback?: CallbackFn): ClientRequest {
+  deleteByQuery(
+    query: string,
+    options?: Record<string, any> | CallbackFn,
+    callback?: CallbackFn
+  ): ClientRequest {
     if (typeof options === 'function') {
       callback = options as CallbackFn;
       options = {};
@@ -459,7 +485,7 @@ deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callbac
       },
     };
     return this.update(data, options, callback);
-  };
+  }
 
   /**
    * Delete all documents
@@ -473,9 +499,12 @@ deleteByQuery(query: string, options?: Record<string, any> | CallbackFn, callbac
    * @api public
    */
 
-deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn): ClientRequest {
+  deleteAll(
+    options: Record<string, any> | CallbackFn,
+    callback: CallbackFn
+  ): ClientRequest {
     return this.deleteByQuery('*:*', options, callback);
-  };
+  }
 
   /**
    * Optimize the index
@@ -489,7 +518,10 @@ deleteAll(options: Record<string, any> | CallbackFn, callback: CallbackFn): Clie
    * @api public
    */
 
-optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn): ClientRequest {
+  optimize(
+    options: Record<string, any> | CallbackFn,
+    callback: CallbackFn
+  ): ClientRequest {
     if (typeof options === 'function') {
       callback = options as CallbackFn;
       options = {};
@@ -498,7 +530,7 @@ optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn): Clien
       optimize: options || {},
     };
     return this.update(data, callback);
-  };
+  }
 
   /**
    * Rollback all add/delete commands made since the last commit.
@@ -510,26 +542,28 @@ optimize(options: Record<string, any> | CallbackFn, callback: CallbackFn): Clien
    * @api public
    */
 
-rollback(callback: CallbackFn): ClientRequest {
+  rollback(callback: CallbackFn): ClientRequest {
     const data = {
       rollback: {},
     };
     return this.update(data, callback);
-  };
+  }
 
   /**
-   * Send an update command to the Solr server with the given `data` stringified in the body.
+   * Send an update command to the Solr server.
    *
-   * @param {Object} data - data sent to the Solr server
-   * @param {Object} [options] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @api private
+   * @param data
+   *   The data to stringify in the body.
+   * @param options
+   *   Query parameters to include in the URL.
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
-update(data: Record<string, any>, options?: Record<string, any> | CallbackFn, callback?: any): ClientRequest {
+  update(
+    data: Record<string, any>,
+    options?: Record<string, any> | CallbackFn,
+    callback?: any
+  ): ClientRequest {
     if (typeof options === 'function') {
       callback = options;
       options = {};
@@ -540,30 +574,56 @@ update(data: Record<string, any>, options?: Record<string, any> | CallbackFn, ca
       this.options.path,
       this.options.core,
       this.UPDATE_JSON_HANDLER +
-      '?' +
-      querystring.stringify(options) +
-      '&wt=json',
+        '?' +
+        querystring.stringify(options) +
+        '&wt=json',
     ]
-      .filter(function(element) {
+      .filter(function (element) {
         return element;
       })
       .join('/');
 
-    const params = {
+    const requestOptions: RequestOptions = {
       host: this.options.host,
       port: this.options.port,
-      fullPath: fullPath,
-      json: json,
-      secure: this.options.secure,
-      bigint: this.options.bigint,
-      authorization: this.options.authorization,
-      agent: this.options.agent,
-      ipVersion: this.options.ipVersion,
-      // TODO this doesn't seem to be used
-      //request: this.request,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'content-length': Buffer.byteLength(json),
+        accept: 'application/json; charset=utf-8',
+      },
+      path: fullPath,
+      family: this.options.ipVersion,
+
+      // Allow these to override (not merge with) previous values.
+      ...this.options.request,
     };
-    return postJSON(params, callback);
-  };
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).request(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function onError(err) {
+      if (callback) {
+        callback(err, null);
+      }
+    });
+
+    request.write(json);
+    request.end();
+
+    return request;
+  }
 
   /**
    * Search documents matching the `query`
@@ -576,9 +636,12 @@ update(data: Record<string, any>, options?: Record<string, any> | CallbackFn, ca
    * @api public
    */
 
-search(query: Query | Record<string, any> | string, callback: CallbackFn): ClientRequest {
+  search(
+    query: Query | Record<string, any> | string,
+    callback: CallbackFn
+  ): ClientRequest {
     return this.get(this.SELECT_HANDLER, query, callback);
-  };
+  }
 
   /**
    * Execute an Admin Collections task on `collection`
@@ -591,9 +654,12 @@ search(query: Query | Record<string, any> | string, callback: CallbackFn): Clien
    * @api public
    */
 
-executeCollection(collection: Collection | Record<string, any> | string, callback: CallbackFn): ClientRequest {
+  executeCollection(
+    collection: Collection | Record<string, any> | string,
+    callback: CallbackFn
+  ): ClientRequest {
     return this.get(this.COLLECTIONS_HANDLER, collection, callback);
-  };
+  }
 
   /**
    * Search for all documents
@@ -606,9 +672,9 @@ executeCollection(collection: Collection | Record<string, any> | string, callbac
    * @api public
    */
 
-searchAll(callback: CallbackFn): ClientRequest {
+  searchAll(callback: CallbackFn): ClientRequest {
     return this.search('q=*', callback);
-  };
+  }
 
   /**
    * Search documents matching the `query`
@@ -624,9 +690,9 @@ searchAll(callback: CallbackFn): ClientRequest {
    * @api public
    */
 
-spell(query: Query, callback: CallbackFn): ClientRequest {
+  spell(query: Query, callback: CallbackFn): ClientRequest {
     return this.get(this.SPELL_HANDLER, query, callback);
-  };
+  }
 
   /**
    * Terms search
@@ -642,24 +708,29 @@ spell(query: Query, callback: CallbackFn): ClientRequest {
    * @api public
    */
 
-termsSearch(query: Query | Record<string, any> | string, callback: CallbackFn) {
+  termsSearch(
+    query: Query | Record<string, any> | string,
+    callback: CallbackFn
+  ) {
     return this.get(this.TERMS_HANDLER, query, callback);
-  };
+  }
 
   /**
-   * Send an arbitrary HTTP GET request to Solr on the specified `handler` (as Solr like to call it i.e path)
+   * Perform an arbitrary query on a Solr handler (a.k.a. 'path').
    *
-   * @param {String} handler
-   * @param {Query|Object|String} [query]
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param handler
+   *   The name of the handler (or 'path' in Solr terminology).
+   * @param query
+   *   A function, Query object, Collection object, plain object, or string
+   *   describing the query to perform.
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
-get(handler: string, query: Collection | Query | Record<string, any> | string | CallbackFn, callback?: CallbackFn): ClientRequest {
+  get(
+    handler: string,
+    query: Collection | Query | Record<string, any> | string | CallbackFn,
+    callback?: CallbackFn
+  ): ClientRequest {
     let parameters = '';
     if (typeof query === 'function') {
       callback = query as CallbackFn;
@@ -667,7 +738,8 @@ get(handler: string, query: Collection | Query | Record<string, any> | string | 
       parameters += query.build();
     } else if (typeof query === 'object') {
       parameters += querystring.stringify(query);
-    } else if (typeof query === 'string') {
+    } else {
+      // query is a string.
       parameters += query;
     }
     let pathArray;
@@ -683,7 +755,7 @@ get(handler: string, query: Collection | Query | Record<string, any> | string | 
     }
 
     const fullPath = pathArray
-      .filter(function(element) {
+      .filter(function (element) {
         return element;
       })
       .join('/');
@@ -695,52 +767,80 @@ get(handler: string, query: Collection | Query | Record<string, any> | string | 
       Buffer.byteLength(fullPath); // Buffer (10) accounts for protocol and special characters like ://, port colon, and initial slash etc
 
     if (
-      this.options.get_max_request_entity_size === false ||
-      approxUrlLength <= this.options.get_max_request_entity_size
+      !(
+        this.options.get_max_request_entity_size === false ||
+        approxUrlLength <= this.options.get_max_request_entity_size
+      )
     ) {
-      const params = {
-        host: this.options.host,
-        port: this.options.port,
-        fullPath: fullPath,
-        secure: this.options.secure,
-        bigint: this.options.bigint,
-        authorization: this.options.authorization,
-        agent: this.options.agent,
-        ipVersion: this.options.ipVersion,
-        request: this.options.request,
-      };
-
-      return getJSON(params, callback);
-    } else {
       // Funnel this through a POST because it's too large
       return this.post(handler, query, callback);
     }
-  };
+
+    const requestOptions: RequestOptions = {
+      host: this.options.host,
+      port: this.options.port,
+      path: fullPath,
+      headers: {
+        accept: 'application/json; charset=utf-8',
+      },
+      family: this.options.ipVersion,
+
+      // Allow these to override (not merge with) previous values.
+      ...this.options.request,
+    };
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).get(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function (err) {
+      if (callback) {
+        callback(err, null);
+      }
+    });
+    return request;
+  }
 
   /**
-   * Send an arbitrary HTTP POST request to Solr on the specified `handler` (as Solr like to call it i.e path)
+   * Perform an arbitrary query on a Solr handler (a.k.a. 'path').
    *
-   * @param {String} handler
-   * @param {Query|Object|String} [query] -//
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
+   * This serves the same purpose as the `get` method, except it uses POST to
+   * transfer the data instead of putting all of the data in the URL.
    *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param handler
+   *   The name of the handler (or 'path' in Solr terminology).
+   * @param query
+   *   A function, Query object, Collection object, plain object, or string
+   *   describing the query to perform.
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-post(handler: string, query?: Query | Record<string, any> | string | CallbackFn, callback?: CallbackFn): ClientRequest {
+  post(
+    handler: string,
+    query: Collection | Query | Record<string, any> | string | CallbackFn,
+    callback?: CallbackFn
+  ): ClientRequest {
     let parameters = '';
     if (typeof query === 'function') {
       callback = query as CallbackFn;
-    } else if (query instanceof Query) {
+    } else if (query instanceof Query || query instanceof Collection) {
       parameters += query.build();
     } else if (typeof query === 'object') {
       parameters += querystring.stringify(query);
-    } else if (typeof query === 'string') {
+    } else {
+      // query is a string.
       parameters += query;
     }
-
     let pathArray;
 
     if (handler != 'admin/collections') {
@@ -750,25 +850,50 @@ post(handler: string, query?: Query | Record<string, any> | string | CallbackFn,
     }
 
     const fullPath = pathArray
-      .filter(function(element) {
+      .filter(function (element) {
         return element;
       })
       .join('/');
 
-    const params: SolrRequestParams = {
+    const requestOptions: RequestOptions = {
       host: this.options.host,
       port: this.options.port,
-      fullPath: fullPath,
-      params: parameters,
-      secure: this.options.secure,
-      bigint: this.options.bigint,
-      authorization: this.options.authorization,
-      agent: this.options.agent,
-      ipVersion: this.options.ipVersion,
-      request: this.options.request,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
+        'content-length': Buffer.byteLength(parameters),
+        accept: 'application/json; charset=utf-8',
+      },
+      path: fullPath,
+      family: this.options.ipVersion,
+
+      // Allow these to override (not merge with) previous values.
+      ...this.options.request,
     };
-    return postForm(params, callback!);
-  };
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).request(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function onError(err) {
+      if (callback) callback(err, null);
+    });
+
+    request.write(parameters);
+    request.end();
+
+    return request;
+  }
 
   /**
    * Create an instance of `Query`
@@ -777,7 +902,7 @@ post(handler: string, query?: Query | Record<string, any> | string | CallbackFn,
    */
   query(): Query {
     return new Query(this.options);
-  };
+  }
 
   /**
    * Create an instance of `Query`
@@ -787,9 +912,9 @@ post(handler: string, query?: Query | Record<string, any> | string | CallbackFn,
    * @api public
    */
 
-createQuery(): Query {
+  createQuery(): Query {
     return new Query(this.options);
-  };
+  }
 
   /**
    * Create an instance of `Collection`
@@ -798,14 +923,14 @@ createQuery(): Query {
    * @api public
    */
 
-collection(): Collection {
+  collection(): Collection {
     return new Collection();
-  };
+  }
 
   /**
    * Expose `format.escapeSpecialChars` from `Client.escapeSpecialChars`
    */
-escapeSpecialChars = format.escapeSpecialChars;
+  escapeSpecialChars = format.escapeSpecialChars;
 
   /**
    * Ping the Solr server
@@ -820,125 +945,71 @@ escapeSpecialChars = format.escapeSpecialChars;
 
   ping(callback: CallbackFn) {
     return this.get(this.ADMIN_PING_HANDLER, callback);
-  };
-
-}
-
-/**
- * HTTP POST request. Send update commands to the Solr server using form encoding (e.g. search)
- *
- * @param {Object} params
- * @param {String} params.host - IP address or host address of the Solr server
- * @param {Number|String} params.port - port of the Solr server
- * @param {String} params.core - name of the Solr core requested
- * @param {String} params.authorization - value of the authorization header
- * @param {String} params.fullPath - full path of the request
- * @param {String} params.params - form params
- * @param {Boolean} params.secure -
- * @param {Boolean} params.bigint -
- * @param {http.Agent} [params.agent] -
- * @param {Object} params.request - request options
- * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
- * @param {Error} callback().err
- * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
- *
- * @return {http.ClientRequest}
- * @api private
- */
-function postForm(params: SolrRequestParams, callback: CallbackFn): ClientRequest {
-  const headers = {
-    'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-    'content-length': params.params ? Buffer.byteLength(params.params) : 0,
-    accept: 'application/json; charset=utf-8',
-  };
-  if (params.authorization) {
-    headers['authorization'] = params.authorization;
-  }
-  let options: RequestOptions = {
-    host: params.host,
-    port: params.port,
-    method: 'POST',
-    headers: headers,
-    path: params.fullPath,
-    family: params.ipVersion,
-  };
-
-  if (params.request) {
-    options = Object.assign(options, params.request);
   }
 
-  if (params.agent !== undefined) {
-    options.agent = params.agent;
-  }
+  createSchemaField(
+    fieldName: string,
+    fieldType: string,
+    cb: CallbackFn
+  ): void {
+    const json = JSON.stringify({
+      'add-field': {
+        name: fieldName,
+        type: fieldType,
+        multiValued: false,
+        stored: true,
+      },
+    });
 
-  const request: ClientRequest = pickProtocol(params.secure).request(options);
+    const callback = (err, result) => {
+      if (err) {
+        // ToDo We should handle this in a more robust way in the future, but
+        // there is a difference between default setup in Solr 5 and Solr 8, so
+        // some fields already exist in Solr 8. Hence if that's the case, we just
+        // ignore that.
+        console.warn(err.message);
+      }
+      cb(undefined, result);
+    };
 
-  request.on('response', handleJSONResponse(request, params.bigint, callback));
+    const fullPath = `${this.options.path}/${this.options.core}/schema`;
 
-  request.on('error', function onError(err) {
-    if (callback) callback(err, null);
-  });
-
-  request.write(params.params);
-  request.end();
-
-  return request;
-}
-
-/**
- * HTTP GET request.  Send a query command to the Solr server (query)
- *
- * @param {Object} params
- * @param {String} params.host - IP address or host address of the Solr server
- * @param {Number|String} params.port - port of the Solr server
- * @param {String} params.core - name of the Solr core requested
- * @param {String} params.authorization - value of the authorization header
- * @param {String} params.fullPath - full path of the request, contains query parameters
- * @param {Boolean} params.secure -
- * @param {Boolean} params.bigint -
- * @param {http.Agent} [params.agent] -
- * @param {Object} params.request - request options
- * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
- * @param {Error} callback().err
- * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
- *
- * @return {http.ClientRequest}
- * @api private
- */
-function getJSON(params: SolrRequestParams, callback): ClientRequest {
-  let options: RequestOptions = {
-    host: params.host,
-    port: params.port,
-    path: params.fullPath,
-    headers: {
-      accept: 'application/json; charset=utf-8',
-    },
-    family: params.ipVersion,
-  };
-
-  if (params.request) {
-    options = Object.assign(options, params.request);
-  }
-
-  if (params.agent !== undefined) {
-    options.agent = params.agent;
-  }
-
-  if (params.authorization) {
-    if (!options.headers) {
-      options.headers = {}
+    const requestOptions: RequestOptions = {
+      host: this.options.host,
+      port: this.options.port,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'content-length': Buffer.byteLength(json),
+        accept: 'application/json; charset=utf-8',
+      },
+      path: fullPath,
+      family: this.options.ipVersion,
+    };
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
     }
-    options.headers.authorization = params.authorization;
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).request(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function onError(err) {
+      if (callback) callback(err, null);
+    });
+
+    request.write(json);
+    request.end();
+
+    return request;
   }
-
-  const request = pickProtocol(params.secure).get(options);
-
-  request.on('response', handleJSONResponse(request, params.bigint, callback));
-
-  request.on('error', function(err) {
-    if (callback) callback(err, null);
-  });
-  return request;
 }
 
 bluebird.promisifyAll(Client.prototype);

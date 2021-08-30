@@ -5,11 +5,19 @@ import * as querystring from 'querystring';
 import * as format from './utils/format';
 import * as arrayUtils from './utils/array';
 import * as versionUtils from './utils/version';
-import { Filters, HlOptions, MltOptions, TermsOptions, GroupOptions, FacetOptions, DateOptions } from './types';
+import {
+  Filters,
+  HlOptions,
+  MltOptions,
+  TermsOptions,
+  GroupOptions,
+  FacetOptions,
+  DateOptions,
+} from './types';
 
 export type QueryOptions = {
-  solrVersion?: number
-}
+  solrVersion?: number;
+};
 
 /**
  * Create a new `Query`
@@ -27,7 +35,6 @@ export class Query {
     this.parameters = [];
   }
 
-
   /**
    * Set a new parameter
    * Since all possibilities provided by Solr are not available in the `Query` object, `set()` is there to fit this gap.
@@ -41,7 +48,7 @@ export class Query {
     const self = this;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the query parser to use with this request.
@@ -51,12 +58,12 @@ export class Query {
    * @return {Query}
    * @api public
    */
-defType(type: string): Query {
+  defType(type: string): Query {
     const self = this;
     const parameter = 'defType=' + type;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the Request Handler used to process the request based on its `name`.
@@ -67,14 +74,14 @@ defType(type: string): Query {
    * @return {Query}
    * @api public
    */
-   requestHandler (name: string): Query {
+  requestHandler(name: string): Query {
     const self = this;
     const parameter = 'qt=' + name;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
-  qt = Query.prototype.requestHandler
+  qt = Query.prototype.requestHandler;
 
   /**
    *  Set the main query
@@ -94,7 +101,7 @@ defType(type: string): Query {
     }
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    *  Set the default query operator
@@ -111,7 +118,7 @@ defType(type: string): Query {
     parameter += op;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the default query field.
@@ -121,13 +128,13 @@ defType(type: string): Query {
    * @return  {Query}
    * @api public
    */
-df(df: string): Query {
+  df(df: string): Query {
     const self = this;
     let parameter = 'df=';
     parameter += df;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the offset where the set of returned documents should begin.
@@ -137,12 +144,12 @@ df(df: string): Query {
    * @return {Query}
    * @api public
    */
-start(start: number): Query {
+  start(start: number): Query {
     const self = this;
     const parameter = 'start=' + start;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the maximum number of documents returned
@@ -152,12 +159,12 @@ start(start: number): Query {
    * @return {Query}
    * @api public
    */
-rows(rows: number): Query {
+  rows(rows: number): Query {
     const self = this;
     const parameter = 'rows=' + rows;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Request to use cursorMarks for deep-paging as explained in http://heliosearch.org/solr/paging-and-deep-paging/
@@ -168,13 +175,13 @@ rows(rows: number): Query {
    * @return {Query}
    * @api public
    */
-cursorMark(mark: string): Query {
+  cursorMark(mark: string): Query {
     const self = this;
     mark = mark || '*';
     const parameter = 'cursorMark=' + encodeURIComponent(mark);
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Sort a result in descending or ascending order based on one or more fields.
@@ -184,13 +191,13 @@ cursorMark(mark: string): Query {
    * @return {Query}
    * @api public
    */
-sort(options: Record<string, any>): Query {
+  sort(options: Record<string, any>): Query {
     const self = this;
     let parameter = 'sort=';
     parameter += querystring.stringify(options, ',', '%20');
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Filter the set of documents found before to return the result with the given range determined by `field`, `start` and `end`.
@@ -216,37 +223,27 @@ sort(options: Record<string, any>): Query {
     let parameter = 'fq=';
     if (Array.isArray(options2)) {
       parameter += '(';
-      const filters = options2.map(function(option) {
+      const filters = options2.map(function (option) {
         const key = option.field;
-        const startParam = option.start ? option.start.toString() : '*'
-        const endParam = option.end ? option.end.toString() : '*'
+        const startParam = option.start ? option.start.toString() : '*';
+        const endParam = option.end ? option.end.toString() : '*';
         const filter = {};
-        filter[key] =
-          '[' +
-          startParam +
-          '%20TO%20' +
-          endParam +
-          ']';
+        filter[key] = '[' + startParam + '%20TO%20' + endParam + ']';
         return format.stringify(filter, '', ':');
       });
       parameter += filters.join('%20AND%20');
       parameter += ')';
     } else {
       const key = options2.field;
-      const startParam = options2.start ? options2.start.toString() : '*'
-      const endParam = options2.end ? options2.end.toString() : '*'
+      const startParam = options2.start ? options2.start.toString() : '*';
+      const endParam = options2.end ? options2.end.toString() : '*';
       const filter = {};
-      filter[key] =
-        '[' +
-        startParam +
-        '%20TO%20' +
-        endParam +
-        ']';
+      filter[key] = '[' + startParam + '%20TO%20' + endParam + ']';
       parameter += format.stringify(filter, '', ':');
     }
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Filter the set of documents found before to return the result with the given `field` and `value`.
@@ -262,14 +259,14 @@ sort(options: Record<string, any>): Query {
    * query.q({ '*' : '*' }).matchFilter('id', 100)
    */
 
-matchFilter(field: string, value: string | number | Date | boolean): Query {
+  matchFilter(field: string, value: string | number | Date | boolean): Query {
     const self = this;
     value = format.dateISOify(value);
     let parameter = 'fq=';
     parameter += field + ':' + encodeURIComponent(value);
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * wrapper function for matchFilter, accepting either an object with `field` and `value` properties
@@ -287,15 +284,16 @@ matchFilter(field: string, value: string | number | Date | boolean): Query {
    * query.q({ '*' : '*' }).fq({field: 'id', value: 100})
    * query.q({ '*' : '*' }).fq([{field: 'id', value: 100}, {field: 'name', value: 'John'}])
    */
-fq(filters: Filters | Filters[] ): Query {
-    const self = this
+  fq(filters: Filters | Filters[]): Query {
+    const self = this;
     if (Array.isArray(filters)) {
-      filters.map(f => this.matchFilter(f.field, f.value))
-      return self
+      filters.map((f) => this.matchFilter(f.field, f.value));
+      return self;
     }
-    if (filters instanceof Object) return this.matchFilter(filters.field, filters.value)
+    if (filters instanceof Object)
+      return this.matchFilter(filters.field, filters.value);
     else {
-      throw new Error('unknown type for filter in fq()')
+      throw new Error('unknown type for filter in fq()');
     }
   }
 
@@ -307,7 +305,7 @@ fq(filters: Filters | Filters[] ): Query {
    * @return {Query}
    * @api public
    */
-fl(fields: string | string[]): Query {
+  fl(fields: string | string[]): Query {
     const self = this;
     let parameter = 'fl=';
     if (typeof fields === 'string') {
@@ -317,9 +315,9 @@ fl(fields: string | string[]): Query {
     }
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
-  restrict = Query.prototype.fl
+  restrict = Query.prototype.fl;
 
   /**
    * Set the time allowed for a search to finish.
@@ -335,7 +333,7 @@ fl(fields: string | string[]): Query {
     const parameter = 'timeAllowed=' + time;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Group documents with the given `field`
@@ -346,13 +344,13 @@ fl(fields: string | string[]): Query {
    * @api public
    */
 
-groupBy(field: string): Query {
+  groupBy(field: string): Query {
     const self = this;
     this.group({
-      field: field
-    })
+      field: field,
+    });
     return self;
-  };
+  }
 
   /**
    * Group documents using field collapsing or result grouping feature.
@@ -376,7 +374,7 @@ groupBy(field: string): Query {
    * @api public
    */
 
-group(options: GroupOptions): Query {
+  group(options: GroupOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('group=false');
@@ -385,7 +383,7 @@ group(options: GroupOptions): Query {
     }
     if (options.field) {
       options.field = arrayUtils.toArray(options.field);
-      options.field.forEach(function(field) {
+      options.field.forEach(function (field) {
         self.parameters.push('group.field=' + field);
       });
     }
@@ -393,7 +391,7 @@ group(options: GroupOptions): Query {
       if (!Array.isArray(options.query)) {
         options.query = [options.query];
       }
-      options.query.forEach(function(query) {
+      options.query.forEach(function (query) {
         self.parameters.push('group.query=' + encodeURIComponent(query));
       });
     }
@@ -407,7 +405,9 @@ group(options: GroupOptions): Query {
       this.parameters.push('group.sort=' + encodeURIComponent(options.sort));
     }
     if (options.format) {
-      this.parameters.push('group.format=' + encodeURIComponent(options.format));
+      this.parameters.push(
+        'group.format=' + encodeURIComponent(options.format)
+      );
     }
     if (options.main !== undefined) {
       this.parameters.push('group.main=' + options.main);
@@ -422,7 +422,7 @@ group(options: GroupOptions): Query {
       this.parameters.push('group.cache.percent=' + options.cache);
     }
     return self;
-  };
+  }
 
   /**
    * Create a facet
@@ -444,7 +444,7 @@ group(options: GroupOptions): Query {
    * @return {Query}
    * @api public
    */
-facet(options: FacetOptions): Query {
+  facet(options: FacetOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('facet=false');
@@ -456,12 +456,14 @@ facet(options: FacetOptions): Query {
     }
     if (options.field) {
       options.field = arrayUtils.toArray(options.field);
-      options.field.forEach(function(field) {
+      options.field.forEach(function (field) {
         self.parameters.push('facet.field=' + field);
       });
     }
     if (options.prefix) {
-      this.parameters.push('facet.prefix=' + encodeURIComponent(options.prefix));
+      this.parameters.push(
+        'facet.prefix=' + encodeURIComponent(options.prefix)
+      );
     }
     if (options.sort) {
       this.parameters.push('facet.sort=' + encodeURIComponent(options.sort));
@@ -489,18 +491,20 @@ facet(options: FacetOptions): Query {
     ) {
       if (options.pivot) {
         options.field = arrayUtils.toArray(options.pivot.fields);
-        options.field.forEach(function(field) {
+        options.field.forEach(function (field) {
           self.parameters.push('facet.pivot=' + field);
         });
 
         if (options.pivot.mincount) {
-          this.parameters.push('facet.pivot.mincount=' + options.pivot.mincount);
+          this.parameters.push(
+            'facet.pivot.mincount=' + options.pivot.mincount
+          );
         }
       }
     }
 
     return self;
-  };
+  }
 
   /**
    * Create a MoreLikeThis. MoreLikeThis constructs a lucene query based on terms within a document.
@@ -566,7 +570,7 @@ facet(options: FacetOptions): Query {
       this.parameters.push('mlt.qf=' + parameter);
     }
     return self;
-  };
+  }
 
   /*!
    * DisMax parameters
@@ -579,11 +583,11 @@ facet(options: FacetOptions): Query {
    * @return {Query}
    * @api public
    */
-dismax(): Query {
+  dismax(): Query {
     const self = this;
     this.defType('dismax');
     return self;
-  };
+  }
 
   /*!
    * EDisMax parameters
@@ -597,11 +601,11 @@ dismax(): Query {
    * @api public
    */
 
-edismax(): Query {
+  edismax(): Query {
     const self = this;
     this.defType('edismax');
     return self;
-  };
+  }
 
   /**
    * Add the parameter debugQuery.
@@ -611,11 +615,11 @@ edismax(): Query {
    * @api public
    */
 
-debugQuery(): Query {
+  debugQuery(): Query {
     const self = this;
     this.parameters.push('debugQuery=true');
     return self;
-  };
+  }
 
   /**
    * Set the "boosts" to associate with each fields
@@ -636,7 +640,7 @@ debugQuery(): Query {
     parameter += querystring.stringify(options, '%20', '^');
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the minimum number or percent of clauses that must match.
@@ -651,12 +655,12 @@ debugQuery(): Query {
    * query.mm(2); // or query.mm('75%');
    */
 
-mm(minimum: string | number): Query {
+  mm(minimum: string | number): Query {
     const self = this;
     const parameter = 'mm=' + minimum;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the Phrase Fields parameter.
@@ -669,13 +673,13 @@ mm(minimum: string | number): Query {
    * @api public
    */
 
-pf(options: Record<string, any>): Query {
+  pf(options: Record<string, any>): Query {
     const self = this;
     let parameter = 'pf=';
     parameter += querystring.stringify(options, '%20', '^');
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the phrase slop allowed in a query.
@@ -686,12 +690,12 @@ pf(options: Record<string, any>): Query {
    * @api public
    */
 
-ps(slop: number): Query {
+  ps(slop: number): Query {
     const self = this;
     const parameter = 'ps=' + slop;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the query slop allowed in a query.
@@ -701,12 +705,12 @@ ps(slop: number): Query {
    * @return {Query}
    * @api public
    */
-qs(slop: number): Query {
+  qs(slop: number): Query {
     const self = this;
     const parameter = 'qs=' + slop;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the tiebreaker in DisjunctionMaxQueries (should be something much less than 1)
@@ -717,12 +721,12 @@ qs(slop: number): Query {
    * @api public
    */
 
-tie(tiebreaker: number): Query {
+  tie(tiebreaker: number): Query {
     const self = this;
     const parameter = 'tie=' + tiebreaker;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the Boost Query parameter.
@@ -733,13 +737,13 @@ tie(tiebreaker: number): Query {
    * @return {Query}
    * @api public
    */
-bq(options: Record<string, any>): Query {
+  bq(options: Record<string, any>): Query {
     const self = this;
     let parameter = 'bq=';
     parameter += querystring.stringify(options, '%20', '^');
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the Functions (with optional boosts) that will be included in the user's query to influence the score.
@@ -748,12 +752,12 @@ bq(options: Record<string, any>): Query {
    * @return {Query}
    * @api public
    */
-bf(functions: string): Query {
+  bf(functions: string): Query {
     const self = this;
     const parameter = 'bf=' + functions;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Set the Functions (with optional boosts) that will be included in the user's query to influence the score.
@@ -763,12 +767,12 @@ bf(functions: string): Query {
    * @api public
    */
 
-boost(functions: string): Query {
+  boost(functions: string): Query {
     const self = this;
     const parameter = 'boost=' + encodeURIComponent(functions);
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Build a querystring with the array of `this.parameters`.
@@ -776,9 +780,9 @@ boost(functions: string): Query {
    * @return {String}
    * @api private
    */
-build(): string {
+  build(): string {
     return this.parameters.join('&');
-  };
+  }
 
   /**
    * Set the Query Highlighting parameter.
@@ -813,7 +817,7 @@ build(): string {
    * @return {Query}
    * @api public
    */
-hl(options: HlOptions): Query {
+  hl(options: HlOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('hl=false');
@@ -840,10 +844,14 @@ hl(options: HlOptions): Query {
       }
     }
     if (options.snippets !== undefined) {
-      this.parameters.push('hl.snippets=' + encodeURIComponent(options.snippets));
+      this.parameters.push(
+        'hl.snippets=' + encodeURIComponent(options.snippets)
+      );
     }
     if (options.fragsize !== undefined) {
-      this.parameters.push('hl.fragsize=' + encodeURIComponent(options.fragsize));
+      this.parameters.push(
+        'hl.fragsize=' + encodeURIComponent(options.fragsize)
+      );
     }
     if (options.mergeContiguous !== undefined) {
       this.parameters.push(
@@ -863,13 +871,13 @@ hl(options: HlOptions): Query {
     if (options.maxMultiValuedToExamine !== undefined) {
       this.parameters.push(
         'hl.maxMultiValuedToExamine=' +
-        encodeURIComponent(options.maxMultiValuedToExamine)
+          encodeURIComponent(options.maxMultiValuedToExamine)
       );
     }
     if (options.maxMultiValuedToMatch !== undefined) {
       this.parameters.push(
         'hl.maxMultiValuedToMatch=' +
-        encodeURIComponent(options.maxMultiValuedToMatch)
+          encodeURIComponent(options.maxMultiValuedToMatch)
       );
     }
     if (options.alternateField) {
@@ -880,7 +888,7 @@ hl(options: HlOptions): Query {
     if (options.maxAlternateFieldLength !== undefined) {
       this.parameters.push(
         'hl.maxAlternateFieldLength=' +
-        encodeURIComponent(options.maxAlternateFieldLength)
+          encodeURIComponent(options.maxAlternateFieldLength)
       );
     }
     if (options.formatter) {
@@ -909,13 +917,14 @@ hl(options: HlOptions): Query {
     }
     if (options.highlightMultiTerm !== undefined) {
       this.parameters.push(
-        'hl.highlightMultiTerm=' + encodeURIComponent(options.highlightMultiTerm)
+        'hl.highlightMultiTerm=' +
+          encodeURIComponent(options.highlightMultiTerm)
       );
     }
     if (options.usePhraseHighlighter !== undefined) {
       this.parameters.push(
         'hl.usePhraseHighlighter=' +
-        encodeURIComponent(options.usePhraseHighlighter)
+          encodeURIComponent(options.usePhraseHighlighter)
       );
     }
     if (options.regexSlop !== undefined) {
@@ -931,7 +940,7 @@ hl(options: HlOptions): Query {
     if (options.regexMaxAnalyzedChars) {
       this.parameters.push(
         'hl.regex.maxAnalyzedChars=' +
-        encodeURIComponent(options.regexMaxAnalyzedChars)
+          encodeURIComponent(options.regexMaxAnalyzedChars)
       );
     }
     if (options.preserveMulti !== undefined) {
@@ -940,11 +949,13 @@ hl(options: HlOptions): Query {
       );
     }
     if (options.payloads !== undefined) {
-      this.parameters.push('hl.payloads=' + encodeURIComponent(options.payloads));
+      this.parameters.push(
+        'hl.payloads=' + encodeURIComponent(options.payloads)
+      );
     }
 
     return self;
-  };
+  }
 
   /**
    * Create a terms
@@ -968,7 +979,7 @@ hl(options: HlOptions): Query {
    * @return {Query}
    * @api public
    */
-terms(options: TermsOptions): Query {
+  terms(options: TermsOptions): Query {
     const self = this;
     if (options.on === false) {
       this.parameters.push('terms=false');
@@ -993,7 +1004,9 @@ terms(options: TermsOptions): Query {
       this.parameters.push('terms.maxcount=' + options.maxcount);
     }
     if (options.prefix !== undefined) {
-      this.parameters.push('terms.prefix=' + encodeURIComponent(options.prefix));
+      this.parameters.push(
+        'terms.prefix=' + encodeURIComponent(options.prefix)
+      );
     }
     if (options.regex !== undefined) {
       this.parameters.push('terms.regex=' + encodeURIComponent(options.regex));
@@ -1021,5 +1034,5 @@ terms(options: TermsOptions): Query {
       this.parameters.push('terms.sort=' + encodeURIComponent(options.sort));
     }
     return self;
-  };
+  }
 }

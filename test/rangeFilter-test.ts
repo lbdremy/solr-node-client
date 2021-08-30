@@ -5,8 +5,8 @@
 const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr')
-  import * as sassert from './sassert';
+  solr = require(libPath + '/solr');
+import * as sassert from './sassert';
 
 // Test suite
 const config = figc(__dirname + '/config.json');
@@ -49,10 +49,7 @@ describe('Client#createQuery', function () {
       });
     });
     it('should filter a query using a range when start and end values are not set', function (done) {
-      const query = client
-        .createQuery()
-        .q('test')
-        .rangeFilter({ field: 'id'});
+      const query = client.createQuery().q('test').rangeFilter({ field: 'id' });
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -64,7 +61,7 @@ describe('Client#createQuery', function () {
       const query = client
         .createQuery()
         .q('test')
-        .rangeFilter({ field: 'id', end: 200});
+        .rangeFilter({ field: 'id', end: 200 });
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);
@@ -76,7 +73,7 @@ describe('Client#createQuery', function () {
       const query = client
         .createQuery()
         .q('test')
-        .rangeFilter({ field: 'id', start: 200});
+        .rangeFilter({ field: 'id', start: 200 });
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);

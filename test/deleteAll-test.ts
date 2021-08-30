@@ -3,8 +3,8 @@
  */
 const figc = require('figc'),
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr')
-  import * as sassert from './sassert';
+  solr = require(libPath + '/solr');
+import * as sassert from './sassert';
 
 // Test suite
 const config = figc(__dirname + '/config.json');

@@ -4,9 +4,9 @@
 const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr')
-  import * as sassert from './sassert';
-  const Stream = require('stream');
+  solr = require(libPath + '/solr');
+import * as sassert from './sassert';
+const Stream = require('stream');
 
 // Test suite
 const config = figc(__dirname + '/config.json');

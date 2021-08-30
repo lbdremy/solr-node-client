@@ -1,10 +1,12 @@
-export { createClient, Client } from './lib/solr'
+export { createClient, Client } from './lib/solr';
 
-export { Query } from './lib/query'
-export type { QueryOptions } from './lib/query'
+export { Query } from './lib/query';
+export type { QueryOptions } from './lib/query';
 
-export { Collection } from './lib/collection'
+export { Collection } from './lib/collection';
 
-export type { SolrClientParams, SolrRequestParams, CallbackFn, ResourceOptions } from './lib/types'
-
-
+export type {
+  SolrClientParams,
+  CallbackFn,
+  ResourceOptions,
+} from './lib/types';

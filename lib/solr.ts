@@ -880,6 +880,44 @@ export class Client {
   ping(callback: CallbackFn) {
     return this.get(this.ADMIN_PING_HANDLER, callback);
   }
+
+  createSchemaField(
+    fieldName: string,
+    fieldType: string,
+    cb: CallbackFn
+  ): void {
+    const payload = {
+      'add-field': {
+        name: fieldName,
+        type: fieldType,
+        multiValued: false,
+        stored: true,
+      },
+    };
+
+    const params = {
+      host: this.options.host,
+      port: this.options.port,
+      fullPath: `${this.options.path}/${this.options.core}/schema`,
+      json: JSON.stringify(payload),
+      secure: this.options.secure,
+      bigint: this.options.bigint,
+      authorization: this.options.authorization,
+      agent: this.options.agent,
+      ipVersion: this.options.ipVersion,
+    };
+
+    postJSON(params, (err, result) => {
+      if (err) {
+        // TODO We should handle this in a more robust way in the future, but
+        //  there is a difference between default setup in Solr 5 and Solr 8,
+        //  so some fields already exist in Solr 8. Hence if that's the case,
+        //  we just ignore that.
+        console.warn(err.message);
+      }
+      cb(undefined, result);
+    });
+  }
 }
 
 /**

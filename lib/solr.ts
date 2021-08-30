@@ -698,18 +698,16 @@ export class Client {
   }
 
   /**
-   * Send an arbitrary HTTP GET request to Solr on the specified `handler` (as Solr like to call it i.e path)
+   * Perform an arbitrary query on a Solr handler (a.k.a. 'path').
    *
-   * @param {String} handler
-   * @param {Query|Object|String} [query]
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param handler
+   *   The name of the handler (or 'path' in Solr terminology).
+   * @param query
+   *   A function, Query object, Collection object, plain object, or string
+   *   describing the query to perform.
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   get(
     handler: string,
     query: Collection | Query | Record<string, any> | string | CallbackFn,

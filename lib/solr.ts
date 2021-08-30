@@ -128,6 +128,25 @@ export class Client {
   }
 
   /**
+   * Construct the full path to the given "handler".
+   *
+   * @param handler
+   *   Relative URL path for the solr handler.
+   *
+   * @returns
+   *   Full URL to the handler.
+   */
+  private getFullHandlerPath(handler: string): string {
+    let pathArray;
+    if (handler === this.COLLECTIONS_HANDLER) {
+      pathArray = [this.options.path, handler];
+    } else {
+      pathArray = [this.options.path, this.options.core, handler];
+    }
+    return pathArray.filter((e) => e).join('/');
+  }
+
+  /**
    * Create credential using the basic access authentication method
    * @api public
    */
@@ -569,17 +588,10 @@ export class Client {
     }
 
     const json = pickJSON(this.options.bigint).stringify(data);
-    const fullPath = [
-      this.options.path,
-      this.options.core,
-      this.UPDATE_JSON_HANDLER +
-        '?' +
-        querystring.stringify({ ...queryParameters, wt: 'json' }),
-    ]
-      .filter(function (element) {
-        return element;
-      })
-      .join('/');
+    const fullPath =
+      this.getFullHandlerPath(this.UPDATE_JSON_HANDLER) +
+      '?' +
+      querystring.stringify({ ...queryParameters, wt: 'json' });
 
     const requestOptions: RequestOptions = {
       host: this.options.host,
@@ -740,23 +752,9 @@ export class Client {
       // query is a string.
       parameters += query;
     }
-    let pathArray;
 
-    if (handler != 'admin/collections') {
-      pathArray = [
-        this.options.path,
-        this.options.core,
-        handler + '?' + parameters + '&wt=json',
-      ];
-    } else {
-      pathArray = [this.options.path, handler + '?' + parameters + '&wt=json'];
-    }
-
-    const fullPath = pathArray
-      .filter(function (element) {
-        return element;
-      })
-      .join('/');
+    const fullPath =
+      this.getFullHandlerPath(handler) + '?' + parameters + '&wt=json';
 
     const approxUrlLength =
       10 +
@@ -970,7 +968,7 @@ export class Client {
       cb(undefined, result);
     };
 
-    const fullPath = `${this.options.path}/${this.options.core}/schema`;
+    const fullPath = this.getFullHandlerPath('schema');
 
     const requestOptions: RequestOptions = {
       host: this.options.host,

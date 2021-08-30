@@ -1,6 +1,6 @@
 require('mocha');
 
-import { assert } from 'chai'
+import { assert } from 'chai';
 const libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
   solr = require(libPath + '/solr');
 

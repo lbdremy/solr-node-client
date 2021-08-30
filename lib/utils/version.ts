@@ -25,7 +25,7 @@ export const versionsEnum = {
  *
  * @param solrVersion
  */
-export function version (solrVersion) {
+export function version(solrVersion) {
   return typeof solrVersion === 'number'
     ? versionsEnum['' + solrVersion + '.0']
     : versionsEnum[solrVersion]

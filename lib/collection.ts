@@ -6,10 +6,17 @@
  * @api private
  */
 import {
-  AddReplica, AddReplicaProp,
-  Alias, BalanceShardUnique, ClusterProp,
+  AddReplica,
+  AddReplicaProp,
+  Alias,
+  BalanceShardUnique,
+  ClusterProp,
   CreateOptions,
-  DeleteReplica, DeleteReplicaProp, Migrate, RebalanceLeaders, Role,
+  DeleteReplica,
+  DeleteReplicaProp,
+  Migrate,
+  RebalanceLeaders,
+  Role,
   ShardOptions,
   SplitShard,
 } from './types';
@@ -21,7 +28,6 @@ export class Collection {
     this.parameters = [];
   }
 
-
   /**
    * Set a new parameter
    * Since all possibilities provided by Solr are not available in the `Collection` object, `set()` is there to fill this gap.
@@ -31,11 +37,11 @@ export class Collection {
    * @return {Collection} - allow chaining
    * @api public
    */
-set(parameter: string): Collection {
+  set(parameter: string): Collection {
     const self = this;
     this.parameters.push(parameter);
     return self;
-  };
+  }
 
   /**
    * Create a new Collection
@@ -57,7 +63,7 @@ set(parameter: string): Collection {
    * @return {Collection}
    * @api public
    */
-create(options: CreateOptions): Collection {
+  create(options: CreateOptions): Collection {
     const self = this;
     this.parameters.push('action=CREATE');
     if (options.name) {
@@ -110,7 +116,7 @@ create(options: CreateOptions): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Reload a Collection
@@ -120,7 +126,7 @@ create(options: CreateOptions): Collection {
    * @return {Collection}
    * @api public
    */
-reload(name: string): Collection {
+  reload(name: string): Collection {
     const self = this;
     this.parameters.push('action=RELOAD');
     if (name) {
@@ -128,7 +134,7 @@ reload(name: string): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Split a shard
@@ -143,7 +149,7 @@ reload(name: string): Collection {
    * @return {Collection}
    * @api public
    */
-splitShard(options: SplitShard): Collection {
+  splitShard(options: SplitShard): Collection {
     const self = this;
     this.parameters.push('action=SPLITSHARD');
     if (options.collection) {
@@ -167,7 +173,7 @@ splitShard(options: SplitShard): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Create a shard
@@ -180,7 +186,7 @@ splitShard(options: SplitShard): Collection {
    * @return {Collection}
    * @api public
    */
-createShard(options: ShardOptions): Collection {
+  createShard(options: ShardOptions): Collection {
     const self = this;
     this.parameters.push('action=CREATESHARD');
     if (options.collection) {
@@ -191,7 +197,7 @@ createShard(options: ShardOptions): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Delete a shard
@@ -203,7 +209,7 @@ createShard(options: ShardOptions): Collection {
    * @return {Collection}
    * @api public
    */
-deleteShard(options: ShardOptions): Collection {
+  deleteShard(options: ShardOptions): Collection {
     const self = this;
     this.parameters.push('action=DELETESHARD');
     if (options.collection) {
@@ -214,7 +220,7 @@ deleteShard(options: ShardOptions): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Create/ Modify alias for a collection
@@ -226,7 +232,7 @@ deleteShard(options: ShardOptions): Collection {
    * @return {Collection}
    * @api public
    */
-createAlias(options: Alias): Collection {
+  createAlias(options: Alias): Collection {
     const self = this;
     this.parameters.push('action=CREATEALIAS');
     if (options.name) {
@@ -241,7 +247,7 @@ createAlias(options: Alias): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Delete a collection alias
@@ -251,7 +257,7 @@ createAlias(options: Alias): Collection {
    * @return {Collection}
    * @api public
    */
-deleteAlias(name: string): Collection {
+  deleteAlias(name: string): Collection {
     const self = this;
     this.parameters.push('action=DELETEALIAS');
     if (name) {
@@ -259,7 +265,7 @@ deleteAlias(name: string): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Delete a Collection
@@ -269,7 +275,7 @@ deleteAlias(name: string): Collection {
    * @return {Collection}
    * @api public
    */
-delete(name: string): Collection {
+  delete(name: string): Collection {
     const self = this;
     this.parameters.push('action=DELETE');
     if (name) {
@@ -277,7 +283,7 @@ delete(name: string): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Delete a replica
@@ -291,7 +297,7 @@ delete(name: string): Collection {
    * @return {Collection}
    * @api public
    */
-deleteReplica(options: DeleteReplica): Collection {
+  deleteReplica(options: DeleteReplica): Collection {
     const self = this;
     this.parameters.push('action=DELETEREPLICA');
     if (options.collection) {
@@ -308,7 +314,7 @@ deleteReplica(options: DeleteReplica): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Add replica
@@ -323,7 +329,7 @@ deleteReplica(options: DeleteReplica): Collection {
    * @return {Collection}
    * @api public
    */
-addReplica(options: AddReplica): Collection {
+  addReplica(options: AddReplica): Collection {
     const self = this;
     this.parameters.push('action=ADDREPLICA');
     if (options.collection) {
@@ -343,7 +349,7 @@ addReplica(options: AddReplica): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Cluster Properties
@@ -355,7 +361,7 @@ addReplica(options: AddReplica): Collection {
    * @return {Collection}
    * @api public
    */
-clusterProp(options: ClusterProp): Collection {
+  clusterProp(options: ClusterProp): Collection {
     const self = this;
     this.parameters.push('action=CLUSTERPROP');
     if (options.name) {
@@ -366,7 +372,7 @@ clusterProp(options: ClusterProp): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Migrate documents to another collection
@@ -381,7 +387,7 @@ clusterProp(options: ClusterProp): Collection {
    * @return {Collection}
    * @api public
    */
-migrate(options: Migrate): Collection {
+  migrate(options: Migrate): Collection {
     const self = this;
     this.parameters.push('action=MIGRATE');
     if (options.collection) {
@@ -401,7 +407,7 @@ migrate(options: Migrate): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Add Role
@@ -413,7 +419,7 @@ migrate(options: Migrate): Collection {
    * @return {Collection}
    * @api public
    */
- addRole(options: Role): Collection {
+  addRole(options: Role): Collection {
     const self = this;
     this.parameters.push('action=ADDROLE');
     if (options.role) {
@@ -424,7 +430,7 @@ migrate(options: Migrate): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Remove Role
@@ -437,7 +443,7 @@ migrate(options: Migrate): Collection {
    * @return {Collection}
    * @api public
    */
-removeRole(options: Role): Collection {
+  removeRole(options: Role): Collection {
     const self = this;
     this.parameters.push('action=REMOVEROLE');
     if (options.role) {
@@ -448,7 +454,7 @@ removeRole(options: Role): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Overseer status and statistics
@@ -456,12 +462,12 @@ removeRole(options: Role): Collection {
    * @return {Collection}
    * @api public
    */
-overseerStatus(): Collection {
+  overseerStatus(): Collection {
     const self = this;
     this.parameters.push('action=OVERSEERSTATUS');
 
     return self;
-  };
+  }
 
   /**
    * Cluster status
@@ -469,12 +475,12 @@ overseerStatus(): Collection {
    * @return {Collection}
    * @api public
    */
-clusterStatus(): Collection {
+  clusterStatus(): Collection {
     const self = this;
     this.parameters.push('action=CLUSTERSTATUS');
 
     return self;
-  };
+  }
 
   /**
    * Request status
@@ -485,7 +491,7 @@ clusterStatus(): Collection {
    * @return {Collection}
    * @api public
    */
-requestStatus(requestid: string): Collection {
+  requestStatus(requestid: string): Collection {
     const self = this;
     this.parameters.push('action=REQUESTSTATUS');
     if (requestid) {
@@ -493,7 +499,7 @@ requestStatus(requestid: string): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * List collections
@@ -501,12 +507,12 @@ requestStatus(requestid: string): Collection {
    * @return {Collection}
    * @api public
    */
-list(): Collection {
+  list(): Collection {
     const self = this;
     this.parameters.push('action=LIST');
 
     return self;
-  };
+  }
 
   /**
    * Add Replica property
@@ -522,7 +528,7 @@ list(): Collection {
    * @return {Collection}
    * @api public
    */
- addReplicaProp(options: AddReplicaProp): Collection {
+  addReplicaProp(options: AddReplicaProp): Collection {
     const self = this;
     this.parameters.push('action=ADDREPLICAPROP');
     if (options.collection) {
@@ -545,7 +551,7 @@ list(): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Delete Replica property
@@ -559,7 +565,7 @@ list(): Collection {
    * @return {Collection}
    * @api public
    */
-deleteReplicaProp(options: DeleteReplicaProp): Collection {
+  deleteReplicaProp(options: DeleteReplicaProp): Collection {
     const self = this;
     this.parameters.push('action=DELETEREPLICAPROP');
     if (options.collection) {
@@ -576,7 +582,7 @@ deleteReplicaProp(options: DeleteReplicaProp): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Balance a property
@@ -591,7 +597,7 @@ deleteReplicaProp(options: DeleteReplicaProp): Collection {
    * @return {Collection}
    * @api public
    */
-balanceShardUnique(options: BalanceShardUnique): Collection {
+  balanceShardUnique(options: BalanceShardUnique): Collection {
     const self = this;
     this.parameters.push('action=BALANCESHARDUNIQUE');
     if (options.collection) {
@@ -608,7 +614,7 @@ balanceShardUnique(options: BalanceShardUnique): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Rebalance leaders
@@ -621,7 +627,7 @@ balanceShardUnique(options: BalanceShardUnique): Collection {
    * @return {Collection}
    * @api public
    */
-rebalanceLeaders(options: RebalanceLeaders): Collection {
+  rebalanceLeaders(options: RebalanceLeaders): Collection {
     const self = this;
     this.parameters.push('action=REBALANCELEADERS');
     if (options.collection) {
@@ -635,7 +641,7 @@ rebalanceLeaders(options: RebalanceLeaders): Collection {
     }
 
     return self;
-  };
+  }
 
   /**
    * Build a querystring with the array of `this.parameters`.
@@ -643,7 +649,7 @@ rebalanceLeaders(options: RebalanceLeaders): Collection {
    * @return {String}
    * @api private
    */
-build(): string {
+  build(): string {
     return this.parameters.join('&');
-  };
+  }
 }

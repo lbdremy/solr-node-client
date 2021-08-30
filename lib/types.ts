@@ -1,5 +1,5 @@
-import type { Agent as HttpAgent} from 'http';
-import type { Agent as HttpsAgent} from 'https';
+import type { Agent as HttpAgent } from 'http';
+import type { Agent as HttpsAgent } from 'https';
 
 export type CallbackFn = (error: Error, result: any) => void;
 
@@ -28,223 +28,221 @@ export type SolrClientParams = {
   host?: string;
   port?: string | number;
   core?: string;
-  path?: string
+  path?: string;
   secure?: boolean;
   bigint?: boolean;
   agent?: HttpAgent | HttpsAgent;
   request?: Record<string, any> | null;
   ipVersion?: number;
-  solrVersion?: number
-  get_max_request_entity_size?: boolean | number
-}
+  solrVersion?: number;
+  get_max_request_entity_size?: boolean | number;
+};
 
 export type FullSolrClientParams = {
   host: string;
   port: string | number;
   core: string;
-  path: string
+  path: string;
   secure: boolean;
   bigint: boolean;
   agent?: HttpAgent | HttpsAgent;
   request?: Record<string, any> | null;
   ipVersion: number;
-  solrVersion: number
-  get_max_request_entity_size: boolean | number
-  authorization?: string
-}
+  solrVersion: number;
+  get_max_request_entity_size: boolean | number;
+  authorization?: string;
+};
 
 export type DateOptions = {
-  field: string
-  start: string | number | Date
-  end: string | number | Date
-}
+  field: string;
+  start: string | number | Date;
+  end: string | number | Date;
+};
 
 export type Filters = {
-  field: string
-  value: string | number | Date | boolean
-}
+  field: string;
+  value: string | number | Date | boolean;
+};
 export type GroupOptions = {
-  on?: boolean
-  field?: string | string[]
-  query?: Record<string, any> | Record<string, any>[]
-  limit?: number
-  offset?: number
-  sort?: string
-  format?: string
-  main?: boolean
-  ngroups?: boolean
-  truncate?: boolean
-  cache?: number
-}
+  on?: boolean;
+  field?: string | string[];
+  query?: Record<string, any> | Record<string, any>[];
+  limit?: number;
+  offset?: number;
+  sort?: string;
+  format?: string;
+  main?: boolean;
+  ngroups?: boolean;
+  truncate?: boolean;
+  cache?: number;
+};
 
 export type FacetOptions = {
-  on?: boolean
-  query?: string
-  field: string | string[]
-  prefix?: string
-  sort?: string
-  limit?: number
-  offset?: number
-  mincount?: number
-  missing?: boolean
-  method?: string
-  pivot: Pivot
-}
+  on?: boolean;
+  query?: string;
+  field: string | string[];
+  prefix?: string;
+  sort?: string;
+  limit?: number;
+  offset?: number;
+  mincount?: number;
+  missing?: boolean;
+  method?: string;
+  pivot: Pivot;
+};
 export type Pivot = {
-  mincount?: string
-  fields
-}
+  mincount?: string;
+  fields;
+};
 
 export type MltOptions = {
-  on?: boolean
-  fl?: string | Record<string, any>[]
-  count?: number
-  mintf?: number
-  mindf?: number
-  minwl?: number
-  maxwl?: number
-  maxqt?: number
-  maxntp?: number
-  boost?: boolean
-  qf?: string | Record<string, any>
-}
+  on?: boolean;
+  fl?: string | Record<string, any>[];
+  count?: number;
+  mintf?: number;
+  mindf?: number;
+  minwl?: number;
+  maxwl?: number;
+  maxqt?: number;
+  maxntp?: number;
+  boost?: boolean;
+  qf?: string | Record<string, any>;
+};
 
 export type HlOptions = {
-  on?: boolean
-  q?: Record<string, any>
-  qparser?: string
-  fl?: Record<string, any>
-  snippets?: number
-  fragsize?: number
-  mergeContiguous?: boolean
-  maxAnalyzedChars?: number
-  maxMultiValuedToExamine?: number
-  maxMultiValuedToMatch?: number
-  alternateField?: string
-  maxAlternateFieldLength?: number
-  formatter?: string
-  simplePre?: string
-  simplePost?: string
-  fragmenter?: string
-  highlightMultiTerm?: boolean
-  requireFieldMatch?: boolean
-  usePhraseHighlighter?: boolean
-  regexSlop?: number
-  regexPattern?: string
-  regexMaxAnalyzedChars?: number
-  preserveMulti?: boolean
-  payloads?: boolean
-}
+  on?: boolean;
+  q?: Record<string, any>;
+  qparser?: string;
+  fl?: Record<string, any>;
+  snippets?: number;
+  fragsize?: number;
+  mergeContiguous?: boolean;
+  maxAnalyzedChars?: number;
+  maxMultiValuedToExamine?: number;
+  maxMultiValuedToMatch?: number;
+  alternateField?: string;
+  maxAlternateFieldLength?: number;
+  formatter?: string;
+  simplePre?: string;
+  simplePost?: string;
+  fragmenter?: string;
+  highlightMultiTerm?: boolean;
+  requireFieldMatch?: boolean;
+  usePhraseHighlighter?: boolean;
+  regexSlop?: number;
+  regexPattern?: string;
+  regexMaxAnalyzedChars?: number;
+  preserveMulti?: boolean;
+  payloads?: boolean;
+};
 
 export type TermsOptions = {
-  on?: boolean
-  fl: string
-  lower?: string
-  lowerIncl?: boolean
-  mincount?: number
-  maxcount?: number
-  prefix?: string
-  regex?: string
-  regexFlag?: string
-  limit?: number
-  upper?: string
-  upperIncl?: boolean
-  raw?: boolean
-  sort?: string
-}
+  on?: boolean;
+  fl: string;
+  lower?: string;
+  lowerIncl?: boolean;
+  mincount?: number;
+  maxcount?: number;
+  prefix?: string;
+  regex?: string;
+  regexFlag?: string;
+  limit?: number;
+  upper?: string;
+  upperIncl?: boolean;
+  raw?: boolean;
+  sort?: string;
+};
 
 export type CreateOptions = {
-  name: string
-  routerName?: string
-  numShards?: number
-  shards?: string | string[]
-  replicationFactor?: number
-  maxShardsPerNode?: number
-  createNodeSet?: string | string[]
-  createNodeSetShuffle?: boolean
-  collectionConfigName?: string
-  routerField?: string
-  autoAddReplicas?: boolean
-  async?: string
-}
+  name: string;
+  routerName?: string;
+  numShards?: number;
+  shards?: string | string[];
+  replicationFactor?: number;
+  maxShardsPerNode?: number;
+  createNodeSet?: string | string[];
+  createNodeSetShuffle?: boolean;
+  collectionConfigName?: string;
+  routerField?: string;
+  autoAddReplicas?: boolean;
+  async?: string;
+};
 
 export type SplitShard = {
-  collection: string
-  shard: string
-  ranges?: string | string[]
-  splitKey?: string
-  async?: string
-}
+  collection: string;
+  shard: string;
+  ranges?: string | string[];
+  splitKey?: string;
+  async?: string;
+};
 export type ShardOptions = {
-  collection: string
-  shard: string
-}
+  collection: string;
+  shard: string;
+};
 
 export type Alias = {
-  name: string
-  collections: string | string[]
-}
+  name: string;
+  collections: string | string[];
+};
 
 export type DeleteReplica = {
-  collection: string
-  shard: string
-  replica: string
-  onlyIfDown: boolean
-}
+  collection: string;
+  shard: string;
+  replica: string;
+  onlyIfDown: boolean;
+};
 
 export type AddReplica = {
-  collection: string
-  shard: string
-  route: string
-  node: string
-  async: string
-}
+  collection: string;
+  shard: string;
+  route: string;
+  node: string;
+  async: string;
+};
 
 export type ClusterProp = {
-  name: string
-  val: string
-}
+  name: string;
+  val: string;
+};
 
 export type Migrate = {
-  collection: string
-  targetCollection: string
-  splitKey: string
-  forwardTimeout?: number
-  async?: string
-}
+  collection: string;
+  targetCollection: string;
+  splitKey: string;
+  forwardTimeout?: number;
+  async?: string;
+};
 
 export type Role = {
-  role: string
-  node: string
-}
+  role: string;
+  node: string;
+};
 
 export type AddReplicaProp = {
-  collection: string
-  shard: string
-  replica: string
-  property: string
-  propertyValue: string
-  shardUnique?: boolean
-}
+  collection: string;
+  shard: string;
+  replica: string;
+  property: string;
+  propertyValue: string;
+  shardUnique?: boolean;
+};
 
 export type DeleteReplicaProp = {
-  collection: string
-  shard: string
-  replica: string
-  property: string
-}
-
-
+  collection: string;
+  shard: string;
+  replica: string;
+  property: string;
+};
 
 export type BalanceShardUnique = {
-  collection: string
-  property: string
-  onlyActiveNodes?: boolean
-  shardUnique?: boolean
-}
+  collection: string;
+  property: string;
+  onlyActiveNodes?: boolean;
+  shardUnique?: boolean;
+};
 
 export type RebalanceLeaders = {
-  collection : string
-  maxAtOnce?: number
-  maxWaitSeconds?: number
-}
+  collection: string;
+  maxAtOnce?: number;
+  maxWaitSeconds?: number;
+};

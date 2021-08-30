@@ -7,8 +7,8 @@ require('mocha');
 const figc = require('figc'),
   assert = require('chai').assert,
   libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr')
-  import * as sassert from './sassert';
+  solr = require(libPath + '/solr');
+import * as sassert from './sassert';
 
 // Test suite
 const config = figc(__dirname + '/config.json');
@@ -271,7 +271,10 @@ describe('Client#createQuery', function () {
       const query = client
         .createQuery()
         .q('*:*')
-        .fq([{field: 'id', value: '19700506.173.85'}, {field: 'title', value: 'testvalue'}])
+        .fq([
+          { field: 'id', value: '19700506.173.85' },
+          { field: 'title', value: 'testvalue' },
+        ])
         .debugQuery();
 
       client.search(query, function (err, data) {
@@ -290,7 +293,7 @@ describe('Client#createQuery', function () {
       const query = client
         .createQuery()
         .q('*:*')
-        .fq({field: 'id', value: '19700506.173.85'})
+        .fq({ field: 'id', value: '19700506.173.85' })
         .debugQuery();
 
       client.search(query, function (err, data) {

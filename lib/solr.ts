@@ -18,12 +18,7 @@ import {
 const request = require('request');
 const bluebird = require('bluebird');
 const format = require('./utils/format');
-const {
-  handleJSONResponse,
-  pickJSON,
-  pickProtocol,
-  postJSON,
-} = require('./client');
+const { handleJSONResponse, pickJSON, pickProtocol } = require('./client');
 
 /**
  * Create an instance of `Client`
@@ -556,17 +551,15 @@ export class Client {
   }
 
   /**
-   * Send an update command to the Solr server with the given `data` stringified in the body.
+   * Send an update command to the Solr server.
    *
-   * @param {Object} data - data sent to the Solr server
-   * @param {Object} [options] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @api private
+   * @param data
+   *   The data to stringify in the body.
+   * @param options
+   *   Query parameters to include in the URL.
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   update(
     data: Record<string, any>,
     options?: Record<string, any> | CallbackFn,
@@ -591,20 +584,46 @@ export class Client {
       })
       .join('/');
 
-    const params = {
+    const requestOptions: RequestOptions = {
       host: this.options.host,
       port: this.options.port,
-      fullPath: fullPath,
-      json: json,
-      secure: this.options.secure,
-      bigint: this.options.bigint,
-      authorization: this.options.authorization,
-      agent: this.options.agent,
-      ipVersion: this.options.ipVersion,
-      // TODO this doesn't seem to be used
-      //request: this.request,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'content-length': Buffer.byteLength(json),
+        accept: 'application/json; charset=utf-8',
+      },
+      path: fullPath,
+      family: this.options.ipVersion,
+
+      // Allow these to override (not merge with) previous values.
+      ...this.options.request,
     };
-    return postJSON(params, callback);
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).request(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function onError(err) {
+      if (callback) {
+        callback(err, null);
+      }
+    });
+
+    request.write(json);
+    request.end();
+
+    return request;
   }
 
   /**
@@ -907,37 +926,63 @@ export class Client {
     fieldType: string,
     cb: CallbackFn
   ): void {
-    const payload = {
+    const json = JSON.stringify({
       'add-field': {
         name: fieldName,
         type: fieldType,
         multiValued: false,
         stored: true,
       },
-    };
+    });
 
-    const params = {
-      host: this.options.host,
-      port: this.options.port,
-      fullPath: `${this.options.path}/${this.options.core}/schema`,
-      json: JSON.stringify(payload),
-      secure: this.options.secure,
-      bigint: this.options.bigint,
-      authorization: this.options.authorization,
-      agent: this.options.agent,
-      ipVersion: this.options.ipVersion,
-    };
-
-    postJSON(params, (err, result) => {
+    const callback = (err, result) => {
       if (err) {
-        // TODO We should handle this in a more robust way in the future, but
-        //  there is a difference between default setup in Solr 5 and Solr 8,
-        //  so some fields already exist in Solr 8. Hence if that's the case,
-        //  we just ignore that.
+        // ToDo We should handle this in a more robust way in the future, but
+        // there is a difference between default setup in Solr 5 and Solr 8, so
+        // some fields already exist in Solr 8. Hence if that's the case, we just
+        // ignore that.
         console.warn(err.message);
       }
       cb(undefined, result);
+    };
+
+    const fullPath = `${this.options.path}/${this.options.core}/schema`;
+
+    const requestOptions: RequestOptions = {
+      host: this.options.host,
+      port: this.options.port,
+      method: 'POST',
+      headers: {
+        'content-type': 'application/json; charset=utf-8',
+        'content-length': Buffer.byteLength(json),
+        accept: 'application/json; charset=utf-8',
+      },
+      path: fullPath,
+      family: this.options.ipVersion,
+    };
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+    if (this.options.authorization) {
+      if (!requestOptions.headers) {
+        requestOptions.headers = {};
+      }
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+
+    const request = pickProtocol(this.options.secure).request(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function onError(err) {
+      if (callback) callback(err, null);
     });
+
+    request.write(json);
+    request.end();
+
+    return request;
   }
 }
 

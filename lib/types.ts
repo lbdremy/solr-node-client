@@ -40,10 +40,10 @@ export type FullSolrClientParams = {
 };
 
 export type DateOptions = {
-  field: string;
-  start?: string | number | Date;
-  end?: string | number | Date;
-};
+  field: string
+  start?: string | number | Date
+  end?: string | number | Date
+}
 
 export type Filters = {
   field: string;

@@ -6,7 +6,7 @@
   "version": "0.10.0-rc5",
   "scripts": {
     "build": "tsc",
-    "format": "prettier --write \"{lib,examples,test}/**/*.js\"",
+    "format": "prettier --write \"{lib,examples,test}/**/*.ts\"",
     "lint": "eslint \"lib/**/*.ts\" \"test/**/*.ts\"",
     "test-cov": "jscoverage lib lib-cov && mocha -r ts-node/register -R html-cov test/*-test.ts > coverage.html && rm -r lib-cov",
     "report": "rm -rf report && mkdir report && plato -r -d report main.ts lib/*",

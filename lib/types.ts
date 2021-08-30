@@ -25,12 +25,12 @@ export type SolrClientParams = {
 };
 
 export type FullSolrClientParams = {
-  host: string
-  port: string | number
-  core: string
-  path: string
-  secure: boolean
-  bigint: boolean
+  host: string;
+  port: string | number;
+  core: string;
+  path: string;
+  secure: boolean;
+  bigint: boolean;
   agent?: HttpAgent | HttpsAgent;
   request?: Record<string, any> | null;
   ipVersion: number;
@@ -129,7 +129,7 @@ export type TermsOptions = {
   lowerIncl?: boolean;
   mincount?: number;
   maxcount?: number;
-  prefix?: string
+  prefix?: string;
   regex?: string;
   regexFlag?: string;
   limit?: number;

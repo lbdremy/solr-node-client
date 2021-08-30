@@ -128,6 +128,100 @@ export class Client {
   }
 
   /**
+   * Construct the full path to the given "handler".
+   *
+   * @param handler
+   *   Relative URL path for the solr handler.
+   *
+   * @returns
+   *   Full URL to the handler.
+   */
+  private getFullHandlerPath(handler: string): string {
+    let pathArray;
+    if (handler === this.COLLECTIONS_HANDLER) {
+      pathArray = [this.options.path, handler];
+    } else {
+      pathArray = [this.options.path, this.options.core, handler];
+    }
+    return pathArray.filter((e) => e).join('/');
+  }
+
+  /**
+   * Common function for all HTTP requests.
+   *
+   * @param path
+   *   Full URL for the request.
+   * @param method
+   *   HTTP method, like "GET" or "POST".
+   * @param body
+   *   Optional data for the request body.
+   * @param bodyContentType
+   *   Optional content type for the request body.
+   * @param acceptContentType
+   *   The expected content type of the response.
+   * @param callback
+   *   The function to call when done.
+   */
+  private doRequest(
+    path: string,
+    method: string,
+    body: string | null,
+    bodyContentType: string | null,
+    acceptContentType: string,
+    callback?: CallbackFn
+  ): ClientRequest {
+    const requestOptions: RequestOptions = {
+      host: this.options.host,
+      port: this.options.port,
+      headers: {},
+      family: this.options.ipVersion,
+
+      // Allow these to override (not merge with) previous values.
+      ...this.options.request,
+
+      method,
+      path,
+    };
+
+    // Now set options that the user should not be able to override.
+    if (!requestOptions.headers) {
+      requestOptions.headers = {};
+    }
+    requestOptions.headers.accept = acceptContentType;
+    if (method === 'POST') {
+      if (bodyContentType) {
+        requestOptions.headers['content-type'] = bodyContentType;
+      }
+      if (body) {
+        requestOptions.headers['content-length'] = Buffer.byteLength(body);
+      }
+    }
+    if (this.options.authorization) {
+      requestOptions.headers.authorization = this.options.authorization;
+    }
+    if (this.options.agent) {
+      requestOptions.agent = this.options.agent;
+    }
+
+    // Perform the request and handle results.
+    const request = pickProtocol(this.options.secure).request(requestOptions);
+    request.on(
+      'response',
+      handleJSONResponse(request, this.options.bigint, callback)
+    );
+    request.on('error', function onError(err) {
+      if (callback) {
+        callback(err, null);
+      }
+    });
+    if (body) {
+      request.write(body);
+    }
+    request.end();
+    return request;
+  }
+
+  /**
    * Create credential using the basic access authentication method
    * @api public
    */
@@ -221,7 +315,7 @@ export class Client {
       query['ids'] = ids.join(',');
     }
 
-    return this.get(this.REAL_TIME_GET_HANDLER, query, callback);
+    return this.doQuery(this.REAL_TIME_GET_HANDLER, query, callback);
   }
 
   /**
@@ -260,7 +354,7 @@ export class Client {
 
     const handler = this.UPDATE_HANDLER + '/' + options.format.toLowerCase();
     const query = querystring.stringify(options.parameters);
-    return this.get(handler, query, callback);
+    return this.doQuery(handler, query, callback);
   }
 
   /**
@@ -278,8 +372,7 @@ export class Client {
       this.options.core,
       this.UPDATE_JSON_HANDLER +
         '?' +
-        querystring.stringify(options) +
-        '&wt=json',
+        querystring.stringify({ ...options, wt: 'json' }),
     ]
       .filter(function (element) {
         return element;
@@ -554,75 +647,35 @@ export class Client {
    *
    * @param data
    *   The data to stringify in the body.
-   * @param options
+   * @param queryParameters
    *   Query parameters to include in the URL.
    * @param callback
    *   A function to execute when the Solr server responds or an error occurs.
    */
   update(
     data: Record<string, any>,
-    options?: Record<string, any> | CallbackFn,
+    queryParameters?: Record<string, any> | CallbackFn,
     callback?: any
   ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options;
-      options = {};
+    if (typeof queryParameters === 'function') {
+      callback = queryParameters;
+      queryParameters = {};
     }
 
-    const json = pickJSON(this.options.bigint).stringify(data);
-    const fullPath = [
-      this.options.path,
-      this.options.core,
-      this.UPDATE_JSON_HANDLER +
-        '?' +
-        querystring.stringify(options) +
-        '&wt=json',
-    ]
-      .filter(function (element) {
-        return element;
-      })
-      .join('/');
-
-    const requestOptions: RequestOptions = {
-      host: this.options.host,
-      port: this.options.port,
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json; charset=utf-8',
-        'content-length': Buffer.byteLength(json),
-        accept: 'application/json; charset=utf-8',
-      },
-      path: fullPath,
-      family: this.options.ipVersion,
-
-      // Allow these to override (not merge with) previous values.
-      ...this.options.request,
-    };
-    if (this.options.agent) {
-      requestOptions.agent = this.options.agent;
-    }
-    if (this.options.authorization) {
-      if (!requestOptions.headers) {
-        requestOptions.headers = {};
-      }
-      requestOptions.headers.authorization = this.options.authorization;
-    }
-
-    const request = pickProtocol(this.options.secure).request(requestOptions);
-    request.on(
-      'response',
-      handleJSONResponse(request, this.options.bigint, callback)
-    );
-    request.on('error', function onError(err) {
-      if (callback) {
-        callback(err, null);
-      }
+    const path = this.getFullHandlerPath(this.UPDATE_JSON_HANDLER);
+    const queryString = querystring.stringify({
+      ...queryParameters,
+      wt: 'json',
     });
 
-    request.write(json);
-    request.end();
-
-    return request;
+    return this.doRequest(
+      `${path}?${queryString}`,
+      'POST',
+      pickJSON(this.options.bigint).stringify(data),
+      'application/json',
+      'application/json; charset=utf-8',
+      callback
+    );
   }
 
   /**
@@ -640,7 +693,7 @@ export class Client {
     query: Query | Record<string, any> | string,
     callback: CallbackFn
   ): ClientRequest {
-    return this.get(this.SELECT_HANDLER, query, callback);
+    return this.doQuery(this.SELECT_HANDLER, query, callback);
   }
 
   /**
@@ -658,7 +711,7 @@ export class Client {
     collection: Collection | Record<string, any> | string,
     callback: CallbackFn
   ): ClientRequest {
-    return this.get(this.COLLECTIONS_HANDLER, collection, callback);
+    return this.doQuery(this.COLLECTIONS_HANDLER, collection, callback);
   }
 
   /**
@@ -691,7 +744,7 @@ export class Client {
    */
 
   spell(query: Query, callback: CallbackFn): ClientRequest {
-    return this.get(this.SPELL_HANDLER, query, callback);
+    return this.doQuery(this.SPELL_HANDLER, query, callback);
   }
 
   /**
@@ -712,7 +765,7 @@ export class Client {
     query: Query | Record<string, any> | string,
     callback: CallbackFn
   ) {
-    return this.get(this.TERMS_HANDLER, query, callback);
+    return this.doQuery(this.TERMS_HANDLER, query, callback);
   }
 
   /**
@@ -726,173 +779,53 @@ export class Client {
    * @param callback
    *   A function to execute when the Solr server responds or an error occurs.
    */
-  get(
+  doQuery(
     handler: string,
     query: Collection | Query | Record<string, any> | string | CallbackFn,
     callback?: CallbackFn
   ): ClientRequest {
-    let parameters = '';
+    // Construct the string to use as query (GET) or body (POST).
+    let data = '';
     if (typeof query === 'function') {
       callback = query as CallbackFn;
     } else if (query instanceof Query || query instanceof Collection) {
-      parameters += query.build();
+      data = query.build();
     } else if (typeof query === 'object') {
-      parameters += querystring.stringify(query);
+      data = querystring.stringify(query);
     } else {
       // query is a string.
-      parameters += query;
-    }
-    let pathArray;
-
-    if (handler != 'admin/collections') {
-      pathArray = [
-        this.options.path,
-        this.options.core,
-        handler + '?' + parameters + '&wt=json',
-      ];
-    } else {
-      pathArray = [this.options.path, handler + '?' + parameters + '&wt=json'];
+      data = query;
     }
 
-    const fullPath = pathArray
-      .filter(function (element) {
-        return element;
-      })
-      .join('/');
+    const path = this.getFullHandlerPath(handler);
+    const queryString = data + '&wt=json';
 
+    // Decide whether to use GET or POST, based on the length of the data.
+    // 10 accounts for protocol and special characters like ://, port colon,
+    // initial slash, etc.
     const approxUrlLength =
       10 +
       Buffer.byteLength(this.options.host) +
-      (this.options.port + '').length +
-      Buffer.byteLength(fullPath); // Buffer (10) accounts for protocol and special characters like ://, port colon, and initial slash etc
+      this.options.port.toString().length +
+      Buffer.byteLength(path) +
+      1 +
+      Buffer.byteLength(queryString);
+    const method =
+      this.options.get_max_request_entity_size === false ||
+      approxUrlLength <= this.options.get_max_request_entity_size
+        ? 'GET'
+        : 'POST';
 
-    if (
-      !(
-        this.options.get_max_request_entity_size === false ||
-        approxUrlLength <= this.options.get_max_request_entity_size
-      )
-    ) {
-      // Funnel this through a POST because it's too large
-      return this.post(handler, query, callback);
-    }
-
-    const requestOptions: RequestOptions = {
-      host: this.options.host,
-      port: this.options.port,
-      path: fullPath,
-      headers: {
-        accept: 'application/json; charset=utf-8',
-      },
-      family: this.options.ipVersion,
-
-      // Allow these to override (not merge with) previous values.
-      ...this.options.request,
-    };
-    if (this.options.agent) {
-      requestOptions.agent = this.options.agent;
-    }
-    if (this.options.authorization) {
-      if (!requestOptions.headers) {
-        requestOptions.headers = {};
-      }
-      requestOptions.headers.authorization = this.options.authorization;
-    }
-
-    const request = pickProtocol(this.options.secure).get(requestOptions);
-    request.on(
-      'response',
-      handleJSONResponse(request, this.options.bigint, callback)
+    return this.doRequest(
+      method === 'GET' ? `${path}?${queryString}` : path,
+      method,
+      method === 'POST' ? data : null,
+      method === 'POST'
+        ? 'application/x-www-form-urlencoded; charset=utf-8'
+        : null,
+      'application/json; charset=utf-8',
+      callback
     );
-    request.on('error', function (err) {
-      if (callback) {
-        callback(err, null);
-      }
-    });
-    return request;
-  }
-
-  /**
-   * Perform an arbitrary query on a Solr handler (a.k.a. 'path').
-   *
-   * This serves the same purpose as the `get` method, except it uses POST to
-   * transfer the data instead of putting all of the data in the URL.
-   *
-   * @param handler
-   *   The name of the handler (or 'path' in Solr terminology).
-   * @param query
-   *   A function, Query object, Collection object, plain object, or string
-   *   describing the query to perform.
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
-   */
-  post(
-    handler: string,
-    query: Collection | Query | Record<string, any> | string | CallbackFn,
-    callback?: CallbackFn
-  ): ClientRequest {
-    let parameters = '';
-    if (typeof query === 'function') {
-      callback = query as CallbackFn;
-    } else if (query instanceof Query || query instanceof Collection) {
-      parameters += query.build();
-    } else if (typeof query === 'object') {
-      parameters += querystring.stringify(query);
-    } else {
-      // query is a string.
-      parameters += query;
-    }
-    let pathArray;
-
-    if (handler != 'admin/collections') {
-      pathArray = [this.options.path, this.options.core, handler + '?wt=json'];
-    } else {
-      pathArray = [this.options.path, handler + '?wt=json'];
-    }
-
-    const fullPath = pathArray
-      .filter(function (element) {
-        return element;
-      })
-      .join('/');
-
-    const requestOptions: RequestOptions = {
-      host: this.options.host,
-      port: this.options.port,
-      method: 'POST',
-      headers: {
-        'content-type': 'application/x-www-form-urlencoded; charset=utf-8',
-        'content-length': Buffer.byteLength(parameters),
-        accept: 'application/json; charset=utf-8',
-      },
-      path: fullPath,
-      family: this.options.ipVersion,
-
-      // Allow these to override (not merge with) previous values.
-      ...this.options.request,
-    };
-    if (this.options.agent) {
-      requestOptions.agent = this.options.agent;
-    }
-    if (this.options.authorization) {
-      if (!requestOptions.headers) {
-        requestOptions.headers = {};
-      }
-      requestOptions.headers.authorization = this.options.authorization;
-    }
-
-    const request = pickProtocol(this.options.secure).request(requestOptions);
-    request.on(
-      'response',
-      handleJSONResponse(request, this.options.bigint, callback)
-    );
-    request.on('error', function onError(err) {
-      if (callback) callback(err, null);
-    });
-
-    request.write(parameters);
-    request.end();
-
-    return request;
   }
 
   /**
@@ -944,71 +877,48 @@ export class Client {
    */
 
   ping(callback: CallbackFn) {
-    return this.get(this.ADMIN_PING_HANDLER, callback);
+    return this.doQuery(this.ADMIN_PING_HANDLER, callback);
   }
 
-  createSchemaField(
+  /**
+   * Utility only used in tests.
+   *
+   * @param {string} fieldName
+   *   The name of the field to create.
+   * @param {string} fieldType
+   *   The type of field to create.
+   * @param {Function} cb
+   *   A callback to run when completed.
+   */
+  private createSchemaField(
     fieldName: string,
     fieldType: string,
     cb: CallbackFn
-  ): void {
-    const json = JSON.stringify({
-      'add-field': {
-        name: fieldName,
-        type: fieldType,
-        multiValued: false,
-        stored: true,
-      },
-    });
-
-    const callback = (err, result) => {
-      if (err) {
-        // ToDo We should handle this in a more robust way in the future, but
-        // there is a difference between default setup in Solr 5 and Solr 8, so
-        // some fields already exist in Solr 8. Hence if that's the case, we just
-        // ignore that.
-        console.warn(err.message);
+  ): ClientRequest {
+    return this.doRequest(
+      this.getFullHandlerPath('schema'),
+      'POST',
+      pickJSON(this.options.bigint).stringify({
+        'add-field': {
+          name: fieldName,
+          type: fieldType,
+          multiValued: false,
+          stored: true,
+        },
+      }),
+      'application/json',
+      'application/json; charset=utf-8',
+      (err, data) => {
+        if (err) {
+          // TODO: We should handle this in a more robust way in the future, but
+          //   there is a difference between default setup in Solr 5 and Solr 8,
+          // so some fields already exist in Solr 8. Hence if that's the case, we
+          // just ignore that.
+          console.warn(err.message);
+        }
+        cb(undefined, data);
       }
-      cb(undefined, result);
-    };
-
-    const fullPath = `${this.options.path}/${this.options.core}/schema`;
-
-    const requestOptions: RequestOptions = {
-      host: this.options.host,
-      port: this.options.port,
-      method: 'POST',
-      headers: {
-        'content-type': 'application/json; charset=utf-8',
-        'content-length': Buffer.byteLength(json),
-        accept: 'application/json; charset=utf-8',
-      },
-      path: fullPath,
-      family: this.options.ipVersion,
-    };
-    if (this.options.agent) {
-      requestOptions.agent = this.options.agent;
-    }
-    if (this.options.authorization) {
-      if (!requestOptions.headers) {
-        requestOptions.headers = {};
-      }
-      requestOptions.headers.authorization = this.options.authorization;
-    }
-
-    const request = pickProtocol(this.options.secure).request(requestOptions);
-    request.on(
-      'response',
-      handleJSONResponse(request, this.options.bigint, callback)
     );
-    request.on('error', function onError(err) {
-      if (callback) callback(err, null);
-    });
-
-    request.write(json);
-    request.end();
-
-    return request;
   }
 }
 

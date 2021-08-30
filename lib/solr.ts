@@ -1,4 +1,3 @@
-import type * as http from 'http';
 import type { RequestOptions } from 'http';
 import { ClientRequest } from 'http';
 import * as querystring from 'querystring';
@@ -19,86 +18,25 @@ const bluebird = require('bluebird');
 const format = require('./utils/format');
 const { handleJSONResponse, pickJSON, pickProtocol } = require('./client');
 
-/**
- * Create an instance of `Client`
- *
- * @param {String|Object} [hostOrParams='127.0.0.1'] - IP address or host address of the Solr server
- * @param {Number|String} [port='8983'] - port of the Solr server
- * @param {String} [core=''] - name of the Solr core requested
- * @param {String} [path='/solr'] - root path of all requests
- * @param {http.Agent} [agent] - HTTP Agent which is used for pooling sockets used in HTTP(s) client requests
- * @param {Boolean} [secure=false] - if true HTTPS will be used instead of HTTP
- * @param {Boolean} [bigint=false] - if true JSONbig serializer/deserializer will be used instead
- *                                    of JSON native serializer/deserializer
- * @param solrVersion ['3.2', '4.0', '5.0', '5.1'], check lib/utils/version.ts for full reference
- * @param {Number} [ipVersion=4] - pass it to http/https lib's "family" option
- * @param {Object} request - request options
- *
- * @return {Client}
- * @api public
- */
-
-export function createClient(
-  hostOrParams: string | SolrClientParams,
-  port?: number | string,
-  core?: string,
-  path?: string,
-  agent?: http.Agent,
-  secure?: boolean,
-  bigint?: boolean,
-  solrVersion?: number,
-  ipVersion?: number,
-  request?: Record<string, any>
-): Client {
-  const options =
-    typeof hostOrParams === 'object'
-      ? hostOrParams
-      : {
-          host: hostOrParams,
-          port: port,
-          core: core,
-          path: path,
-          agent: agent,
-          secure: secure,
-          bigint: bigint,
-          solrVersion: solrVersion,
-          ipVersion: ipVersion == 6 ? 6 : 4,
-          request: request,
-        };
+export function createClient(options: SolrClientParams = {}) {
   return new Client(options);
 }
 
 /**
- * Solr client
- * @constructor
- *
- * @param {Object} options - set of options used to request the Solr server
- * @param {String} options.host - IP address or host address of the Solr server
- * @param {Number|String} options.port - port of the Solr server, 0 to be ignored by HTTP agent in case of using API endpoint.
- * @param {String} options.core - name of the Solr core requested
- * @param {String} options.path - root path of all requests
- * @param {http.Agent} [options.agent] - HTTP Agent which is used for pooling sockets used in HTTP(s) client requests
- * @param {Boolean} [options.secure=false] - if true HTTPS will be used instead of HTTP
- * @param {Boolean} [options.bigint=false] - if true JSONbig serializer/deserializer will be used instead
- *                                    of JSON native serializer/deserializer
- * @param {Object} options.request - request options
- * @param {Number} [ipVersion=4] - pass it to http/https lib's "family" option
- *
- * @api private
+ * Solr client.
  */
-
 export class Client {
-  private options: FullSolrClientParams;
-  private UPDATE_JSON_HANDLER: string;
-  private UPDATE_HANDLER: string;
-  private TERMS_HANDLER: string;
-  private SPELL_HANDLER: string;
-  private REAL_TIME_GET_HANDLER: string;
-  private ADMIN_PING_HANDLER: string;
-  private COLLECTIONS_HANDLER: string;
-  private SELECT_HANDLER: string;
+  private readonly options: FullSolrClientParams;
+  private readonly UPDATE_JSON_HANDLER: string;
+  private readonly UPDATE_HANDLER: string;
+  private readonly TERMS_HANDLER: string;
+  private readonly SPELL_HANDLER: string;
+  private readonly REAL_TIME_GET_HANDLER: string;
+  private readonly ADMIN_PING_HANDLER: string;
+  private readonly COLLECTIONS_HANDLER: string;
+  private readonly SELECT_HANDLER: string;
 
-  constructor(options: SolrClientParams) {
+  constructor(options: SolrClientParams = {}) {
     this.options = {
       host: options.host || '127.0.0.1',
       port: options.port === 0 ? 0 : options.port || '8983',
@@ -798,7 +736,7 @@ export class Client {
     }
 
     const path = this.getFullHandlerPath(handler);
-    const queryString = data + '&wt=json';
+    const queryString = data ? data + '&wt=json' : 'wt=json';
 
     // Decide whether to use GET or POST, based on the length of the data.
     // 10 accounts for protocol and special characters like ://, port colon,

@@ -7,7 +7,6 @@ export { Collection } from './lib/collection';
 
 export type {
   SolrClientParams,
-  SolrRequestParams,
   CallbackFn,
   ResourceOptions,
 } from './lib/types';

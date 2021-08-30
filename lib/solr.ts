@@ -894,7 +894,7 @@ export class Client {
     const params = {
       host: this.options.host,
       port: this.options.port,
-      fullPath: `http://localhost:8983/solr/testcore/schema`,
+      fullPath: `${this.options.path}/${this.options.core}/schema`,
       json: JSON.stringify(payload),
       secure: this.options.secure,
       bigint: this.options.bigint,

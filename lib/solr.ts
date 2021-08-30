@@ -611,14 +611,12 @@ export class Client {
    */
   doQuery(
     handler: string,
-    query: Collection | Query | Record<string, any> | string | CallbackFn,
-    callback?: CallbackFn
+    query: Collection | Query | Record<string, any> | string,
+    callback: CallbackFn | undefined
   ): ClientRequest {
     // Construct the string to use as query (GET) or body (POST).
-    let data = '';
-    if (typeof query === 'function') {
-      callback = query as CallbackFn;
-    } else if (query instanceof Query || query instanceof Collection) {
+    let data: string;
+    if (query instanceof Query || query instanceof Collection) {
       data = query.build();
     } else if (typeof query === 'object') {
       data = querystring.stringify(query);
@@ -684,7 +682,7 @@ export class Client {
    *   A function to execute when the Solr server responds or an error occurs.
    */
   ping(callback: CallbackFn) {
-    return this.doQuery(this.ADMIN_PING_HANDLER, callback);
+    return this.doQuery(this.ADMIN_PING_HANDLER, '', callback);
   }
 
   /**

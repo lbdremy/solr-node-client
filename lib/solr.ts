@@ -881,7 +881,11 @@ export class Client {
     return this.get(this.ADMIN_PING_HANDLER, callback);
   }
 
-  createSchemaField(fieldName, fieldType, cb) {
+  createSchemaField(
+    fieldName: string,
+    fieldType: string,
+    cb: CallbackFn
+  ): void {
     const payload = {
       'add-field': {
         name: fieldName,

@@ -722,7 +722,8 @@ export class Client {
       parameters += query.build();
     } else if (typeof query === 'object') {
       parameters += querystring.stringify(query);
-    } else if (typeof query === 'string') {
+    } else {
+      // query is a string.
       parameters += query;
     }
     let pathArray;

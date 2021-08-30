@@ -278,8 +278,7 @@ export class Client {
       this.options.core,
       this.UPDATE_JSON_HANDLER +
         '?' +
-        querystring.stringify(options) +
-        '&wt=json',
+        querystring.stringify({ ...options, wt: 'json' }),
     ]
       .filter(function (element) {
         return element;
@@ -575,8 +574,7 @@ export class Client {
       this.options.core,
       this.UPDATE_JSON_HANDLER +
         '?' +
-        querystring.stringify(options) +
-        '&wt=json',
+        querystring.stringify({ ...options, wt: 'json' }),
     ]
       .filter(function (element) {
         return element;

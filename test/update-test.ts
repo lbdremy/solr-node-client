@@ -1,19 +1,15 @@
-/**
- * Modules dependencies
- */
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr');
+import { assert } from 'chai';
+import * as figc from 'figc';
+import { createClient } from '../lib/solr';
 import * as sassert from './sassert';
 
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient(config.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 /**
-atomicUpdate is just an override of update like add and from the Solr point of view idiomatically correct.
-**/
+ * `atomicUpdate` is just an alias of `update`.
+ */
 describe('Client', function () {
   describe('#Atomic update({ id : 1, title_t : "Modified title"},callback)', function () {
     const doc_id = 'RandomId-' + Math.floor(Math.random() * 1000000);

@@ -65,6 +65,10 @@ export class Client {
     this.TERMS_HANDLER = 'terms';
   }
 
+  get solrVersion(): number {
+    return this.options.solrVersion;
+  }
+
   /**
    * Construct the full path to the given "handler".
    *

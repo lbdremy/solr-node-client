@@ -27,7 +27,14 @@ export type ResourceOptions = {
   path: string;
 };
 
+export type Logger = {
+  info(string): void;
+  error(string): void;
+}
+
 export type SolrClientParams = {
+  logger?: Logger;
+
   /**
    * IP address or host ame of the Solr server.
    */

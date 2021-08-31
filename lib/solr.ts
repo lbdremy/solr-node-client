@@ -9,6 +9,7 @@ import * as versionUtils from './utils/version';
 import {
   CallbackFn,
   FullSolrClientParams,
+  Logger,
   ResourceOptions,
   SolrClientParams,
 } from './types';
@@ -35,6 +36,7 @@ export class Client {
   private readonly ADMIN_PING_HANDLER: string;
   private readonly COLLECTIONS_HANDLER: string;
   private readonly SELECT_HANDLER: string;
+  private readonly logger: Logger
 
   constructor(options: SolrClientParams = {}) {
     this.options = {
@@ -63,6 +65,7 @@ export class Client {
     this.REAL_TIME_GET_HANDLER = 'get';
     this.SPELL_HANDLER = 'spell';
     this.TERMS_HANDLER = 'terms';
+    this.logger = options.logger ?? console
   }
 
   /**
@@ -147,7 +150,10 @@ export class Client {
       'response',
       handleJSONResponse(request, this.options.bigint, callback)
     );
-    request.on('error', function onError(err) {
+    request.on('error', (err) => {
+      if (err) {
+        this.logger.error(`Error performing Solr request: ${err.message}`)
+      }
       if (callback) {
         callback(err, null);
       }

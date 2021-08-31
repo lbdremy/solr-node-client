@@ -6,7 +6,9 @@ export type { QueryOptions } from './lib/query';
 export { Collection } from './lib/collection';
 
 export type {
-  SolrClientParams,
   CallbackFn,
+  DateOptions,
+  Logger,
   ResourceOptions,
+  SolrClientParams,
 } from './lib/types';

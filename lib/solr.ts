@@ -66,7 +66,12 @@ export class Client {
     this.REAL_TIME_GET_HANDLER = 'get';
     this.SPELL_HANDLER = 'spell';
     this.TERMS_HANDLER = 'terms';
-    this.logger = options.logger ?? console;
+
+    // Default is noop, you can replace it with console or your custom logging
+    this.logger = options.logger ?? {
+      error() {},
+      info() {},
+    };
   }
 
   get solrVersion(): number {

@@ -141,7 +141,7 @@ export type FacetOptions = {
   pivot: Pivot;
 };
 export type Pivot = {
-  mincount?: string;
+  mincount?: number;
   fields;
 };
 

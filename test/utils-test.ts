@@ -1,14 +1,7 @@
-/**
- * Modules dependencies
- */
 import { assert } from 'chai';
-// ToDo check if necessary
-// libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
 import * as format from '../lib/utils/format';
 import * as arrayUtils from '../lib/utils/array';
 import * as typeUtils from '../lib/utils/type';
-
-// Test suite
 
 describe('format', function () {
   describe('.escapeSpecialChars(string)', function () {

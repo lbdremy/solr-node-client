@@ -1,17 +1,11 @@
-/**
- * Modules dependencies
- */
-
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr');
+import * as figc from 'figc';
 import * as sassert from './sassert';
 import * as versionUtils from '../lib/utils/version';
+import { assert } from 'chai';
+import { createClient } from '../lib/solr';
 
-// Test suite
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient(config.client);
 const basePath = [config.client.path, config.client.core]
   .join('/')
   .replace(/\/$/, '');
@@ -64,9 +58,8 @@ describe('Client', function () {
       };
       const request = client.add(docs, options, function (err, data) {
         if (
-          client.options.solrVersion &&
-          versionUtils.version(client.options.solrVersion) >=
-            versionUtils.Solr4_0
+          client.solrVersion &&
+          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
         ) {
           assert.equal(
             request.path,
@@ -100,9 +93,8 @@ describe('Client', function () {
       };
       const request = client.add(docs, options, function (err, data) {
         if (
-          client.options.solrVersion &&
-          versionUtils.version(client.options.solrVersion) >=
-            versionUtils.Solr4_0
+          client.solrVersion &&
+          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
         ) {
           assert.equal(request.path, basePath + '/update?commit=true&wt=json');
         } else {
@@ -133,9 +125,8 @@ describe('Client', function () {
       };
       const request = client.add(docs, options, function (err, data) {
         if (
-          client.options.solrVersion &&
-          versionUtils.version(client.options.solrVersion) >=
-            versionUtils.Solr4_0
+          client.solrVersion &&
+          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
         ) {
           assert.equal(
             request.path,

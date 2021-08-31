@@ -1,22 +1,20 @@
-// Testing support http://wiki.apache.org/solr/MoreLikeThis
 /**
- * Modules dependencies
+ * Testing support for http://wiki.apache.org/solr/MoreLikeThis
  */
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr');
+import { assert } from 'chai';
+import * as figc from 'figc';
+import { createClient } from '../lib/solr';
 import * as sassert from './sassert';
+import { MltOptions } from '../lib/types';
 
-// Test suite
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient(config.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery', function () {
   describe('#mlt(options), callback)', function () {
     it('should create a MoreLikeThis query', function (done) {
-      const options = {
+      const options: MltOptions = {
         on: true,
         fl: ['content', 'title'],
         count: 15,

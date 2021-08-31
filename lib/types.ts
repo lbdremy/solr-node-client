@@ -148,13 +148,13 @@ export type FacetOptions = {
   pivot: Pivot;
 };
 export type Pivot = {
-  mincount?: string;
+  mincount?: number;
   fields;
 };
 
 export type MltOptions = {
   on?: boolean;
-  fl?: string | Record<string, any>[];
+  fl?: string | string[];
   count?: number;
   mintf?: number;
   mindf?: number;
@@ -163,14 +163,14 @@ export type MltOptions = {
   maxqt?: number;
   maxntp?: number;
   boost?: boolean;
-  qf?: string | Record<string, any>;
+  qf?: string | number | Record<string, any>;
 };
 
 export type HlOptions = {
   on?: boolean;
-  q?: Record<string, any>;
+  q?: Record<string, any> | string;
   qparser?: string;
-  fl?: Record<string, any>;
+  fl?: Record<string, any> | string;
   snippets?: number;
   fragsize?: number;
   mergeContiguous?: boolean;
@@ -250,16 +250,16 @@ export type DeleteReplica = {
 };
 
 export type AddReplica = {
-  collection: string;
-  shard: string;
-  route: string;
-  node: string;
-  async: string;
+  collection?: string;
+  shard?: string;
+  route?: string;
+  node?: string;
+  async?: string;
 };
 
 export type ClusterProp = {
-  name: string;
-  val: string;
+  name?: string;
+  val?: string | boolean | number;
 };
 
 export type Migrate = {
@@ -280,7 +280,7 @@ export type AddReplicaProp = {
   shard: string;
   replica: string;
   property: string;
-  propertyValue: string;
+  propertyValue: string | boolean | number;
   shardUnique?: boolean;
 };
 

@@ -1,23 +1,17 @@
-// Testing support for really big long values in json coming from solr
-// specially values that are bigger then what javascript can keep in Number variables without loosing precision
-
 /**
- * Modules dependencies
+ * Testing support for really big long values in json coming from Solr, especially values that are bigger then what
+ * JS can keep in Number variables without losing precision.
  */
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr');
-const BigNumber = require('bignumber.js');
+
+import * as figc from 'figc';
 import * as sassert from './sassert';
+import { assert } from 'chai';
+import { createClient } from '../lib/solr';
+import BigNumber from 'bignumber.js';
 
-// Test suite
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient({ ...config.client, bigint: true });
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
-
-// Force Solr client to handle big integers
-client.options.bigint = true;
 
 describe('Client', function () {
   describe('Checking support for longs passed down in json formats to/from solr', function () {

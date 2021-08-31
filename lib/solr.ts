@@ -13,6 +13,7 @@ import {
   ResourceOptions,
   SolrClientParams,
 } from './types';
+import { Duplex } from 'stream';
 
 const request = require('request');
 const bluebird = require('bluebird');
@@ -66,6 +67,10 @@ export class Client {
     this.SPELL_HANDLER = 'spell';
     this.TERMS_HANDLER = 'terms';
     this.logger = options.logger ?? console
+  }
+
+  get solrVersion(): number {
+    return this.options.solrVersion;
   }
 
   /**
@@ -275,7 +280,7 @@ export class Client {
   /**
    * Create a writable/readable `Stream` to add documents into the Solr database.
    */
-  createAddStream(options: Record<string, any>) {
+  createAddStream(options: Record<string, any> = {}): Duplex {
     const path = [
       this.options.path,
       this.options.core,

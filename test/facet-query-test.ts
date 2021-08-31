@@ -1,27 +1,22 @@
-/**
- * Modules dependencies
- */
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr');
+import { assert } from 'chai';
+import * as figc from 'figc';
+import { createClient } from '../lib/solr';
 import * as sassert from './sassert';
 import * as versionUtils from '../lib/utils/version';
+import { FacetOptions } from '../lib/types';
 
 //TODO support all stuff describe there
 // http://wiki.apache.org/solr/SimpleFacetParameters#Retrieve_docs_with_facets_missing
 // and http://wiki.apache.org/solr/HierarchicalFaceting
 
-// Test suite
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient(config.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery()', function () {
   describe('.facet(options)', function () {
-    it('should create a facet for multiple date/range fields', function (done) {
-      const date = new Date().getTime();
-      const facetOptions = {
+    it('should create a facet with pivot on multiple fields', function (done) {
+      const facetOptions: FacetOptions = {
         on: true,
         query: 'query',
         field: 'author',
@@ -32,28 +27,6 @@ describe('Client#createQuery()', function () {
         mincount: 10,
         missing: true,
         method: 'fc',
-        date: [
-          {
-            field: 'date_field',
-            start: date,
-            end: date,
-            gap: '+1DAY',
-            hardened: true,
-            other: 'all',
-            include: 'all',
-          },
-        ],
-        range: [
-          {
-            field: 'range_field',
-            start: 0.0,
-            end: '1000',
-            gap: '+1DAY',
-            hardened: true,
-            other: 'all',
-            include: 'all',
-          },
-        ],
         pivot: {
           fields: ['cat', 'popularity'],
           mincount: 10,
@@ -81,10 +54,10 @@ describe('Client#createQuery()', function () {
           'facet.query': 'query',
           'facet.sort': 'field desc',
         };
+
         if (
-          client.options.solrVersion &&
-          versionUtils.version(client.options.solrVersion) >=
-            versionUtils.Solr4_0
+          client.solrVersion &&
+          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
         ) {
           validationJSON['facet.pivot.mincount'] = '10';
           validationJSON['facet.pivot'] = ['cat', 'popularity'];
@@ -96,8 +69,7 @@ describe('Client#createQuery()', function () {
       });
     });
 
-    it('should create a facet for single date/range fields', function (done) {
-      const date = new Date().getTime();
+    it('should create a facet with pivot on a single field', function (done) {
       const facetOptions = {
         on: true,
         query: 'query',
@@ -109,24 +81,6 @@ describe('Client#createQuery()', function () {
         mincount: 10,
         missing: true,
         method: 'fc',
-        date: {
-          field: 'date_field',
-          start: date,
-          end: date,
-          gap: '+1DAY',
-          hardened: true,
-          other: 'all',
-          include: 'all',
-        },
-        range: {
-          field: 'range_field',
-          start: 0.0,
-          end: '1000',
-          gap: '+1DAY',
-          hardened: true,
-          other: 'all',
-          include: 'all',
-        },
         pivot: {
           fields: 'cat',
           mincount: 10,
@@ -156,12 +110,11 @@ describe('Client#createQuery()', function () {
         };
 
         if (
-          client.options.solrVersion &&
-          versionUtils.version(client.options.solrVersion) >=
-            versionUtils.Solr4_0
+          client.solrVersion &&
+          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
         ) {
-          validationJSON['facet.pivot'] = 'cat';
           validationJSON['facet.pivot.mincount'] = '10';
+          validationJSON['facet.pivot'] = 'cat';
         }
 
         assert.deepEqual(data.responseHeader.params, validationJSON);

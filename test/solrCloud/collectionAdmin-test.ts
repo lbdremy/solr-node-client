@@ -1,16 +1,9 @@
-require('../sassert');
-require('mocha');
-/**
- * Modules dependencies
- */
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../../lib-cov' : '../../lib',
-  solr = require(libPath + '/solr');
+import { assert } from 'chai';
+import * as figc from 'figc';
+import { createClient } from '../../lib/solr';
 
-// Test suite
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient(config.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 //TO-DO: add test for collectionConfigName, routerField, async, createNodeSet, createNodeSetShuffle
@@ -24,10 +17,9 @@ describe('Collection', function () {
         numShards: 2,
         replicationFactor: 1,
         maxShardsPerNode: 1,
-        autoAddReplicas: 'false',
+        autoAddReplicas: false,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -43,7 +35,6 @@ describe('Collection', function () {
         replicationFactor: 1,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -57,7 +48,6 @@ describe('Collection', function () {
         shards: ['shard1', 'shard2'],
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -70,7 +60,6 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.reload('solrCollectionTest1');
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -87,7 +76,6 @@ describe('Collection', function () {
         shard: 'shard1',
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -103,7 +91,6 @@ describe('Collection', function () {
         shard: 'shard1',
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -119,7 +106,6 @@ describe('Collection', function () {
         shard: 'shard1',
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -135,7 +121,6 @@ describe('Collection', function () {
         collections: ['solrCollectionTest1', 'solrCollectionTest2'],
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -148,7 +133,6 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.deleteAlias('testAlias');
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -164,7 +148,6 @@ describe('Collection', function () {
         shard: 'shard1',
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -179,10 +162,9 @@ describe('Collection', function () {
         collection: 'solrCollectionTest2',
         shard: 'shard1',
         replica: 'core_node2',
-        onlyIfDown: 'false',
+        onlyIfDown: false,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -195,10 +177,9 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.clusterProp({
         name: 'autoAddReplicas',
-        val: 'true',
+        val: true,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -208,10 +189,8 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.clusterProp({
         name: 'autoAddReplicas',
-        val: null,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -228,7 +207,6 @@ describe('Collection', function () {
         splitKey: 'A!',
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -243,7 +221,6 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.overseerStatus();
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -256,7 +233,6 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.clusterStatus();
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -269,7 +245,6 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.list();
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -285,11 +260,10 @@ describe('Collection', function () {
         shard: 'shard1',
         replica: 'core_node1',
         property: 'preferredLeader',
-        propertyValue: 'true',
-        shardUnique: 'true',
+        propertyValue: true,
+        shardUnique: true,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -305,10 +279,8 @@ describe('Collection', function () {
         shard: 'shard1',
         replica: 'core_node1',
         property: 'preferredLeader',
-        sharedUnique: 'true',
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -322,10 +294,9 @@ describe('Collection', function () {
       collection.balanceShardUnique({
         collection: 'solrCollectionTest2',
         property: 'preferredLeader',
-        shardUnique: 'true',
+        shardUnique: true,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -342,7 +313,6 @@ describe('Collection', function () {
         maxWaitSeconds: 60,
       });
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -355,7 +325,6 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.delete('solrCollectionTest1');
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });
@@ -366,7 +335,7 @@ describe('Collection', function () {
                         var collection = client.collection();
                         collection.delete('solrCollectionTest2');
                         client.executeCollection(collection,function(err,data){
-                                //sassert.ok(err,data);
+
                                 assert.equal(data.responseHeader.status,0);
                                 done();
                         });
@@ -377,7 +346,6 @@ describe('Collection', function () {
       const collection = client.collection();
       collection.delete('solrCollectionTest3');
       client.executeCollection(collection, function (err, data) {
-        //sassert.ok(err,data);
         assert.equal(data.responseHeader.status, 0);
         done();
       });

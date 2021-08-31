@@ -1,18 +1,14 @@
-// Testing support http://wiki.apache.org/solr/CommonQueryParameters
-require('mocha');
 /**
- * Modules dependencies
+ * Testing support for http://wiki.apache.org/solr/CommonQueryParameters
  */
 
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr');
+import * as figc from 'figc';
 import * as sassert from './sassert';
+import { assert } from 'chai';
+import { createClient } from '../lib/solr';
 
-// Test suite
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient(config.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery', function () {

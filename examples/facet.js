@@ -2,7 +2,7 @@
 const solr = require('../lib/solr');
 
 const client = solr.createClient();
-const query = client.createQuery().q('*:*').rows(0).facet({
+const query = client.query().q('*:*').rows(0).facet({
   field: 'title',
   prefix: 'Ipa',
   query: 'title:Ipad',

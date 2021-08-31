@@ -30,7 +30,7 @@ describe('Client', function () {
     });
 
     it('should not find that document in the index yet', function (done) {
-      const query = client.createQuery();
+      const query = client.query();
       query.matchFilter('id', id);
       client.search(query, function (err, data) {
         sassert.ok(err, data);

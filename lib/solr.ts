@@ -1,4 +1,3 @@
-import type * as http from 'http';
 import type { RequestOptions } from 'http';
 import { ClientRequest } from 'http';
 import * as querystring from 'querystring';
@@ -19,86 +18,25 @@ const bluebird = require('bluebird');
 const format = require('./utils/format');
 const { handleJSONResponse, pickJSON, pickProtocol } = require('./client');
 
-/**
- * Create an instance of `Client`
- *
- * @param {String|Object} [hostOrParams='127.0.0.1'] - IP address or host address of the Solr server
- * @param {Number|String} [port='8983'] - port of the Solr server
- * @param {String} [core=''] - name of the Solr core requested
- * @param {String} [path='/solr'] - root path of all requests
- * @param {http.Agent} [agent] - HTTP Agent which is used for pooling sockets used in HTTP(s) client requests
- * @param {Boolean} [secure=false] - if true HTTPS will be used instead of HTTP
- * @param {Boolean} [bigint=false] - if true JSONbig serializer/deserializer will be used instead
- *                                    of JSON native serializer/deserializer
- * @param solrVersion ['3.2', '4.0', '5.0', '5.1'], check lib/utils/version.ts for full reference
- * @param {Number} [ipVersion=4] - pass it to http/https lib's "family" option
- * @param {Object} request - request options
- *
- * @return {Client}
- * @api public
- */
-
-export function createClient(
-  hostOrParams: string | SolrClientParams,
-  port?: number | string,
-  core?: string,
-  path?: string,
-  agent?: http.Agent,
-  secure?: boolean,
-  bigint?: boolean,
-  solrVersion?: number,
-  ipVersion?: number,
-  request?: Record<string, any>
-): Client {
-  const options =
-    typeof hostOrParams === 'object'
-      ? hostOrParams
-      : {
-          host: hostOrParams,
-          port: port,
-          core: core,
-          path: path,
-          agent: agent,
-          secure: secure,
-          bigint: bigint,
-          solrVersion: solrVersion,
-          ipVersion: ipVersion == 6 ? 6 : 4,
-          request: request,
-        };
+export function createClient(options: SolrClientParams = {}) {
   return new Client(options);
 }
 
 /**
- * Solr client
- * @constructor
- *
- * @param {Object} options - set of options used to request the Solr server
- * @param {String} options.host - IP address or host address of the Solr server
- * @param {Number|String} options.port - port of the Solr server, 0 to be ignored by HTTP agent in case of using API endpoint.
- * @param {String} options.core - name of the Solr core requested
- * @param {String} options.path - root path of all requests
- * @param {http.Agent} [options.agent] - HTTP Agent which is used for pooling sockets used in HTTP(s) client requests
- * @param {Boolean} [options.secure=false] - if true HTTPS will be used instead of HTTP
- * @param {Boolean} [options.bigint=false] - if true JSONbig serializer/deserializer will be used instead
- *                                    of JSON native serializer/deserializer
- * @param {Object} options.request - request options
- * @param {Number} [ipVersion=4] - pass it to http/https lib's "family" option
- *
- * @api private
+ * Solr client.
  */
-
 export class Client {
-  private options: FullSolrClientParams;
-  private UPDATE_JSON_HANDLER: string;
-  private UPDATE_HANDLER: string;
-  private TERMS_HANDLER: string;
-  private SPELL_HANDLER: string;
-  private REAL_TIME_GET_HANDLER: string;
-  private ADMIN_PING_HANDLER: string;
-  private COLLECTIONS_HANDLER: string;
-  private SELECT_HANDLER: string;
+  private readonly options: FullSolrClientParams;
+  private readonly UPDATE_JSON_HANDLER: string;
+  private readonly UPDATE_HANDLER: string;
+  private readonly TERMS_HANDLER: string;
+  private readonly SPELL_HANDLER: string;
+  private readonly REAL_TIME_GET_HANDLER: string;
+  private readonly ADMIN_PING_HANDLER: string;
+  private readonly COLLECTIONS_HANDLER: string;
+  private readonly SELECT_HANDLER: string;
 
-  constructor(options: SolrClientParams) {
+  constructor(options: SolrClientParams = {}) {
     this.options = {
       host: options.host || '127.0.0.1',
       port: options.port === 0 ? 0 : options.port || '8983',
@@ -223,9 +161,7 @@ export class Client {
 
   /**
    * Create credential using the basic access authentication method
-   * @api public
    */
-
   basicAuth(username: string, password: string): Client {
     this.options.authorization =
       'Basic ' + Buffer.from(username + ':' + password).toString('base64');
@@ -234,27 +170,21 @@ export class Client {
 
   /**
    * Remove authorization header
-   * @api public
    */
-
   unauth(): Client {
     delete this.options.authorization;
     return this;
   }
 
   /**
-   * Add a document or a list of documents
+   * Add a document or a list of documents.
    *
-   * @param {Object|Array} doc - document or list of documents to add into the Solr database
-   * @param {Object} [options] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param docs
+   *   Document or list of documents to add into the Solr database.
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   add(
     docs: Record<string, any> | Record<string, any>[],
     options?: Record<string, any> | CallbackFn,
@@ -270,17 +200,9 @@ export class Client {
   }
 
   /**
-   * Updates a document or a list of documents Solr 4.0+
-   * This function is a clone of add and it was added to give more clarity on the availability of atomic updates.
+   * Updates a document or a list of documents.
    *
-   * @param {Object|Array} doc - document or list of documents to be updated into the Solr database (set, inc, add)
-   * @param {Object} [options] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * This function is a clone of `add` and it was added to give more clarity on the availability of atomic updates.
    */
   atomicUpdate = Client.prototype.add;
 
@@ -288,16 +210,12 @@ export class Client {
    * Get a document by id or a list of documents by ids using the Real-time-get feature
    *  in SOLR4 (https://wiki.apache.org/solr/RealTimeGet)
    *
-   * @param {String|Array} ids - id or list of ids that identify the documents to get
-   * @param {Query|Object|String} [query] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param ids
+   *   ID or list of IDs that identify the documents to get.
+   * @param query
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   realTimeGet(
     ids: string | string[],
     query?: Query | Record<string, any> | string,
@@ -321,19 +239,10 @@ export class Client {
   /**
    * Add the remote resource located at the given path `options.path` into the Solr database.
    *
-   * @param {Object} options -
-   * @param {String} options.path - path of the file. HTTP URL, the full path or a path relative to the CWD of the running solr server must be used.
-   * @param {String} [options.format='xml'] - format of the resource. XML, CSV or JSON formats must be used.
-   * @param {String} [options.contentType='text/plain;charset=utf-8'] - content type of the resource
-   * @param {Object} [options.parameters] - set of extras parameters pass along in the query.
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   addRemoteResource(
     options: ResourceOptions,
     callback: CallbackFn
@@ -358,14 +267,8 @@ export class Client {
   }
 
   /**
-   * Create a writable/readable `Stream` to add documents into the Solr database
-   *
-   * @param {Object} [options] -
-   *
-   * return {Stream}
-   * @api public
+   * Create a writable/readable `Stream` to add documents into the Solr database.
    */
-
   createAddStream(options: Record<string, any>) {
     const path = [
       this.options.path,
@@ -395,22 +298,16 @@ export class Client {
     const jsonStreamStringify = JSONStream.stringify();
     const postRequest = request(optionsRequest);
     jsonStreamStringify.pipe(postRequest);
-    const duplex = duplexer(jsonStreamStringify, postRequest);
-    return duplex;
+    return duplexer(jsonStreamStringify, postRequest);
   }
 
   /**
    * Commit last added and removed documents, that means your documents are now indexed.
    *
-   * @param {Object} options
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   commit(
     options: Record<string, any> | CallbackFn,
     callback: CallbackFn
@@ -428,14 +325,9 @@ export class Client {
   /**
    * Call Lucene's IndexWriter.prepareCommit, the changes won't be visible in the index.
    *
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   prepareCommit(callback: CallbackFn): ClientRequest {
     return this.update({}, { prepareCommit: true }, callback);
   }
@@ -443,14 +335,9 @@ export class Client {
   /**
    * Soft commit all changes
    *
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   softCommit(callback: CallbackFn): ClientRequest {
     return this.update({}, { softCommit: true }, callback);
   }
@@ -458,17 +345,12 @@ export class Client {
   /**
    * Delete documents based on the given `field` and `text`.
    *
-   * @param {String} field
-   * @param {String} text
-   * @param {Object} [options]
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param field
+   * @param text
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   delete(
     field: string,
     text: string,
@@ -491,17 +373,13 @@ export class Client {
   /**
    * Delete a range of documents based on the given `field`, `start` and `stop` arguments.
    *
-   * @param {String} field
-   * @param {String|Date} start
-   * @param {String|Date} stop
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param field
+   * @param start
+   * @param stop
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   deleteByRange(
     field: string,
     start: string | Date,
@@ -523,16 +401,12 @@ export class Client {
   /**
    * Delete the document with the given `id`
    *
-   * @param {String|Number} id - id of the document you want to delete
-   * @param {Object} [options] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param id
+   *   ID of the document you want to delete.
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   deleteByID(
     id: string | number,
     options?: Record<string, any> | CallbackFn,
@@ -551,18 +425,13 @@ export class Client {
   }
 
   /**
-   * Delete documents matching the given `query`
+   * Delete documents matching the given `query`.
    *
-   * @param {String} query -
-   * @param {Object} [options] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param query
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   deleteByQuery(
     query: string,
     options?: Record<string, any> | CallbackFn,
@@ -581,17 +450,12 @@ export class Client {
   }
 
   /**
-   * Delete all documents
+   * Delete all documents.
    *
-   * @param {Object} [options] -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   deleteAll(
     options: Record<string, any> | CallbackFn,
     callback: CallbackFn
@@ -600,17 +464,12 @@ export class Client {
   }
 
   /**
-   * Optimize the index
+   * Optimize the index.
    *
-   * @param {Object} options -
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param options
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   optimize(
     options: Record<string, any> | CallbackFn,
     callback: CallbackFn
@@ -628,13 +487,9 @@ export class Client {
   /**
    * Rollback all add/delete commands made since the last commit.
    *
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @api public
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   rollback(callback: CallbackFn): ClientRequest {
     const data = {
       rollback: {},
@@ -681,14 +536,10 @@ export class Client {
   /**
    * Search documents matching the `query`
    *
-   * @param {Query|Object|String} query
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @api public
+   * @param query
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   search(
     query: Query | Record<string, any> | string,
     callback: CallbackFn
@@ -700,13 +551,9 @@ export class Client {
    * Execute an Admin Collections task on `collection`
    *
    * @param {Query|Object|String} collection
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @api public
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   executeCollection(
     collection: Collection | Record<string, any> | string,
     callback: CallbackFn
@@ -715,52 +562,35 @@ export class Client {
   }
 
   /**
-   * Search for all documents
+   * Search for all documents.
    *
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   searchAll(callback: CallbackFn): ClientRequest {
     return this.search('q=*', callback);
   }
 
   /**
-   * Search documents matching the `query`
+   * Search documents matching the `query`, with spellchecking enabled.
    *
-   * Spellcheck is also enabled.
-   *
-   * @param {Query|Object|String} query
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param query
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   spell(query: Query, callback: CallbackFn): ClientRequest {
     return this.doQuery(this.SPELL_HANDLER, query, callback);
   }
 
   /**
-   * Terms search
+   * Terms search.
    *
    * Provides access to the indexed terms in a field and the number of documents that match each term.
    *
-   * @param {Query|Object|String} query
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param query
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   termsSearch(
     query: Query | Record<string, any> | string,
     callback: CallbackFn
@@ -781,14 +611,12 @@ export class Client {
    */
   doQuery(
     handler: string,
-    query: Collection | Query | Record<string, any> | string | CallbackFn,
-    callback?: CallbackFn
+    query: Collection | Query | Record<string, any> | string,
+    callback: CallbackFn | undefined
   ): ClientRequest {
     // Construct the string to use as query (GET) or body (POST).
-    let data = '';
-    if (typeof query === 'function') {
-      callback = query as CallbackFn;
-    } else if (query instanceof Query || query instanceof Collection) {
+    let data: string;
+    if (query instanceof Query || query instanceof Collection) {
       data = query.build();
     } else if (typeof query === 'object') {
       data = querystring.stringify(query);
@@ -798,7 +626,7 @@ export class Client {
     }
 
     const path = this.getFullHandlerPath(handler);
-    const queryString = data + '&wt=json';
+    const queryString = data ? data + '&wt=json' : 'wt=json';
 
     // Decide whether to use GET or POST, based on the length of the data.
     // 10 accounts for protocol and special characters like ://, port colon,
@@ -830,32 +658,14 @@ export class Client {
 
   /**
    * Create an instance of `Query`
-   *
-   * @api public
    */
   query(): Query {
     return new Query(this.options);
   }
 
   /**
-   * Create an instance of `Query`
-   * NOTE: This method will be deprecated in the v0.6 release. Please use `Client.query()` instead.
-   *
-   * @return {Query}
-   * @api public
+   * Create an instance of `Collection`.
    */
-
-  createQuery(): Query {
-    return new Query(this.options);
-  }
-
-  /**
-   * Create an instance of `Collection`
-   *
-   * @return {Collection}
-   * @api public
-   */
-
   collection(): Collection {
     return new Collection();
   }
@@ -866,18 +676,13 @@ export class Client {
   escapeSpecialChars = format.escapeSpecialChars;
 
   /**
-   * Ping the Solr server
+   * Ping the Solr server.
    *
-   * @param {Function} callback(err,obj) - a function executed when the Solr server responds or an error occurs
-   * @param {Error} callback().err
-   * @param {Object} callback().obj - JSON response sent by the Solr server deserialized
-   *
-   * @return {http.ClientRequest}
-   * @api public
+   * @param callback
+   *   A function to execute when the Solr server responds or an error occurs.
    */
-
   ping(callback: CallbackFn) {
-    return this.doQuery(this.ADMIN_PING_HANDLER, callback);
+    return this.doQuery(this.ADMIN_PING_HANDLER, '', callback);
   }
 
   /**
@@ -890,7 +695,7 @@ export class Client {
    * @param {Function} cb
    *   A callback to run when completed.
    */
-  private createSchemaField(
+  public createSchemaField(
     fieldName: string,
     fieldType: string,
     cb: CallbackFn

@@ -211,7 +211,7 @@ export class Query {
    * @api public
    *
    * @example
-   * var query = client.createQuery();
+   * var query = client.query();
    * query.q({ '*' : '*' }).rangeFilter({ field : 'id', start : 100, end : 200})
    * // also works
    * query.q({ '*' : '*' }).rangeFilter([{ field : 'id', start : 100, end : 200},{ field : 'date', start : new Date(), end : new Date() - 3600}]);
@@ -255,7 +255,7 @@ export class Query {
    * @api public
    *
    * @example
-   * var query = client.createQuery();
+   * var query = client.query();
    * query.q({ '*' : '*' }).matchFilter('id', 100)
    */
 
@@ -280,7 +280,7 @@ export class Query {
    * @api public
    *
    * @example
-   * var query = client.createQuery();
+   * var query = client.query();
    * query.q({ '*' : '*' }).fq({field: 'id', value: 100})
    * query.q({ '*' : '*' }).fq([{field: 'id', value: 100}, {field: 'name', value: 'John'}])
    */
@@ -630,7 +630,7 @@ export class Query {
    * @api public
    *
    * @example
-   * const query = client.createQuery();
+   * const query = client.query();
    * query.qf({title : 2.2, description : 0.5 });
    */
 
@@ -651,7 +651,7 @@ export class Query {
    * @api public
    *
    * @example
-   * var query = client.createQuery();
+   * var query = client.query();
    * query.mm(2); // or query.mm('75%');
    */
 

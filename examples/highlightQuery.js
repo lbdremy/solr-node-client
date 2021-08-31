@@ -2,7 +2,7 @@
 const solr = require('../lib/solr');
 
 const client = solr.createClient();
-const query = client.createQuery().q('*:*').rows(0).hl({
+const query = client.query().q('*:*').rows(0).hl({
   on: true,
   q: 'title:An Example Title to Highlight',
   fl: 'title',

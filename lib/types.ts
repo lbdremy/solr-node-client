@@ -4,23 +4,87 @@ import type { Agent as HttpsAgent } from 'https';
 export type CallbackFn = (error: Error | undefined, result: any) => void;
 
 export type ResourceOptions = {
+  /**
+   * Set of extras parameters pass along in the query.
+   */
   parameters?: Record<string, any>;
+
+  /**
+   * Format of the resource. XML, CSV or JSON formats must be used.
+   */
   format?: string;
+
+  /**
+   * Content type of the resource. E.g. 'text/plain;charset=utf-8'.
+   */
   contentType?: string;
+
+  /**
+   * File path or HTTP URL to a remote resource.
+   *
+   * A full path or a path relative to the CWD of the running solr server must be used.
+   */
   path: string;
 };
 
 export type SolrClientParams = {
+  /**
+   * IP address or host ame of the Solr server.
+   */
   host?: string;
+
+  /**
+   * Port of the Solr server
+   */
   port?: string | number;
+
+  /**
+   * Name of the Solr core to use.
+   */
   core?: string;
+
+  /**
+   * Root path of all requests.
+   */
   path?: string;
+
+  /**
+   * Whether to use HTTPS.
+   */
   secure?: boolean;
+
+  /**
+   * Whether to use the JSONbig serializer/deserializer instead of the native
+   * JSON serializer/deserializer.
+   */
   bigint?: boolean;
+
+  /**
+   * HTTP Agent which is used for pooling sockets.
+   */
   agent?: HttpAgent | HttpsAgent;
+
+  /**
+   * Custom request options to use with every request.
+   */
   request?: Record<string, any> | null;
+
+  /**
+   * One of [4, 6].
+   * Passed to http/https lib's "family" option.
+   */
   ipVersion?: number;
+
+  /**
+   * One of ['3.2', '4.0', '5.0', '5.1'].
+   * Check lib/utils/version.ts for full reference.
+   */
   solrVersion?: number;
+
+  /**
+   * The maximum size for which to use GET requests.
+   * Requests larger than this will use POST.
+   */
   get_max_request_entity_size?: boolean | number;
 };
 

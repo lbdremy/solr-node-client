@@ -24,7 +24,6 @@
     "node": ">= 12"
   },
   "dependencies": {
-    "bluebird": "^3.7.2",
     "duplexer": "^0.1.2",
     "hnp": "^1.0.1",
     "json-bigint": "^1.0.0",

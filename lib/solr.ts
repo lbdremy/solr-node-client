@@ -15,7 +15,6 @@ import {
 import { Duplex } from 'stream';
 
 const request = require('request');
-const bluebird = require('bluebird');
 const format = require('./utils/format');
 const { handleJSONResponse, pickJSON, pickProtocol } = require('./client');
 
@@ -731,5 +730,3 @@ export class Client {
     );
   }
 }
-
-bluebird.promisifyAll(Client.prototype);

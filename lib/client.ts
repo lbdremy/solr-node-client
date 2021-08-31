@@ -58,9 +58,6 @@ function handleJSONResponse(
 
     response.on('end', function () {
       if (response.statusCode < 200 || response.statusCode > 299) {
-        logger.error(
-          `Error performing Solr request: ${response.statusCode}: ${response.statusMessage}`
-        );
         err = new SolrError(request, response, text);
         if (callback) callback(err, null);
       } else {

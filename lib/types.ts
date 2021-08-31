@@ -1,7 +1,7 @@
 import type { Agent as HttpAgent } from 'http';
 import type { Agent as HttpsAgent } from 'https';
 
-export type CallbackFn = (error: Error | undefined, result: any) => void;
+export type CallbackFn = (error: Error | undefined | null, result: any) => void;
 
 export type ResourceOptions = {
   /**

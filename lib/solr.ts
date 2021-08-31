@@ -13,10 +13,12 @@ import {
   SolrClientParams,
 } from './types';
 import { Duplex } from 'stream';
+import { Response } from 'request';
+import { SolrError } from './error/solr-error';
 
 const request = require('request');
 const format = require('./utils/format');
-const { handleJSONResponse, pickJSON, pickProtocol } = require('./client');
+const { pickJSON, pickProtocol } = require('./client');
 
 export function createClient(options: SolrClientParams = {}) {
   return new Client(options);
@@ -147,10 +149,33 @@ export class Client {
 
     // Perform the request and handle results.
     const request = pickProtocol(this.options.secure).request(requestOptions);
-    request.on(
-      'response',
-      handleJSONResponse(request, this.options.bigint, callback)
-    );
+    request.on('response', (response: Response) => {
+      let text = '';
+      let err: Error | null = null;
+      let data = null;
+
+      // This properly handles multi-byte characters
+      response.setEncoding('utf-8');
+
+      response.on('data', function (chunk) {
+        text += chunk;
+      });
+
+      response.on('end', () => {
+        if (response.statusCode < 200 || response.statusCode > 299) {
+          err = new SolrError(request, response, text);
+          if (callback) callback(err, null);
+        } else {
+          try {
+            data = pickJSON(this.options.bigint).parse(text);
+          } catch (error: any) {
+            err = error;
+          } finally {
+            if (callback) callback(err, data);
+          }
+        }
+      });
+    });
     request.on('error', function onError(err) {
       if (callback) {
         callback(err, null);

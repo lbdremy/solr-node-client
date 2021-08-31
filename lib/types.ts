@@ -147,7 +147,7 @@ export type Pivot = {
 
 export type MltOptions = {
   on?: boolean;
-  fl?: string | Record<string, any>[];
+  fl?: string | string[];
   count?: number;
   mintf?: number;
   mindf?: number;
@@ -156,7 +156,7 @@ export type MltOptions = {
   maxqt?: number;
   maxntp?: number;
   boost?: boolean;
-  qf?: string | Record<string, any>;
+  qf?: string | number | Record<string, any>;
 };
 
 export type HlOptions = {

@@ -243,16 +243,16 @@ export type DeleteReplica = {
 };
 
 export type AddReplica = {
-  collection: string;
-  shard: string;
-  route: string;
-  node: string;
-  async: string;
+  collection?: string;
+  shard?: string;
+  route?: string;
+  node?: string;
+  async?: string;
 };
 
 export type ClusterProp = {
-  name: string;
-  val: string;
+  name?: string;
+  val?: string | boolean | number;
 };
 
 export type Migrate = {
@@ -273,7 +273,7 @@ export type AddReplicaProp = {
   shard: string;
   replica: string;
   property: string;
-  propertyValue: string;
+  propertyValue: string | boolean | number;
   shardUnique?: boolean;
 };
 

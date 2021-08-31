@@ -37,7 +37,7 @@ export class Client {
   private readonly ADMIN_PING_HANDLER: string;
   private readonly COLLECTIONS_HANDLER: string;
   private readonly SELECT_HANDLER: string;
-  private readonly logger: Logger
+  private readonly logger: Logger;
 
   constructor(options: SolrClientParams = {}) {
     this.options = {
@@ -66,7 +66,7 @@ export class Client {
     this.REAL_TIME_GET_HANDLER = 'get';
     this.SPELL_HANDLER = 'spell';
     this.TERMS_HANDLER = 'terms';
-    this.logger = options.logger ?? console
+    this.logger = options.logger ?? console;
   }
 
   get solrVersion(): number {
@@ -153,12 +153,9 @@ export class Client {
     const request = pickProtocol(this.options.secure).request(requestOptions);
     request.on(
       'response',
-      handleJSONResponse(request, this.options.bigint, callback)
+      handleJSONResponse(request, this.options.bigint, callback, this.logger)
     );
     request.on('error', (err) => {
-      if (err) {
-        this.logger.error(`Error performing Solr request: ${err.message}`)
-      }
       if (callback) {
         callback(err, null);
       }

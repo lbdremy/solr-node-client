@@ -9,6 +9,4 @@ report
 .idea
 package-lock.json
 /dist/
-/lib/
-/test/
 .github

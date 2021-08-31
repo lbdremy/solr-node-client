@@ -2,6 +2,8 @@ import * as http from 'http';
 import * as https from 'https';
 const JSONbig = require('json-bigint');
 import { SolrError } from './error/solr-error';
+import { CallbackFn, Logger } from './types';
+import { Request, Response } from 'request';
 
 /**
  * Pick appropriate protocol based on the given `secure` flag
@@ -36,8 +38,13 @@ function pickJSON(bigint: boolean): typeof JSON | typeof JSONbig {
  * @api private
  */
 
-function handleJSONResponse(request, bigint, callback) {
-  return function onJSONResponse(response) {
+function handleJSONResponse(
+  request: Request,
+  bigint: boolean,
+  callback: CallbackFn,
+  logger: Logger
+) {
+  return function onJSONResponse(response: Response) {
     let text = '';
     let err: Error | null = null;
     let data = null;
@@ -51,6 +58,9 @@ function handleJSONResponse(request, bigint, callback) {
 
     response.on('end', function () {
       if (response.statusCode < 200 || response.statusCode > 299) {
+        logger.error(
+          `Error performing Solr request: ${response.statusCode}: ${response.statusMessage}`
+        );
         err = new SolrError(request, response, text);
         if (callback) callback(err, null);
       } else {

@@ -15,10 +15,33 @@ import {
 import { Duplex } from 'stream';
 import { Response } from 'request';
 import { SolrError } from './error/solr-error';
+import * as http from 'http';
+import * as https from 'https';
 
 const request = require('request');
 const format = require('./utils/format');
-const { pickJSON, pickProtocol } = require('./client');
+const JSONbig = require('json-bigint');
+
+/**
+ * Pick appropriate protocol based on the given `secure` flag.
+ */
+function pickProtocol(secure: boolean): typeof http | typeof https {
+  return secure ? https : http;
+}
+
+/**
+ * Pick appropriate JSON serializer/deserializer library based on the given `bigint` flag
+ *
+ * @param bigint
+ *   Whether to handle big numbers correctly or not.
+ *   The reason for not using JSONbig all the times is it has a significant performance cost.
+ *
+ * @return
+ *   JSON or JSONbig serializer/deserializer
+ */
+function pickJSON(bigint: boolean): typeof JSON | typeof JSONbig {
+  return bigint ? JSONbig : JSON;
+}
 
 export function createClient(options: SolrClientParams = {}) {
   return new Client(options);

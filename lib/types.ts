@@ -161,9 +161,9 @@ export type MltOptions = {
 
 export type HlOptions = {
   on?: boolean;
-  q?: Record<string, any>;
+  q?: Record<string, any> | string;
   qparser?: string;
-  fl?: Record<string, any>;
+  fl?: Record<string, any> | string;
   snippets?: number;
   fragsize?: number;
   mergeContiguous?: boolean;

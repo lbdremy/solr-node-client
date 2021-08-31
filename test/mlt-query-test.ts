@@ -31,7 +31,7 @@ describe('Client#createQuery', function () {
       };
 
       const query = client
-        .createQuery()
+        .query()
         .mlt(options)
         .q({ title_t: 'test' })
         .debugQuery();

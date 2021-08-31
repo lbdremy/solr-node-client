@@ -15,18 +15,18 @@ const basePath = [config.client.path, config.client.core]
   .replace(/\/$/, '');
 
 describe('Client', function () {
-  describe('#get("admin/ping",callback)', function () {
+  describe('#doQuery("admin/ping",callback)', function () {
     it('should ping', function (done) {
-      client.get('admin/ping', function (err, data) {
+      client.doQuery('admin/ping', '', function (err, data) {
         sassert.ok(err, data);
         assert.equal(data.status, 'OK');
         done();
       });
     });
   });
-  describe('#get("update/json", "softCommit=true", callback)', function () {
+  describe('#doQuery("update/json", "softCommit=true", callback)', function () {
     it('should soft commit', function (done) {
-      const request = client.get(
+      const request = client.doQuery(
         'update/json',
         'softCommit=true',
         function (err, data) {
@@ -40,12 +40,12 @@ describe('Client', function () {
       );
     });
   });
-  describe('#get("select", query, callback)', function () {
+  describe('#doQuery("select", query, callback)', function () {
     it('should find documents describe in the `query` instance of `Query`', function (done) {
-      const query = client.createQuery().q({
+      const query = client.query().q({
         title_t: 'test',
       });
-      client.get('select', query, function (err, data) {
+      client.doQuery('select', query, function (err, data) {
         assert.deepEqual(
           { q: 'title_t:test', wt: 'json' },
           data.responseHeader.params

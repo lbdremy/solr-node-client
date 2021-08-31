@@ -16,11 +16,7 @@ const client = solr.createClient(config.client);
 describe('Client#createQuery', function () {
   describe('.groupBy(field), callback)', function () {
     it('should create a group by query', function (done) {
-      const query = client
-        .createQuery()
-        .q('test')
-        .groupBy('title_t')
-        .debugQuery();
+      const query = client.query().q('test').groupBy('title_t').debugQuery();
       client.search(query, function (err, data) {
         sassert.ok(err, data);
         assert(data.responseHeader.params.group);
@@ -49,7 +45,7 @@ describe('Client#createQuery', function () {
         cache: 50,
       };
 
-      const query = client.createQuery().group(options);
+      const query = client.query().group(options);
 
       client.search(query, function (err, data) {
         sassert.ok(err, data);

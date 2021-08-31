@@ -7,7 +7,7 @@ const client = solr.createClient();
 
 // DixMax query
 const query = client
-  .createQuery()
+  .query()
   .q('laptop')
   .dismax()
   .qf({ title_t: 0.2, description_t: 3.3 })
@@ -23,7 +23,7 @@ client.search(query, function (err, obj) {
 });
 
 // Lucene query
-const query2 = client.createQuery().q({ title_t: 'laptop' }).start(0).rows(10);
+const query2 = client.query().q({ title_t: 'laptop' }).start(0).rows(10);
 client.search(query2, function (err, obj) {
   if (err) {
     console.log(err);
@@ -42,7 +42,7 @@ client.search(query2, function (err, obj) {
  * @author Tolga Akyüz <me@tolgaakyuz.org>
  */
 const query3 = client
-  .createQuery()
+  .query()
   .q('laptop')
   .edismax()
   .qf({ title_t: 0.2, description_t: 3.3 })
@@ -70,7 +70,7 @@ client.search(query3, function (err, obj) {
  * @author Tolga Akyüz <me@tolgaakyuz.org>
  */
 const query4 = client
-  .createQuery()
+  .query()
   .q('laptop')
   .edismax()
   .qf({ title_t: 0.2, description_t: 3.3 })

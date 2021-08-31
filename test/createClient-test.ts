@@ -33,7 +33,12 @@ describe('solr', function () {
   });
   describe('.createClient("10.10.10.10",8080,"core1","/solr4")', function () {
     it('should return a `Client` instance with the given options', function () {
-      const client = solr.createClient('10.10.10.10', 8080, 'core1', '/solr4');
+      const client = solr.createClient({
+        host: '10.10.10.10',
+        port: 8080,
+        core: 'core1',
+        path: '/solr4',
+      });
       assert.equal(client.options.host, '10.10.10.10');
       assert.equal(client.options.port, 8080);
       assert.equal(client.options.core, 'core1');

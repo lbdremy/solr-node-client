@@ -1,7 +1,13 @@
 import type { Agent as HttpAgent } from 'http';
 import type { Agent as HttpsAgent } from 'https';
+import Dispatcher from 'undici/types/dispatcher';
 
 export type CallbackFn = (error: Error | undefined | null, result: any) => void;
+
+export type UndiciRequestOptions = Omit<
+  Dispatcher.RequestOptions,
+  'origin' | 'path'
+>;
 
 export type ResourceOptions = {
   /**

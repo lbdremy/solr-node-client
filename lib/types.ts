@@ -2,8 +2,6 @@ import type { Agent as HttpAgent } from 'http';
 import type { Agent as HttpsAgent } from 'https';
 import Dispatcher from 'undici/types/dispatcher';
 
-export type CallbackFn = (error: Error | undefined | null, result: any) => void;
-
 export type UndiciRequestOptions = Omit<
   Dispatcher.RequestOptions,
   'origin' | 'path'
@@ -102,7 +100,7 @@ export type FullSolrClientParams = {
   secure: boolean;
   bigint: boolean;
   agent?: HttpAgent | HttpsAgent;
-  request?: Record<string, any> | null;
+  request?: UndiciRequestOptions | null;
   ipVersion: number;
   solrVersion: number;
   get_max_request_entity_size: boolean | number;
@@ -302,3 +300,5 @@ export type RebalanceLeaders = {
   maxAtOnce?: number;
   maxWaitSeconds?: number;
 };
+
+export type JsonResponseData = Record<string, any> | any[];

@@ -13,6 +13,7 @@ import {
   GroupOptions,
   FacetOptions,
   DateOptions,
+  JoinOptions,
 } from './types';
 
 export type QueryOptions = {
@@ -216,6 +217,7 @@ export class Query {
    */
 
   rangeFilter(options: DateOptions | DateOptions[]): Query {
+    const x = options;
     const self = this;
     const options2 = format.dateISOify(options);
     let parameter = 'fq=';
@@ -239,6 +241,15 @@ export class Query {
       filter[key] = '[' + startParam + '%20TO%20' + endParam + ']';
       parameter += format.stringify(filter, '', ':');
     }
+    this.parameters.push(parameter);
+    return self;
+  }
+
+  fqJoin(options: JoinOptions): Query {
+    const self = this;
+    let parameter = 'fq=';
+    const filter1 = `%7B!join%20fromIndex%3D${options.fromIndex}%20from%3D${options.from}%20to%3D${options.to}%20v%3D'${options.field}:${options.value}'%7D`;
+    parameter += filter1;
     this.parameters.push(parameter);
     return self;
   }

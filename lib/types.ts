@@ -109,6 +109,14 @@ export type DateOptions = {
   end?: string | number | Date;
 };
 
+export type JoinOptions = {
+  from: string;
+  to: string;
+  fromIndex: string;
+  field: string;
+  value: string;
+};
+
 export type Filters = {
   field: string;
   value: string | number | Date | boolean;

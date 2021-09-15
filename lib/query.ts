@@ -170,14 +170,12 @@ export class Query {
    * Request to use cursorMarks for deep-paging as explained in http://heliosearch.org/solr/paging-and-deep-paging/
    * Note that usage of a cursor requires a sort containing a uniqueKey field tie breaker
    *
-   * @param {String} mark - The mark to use, defaults to "*" to request a new cursor in the first request
-   *
-   * @return {Query}
-   * @api public
+   * @param mark
+   *   The mark to use.
+   *   Defaults to "*" to request a new cursor in the first request.
    */
-  cursorMark(mark: string): Query {
+  cursorMark(mark = '*'): Query {
     const self = this;
-    mark = mark || '*';
     const parameter = 'cursorMark=' + encodeURIComponent(mark);
     this.parameters.push(parameter);
     return self;

@@ -1,16 +1,11 @@
-/**
- * Modules dependencies
- */
-const figc = require('figc'),
-  assert = require('chai').assert,
-  libPath = process.env['SOLR_CLIENT_COV'] ? '../lib-cov' : '../lib',
-  solr = require(libPath + '/solr');
+import { assert } from 'chai';
+import * as figc from 'figc';
+import { createClient } from '../lib/solr';
 import * as sassert from './sassert';
 import * as versionUtils from '../lib/utils/version';
 
-// Test suite
 const config = figc(__dirname + '/config.json');
-const client = solr.createClient(config.client);
+const client = createClient(config.client);
 const basePath = [config.client.path, config.client.core]
   .join('/')
   .replace(/\/$/, '');
@@ -21,9 +16,8 @@ describe('Client', function () {
       const request = client.prepareCommit(function (err, data) {
         sassert.ok(err, data);
         if (
-          client.options.solrVersion &&
-          versionUtils.version(client.options.solrVersion) >=
-            versionUtils.Solr4_0
+          client.solrVersion &&
+          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
         ) {
           assert.equal(
             request.path,

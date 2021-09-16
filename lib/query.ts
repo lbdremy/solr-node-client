@@ -217,7 +217,6 @@ export class Query {
    */
 
   rangeFilter(options: DateOptions | DateOptions[]): Query {
-    const x = options;
     const self = this;
     const options2 = format.dateISOify(options);
     let parameter = 'fq=';
@@ -244,8 +243,20 @@ export class Query {
     this.parameters.push(parameter);
     return self;
   }
-
-  fqJoin(options: JoinOptions): Query {
+  /**
+   * Filter the set of documents found before to return the result by  joining inner data from one solr connection (core) to another (core).
+   *
+   * @param {String} field - name of field
+   * @param {String|Number|Date} value - value of the field that must match
+   *
+   * @return {Query}
+   * @api public
+   *
+   * @example
+   * var query = client.query();
+   * query.q({ '*' : '*' }).matchFilter('id', 100)
+   */
+  doubleCoreFilter(options: JoinOptions): Query {
     const self = this;
     let parameter = 'fq=';
     const filter1 = `%7B!join%20fromIndex%3D${options.fromIndex}%20from%3D${options.from}%20to%3D${options.to}%20v%3D'${options.field}:${options.value}'%7D`;

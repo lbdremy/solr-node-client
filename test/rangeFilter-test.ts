@@ -80,7 +80,7 @@ describe('Client#createQuery', function () {
       });
     });
     it('should filter a query using a range join', function (done) {
-      const query = client.query().q('test').doubleCoreFilter({
+      const query = client.query().q('test').joinFilter({
         fromIndex: 'organizations',
         from: 'organizationId_i',
         to: 'id',
@@ -91,8 +91,8 @@ describe('Client#createQuery', function () {
       client.search(query, function (err, data) {
         sassert.ok(err, data);
         assert.equal(
-          "{!join fromIndex=organizations from=organizationId_i to=id v='name:test'}",
-          data.responseHeader.params.fq
+          data.responseHeader.params.fq,
+          `"{!join fromIndex=organizations from=organizationId_i to=id v='name:test'}"`
         );
         done();
       });

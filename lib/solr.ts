@@ -23,10 +23,6 @@ export function createClient(options: SolrClientParams = {}) {
   return new Client(options);
 }
 
-export function createClient2(options: SolrClientParams = {}) {
-  return new Client(options);
-}
-
 /**
  * Solr client.
  */

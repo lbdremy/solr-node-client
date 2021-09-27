@@ -246,15 +246,12 @@ export class Query {
   /**
    * Filter the set of documents found before to return the result by  joining inner data from one solr connection (core) to another (core).
    *
-   * @param {String} field - name of field
-   * @param {String|Number|Date} value - value of the field that must match
-   *
    * @return {Query}
    * @api public
    *
    * @example
    * var query = client.query();
-   * query.q({ '*' : '*' }).matchFilter('id', 100)
+   * query.q({ '*' : '*' }).joinFilter{fromIndex='organizations', from='region_s', to='region_s', v='mgr_s:yes'}}
    */
   joinFilter(options: JoinOptions): Query {
     const self = this;

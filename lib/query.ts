@@ -13,6 +13,7 @@ import {
   GroupOptions,
   FacetOptions,
   DateOptions,
+  JoinOptions,
 } from './types';
 
 export type QueryOptions = {
@@ -239,6 +240,24 @@ export class Query {
       filter[key] = '[' + startParam + '%20TO%20' + endParam + ']';
       parameter += format.stringify(filter, '', ':');
     }
+    this.parameters.push(parameter);
+    return self;
+  }
+  /**
+   * Filter the set of documents found before to return the result by  joining inner data from one solr connection (core) to another (core).
+   *
+   * @return {Query}
+   * @api public
+   *
+   * @example
+   * var query = client.query();
+   * query.q({ '*' : '*' }).joinFilter{fromIndex='organizations', from='region_s', to='region_s', v='mgr_s:yes'}}
+   */
+  joinFilter(options: JoinOptions): Query {
+    const self = this;
+    let parameter = 'fq=';
+    const filter = `{!join fromIndex=${options.fromIndex} from=${options.from} to=${options.to} v='${options.field}:${options.value}'}`;
+    parameter += encodeURIComponent(filter);
     this.parameters.push(parameter);
     return self;
   }

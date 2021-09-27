@@ -114,7 +114,7 @@ export type JoinOptions = {
   to: string;
   fromIndex: string;
   field: string;
-  value: string;
+  value: string | number | Date | boolean;
 };
 
 export type Filters = {

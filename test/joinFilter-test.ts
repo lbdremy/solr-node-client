@@ -10,25 +10,7 @@ const client2 = createClient(config2.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery', function () {
-  describe('.rangeFilter(start, end)', function () {
-    it('should filter a query using a range join', function (done) {
-      const query = client.query().q('test').joinFilter({
-        fromIndex: 'organizations',
-        from: 'organizationId_i',
-        to: 'id',
-        field: 'name',
-        value: 'test',
-      });
-
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.equal(
-          data.responseHeader.params.fq,
-          `"{!join fromIndex=organizations from=organizationId_i to=id v='name:test'}"`
-        );
-        done();
-      });
-    });
+  describe('.joinFilter', function () {
     it('should filter a query using a range join 2 cores', async function () {
       const docs = [
         {

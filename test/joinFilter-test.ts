@@ -29,7 +29,7 @@ describe('Client#createQuery', function () {
         done();
       });
     });
-    it('should filter a query using a range join 2 cores', function (done) {
+    it('should filter a query using a range join 2 cores', async function () {
       const docs = [
         {
           id: 1,
@@ -47,15 +47,15 @@ describe('Client#createQuery', function () {
           sales_i: 300000,
         },
         {
-          id: 7,
+          id: 4,
           region_s: 'south',
           sales_i: 400000,
         },
       ];
-      client.add(docs, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+      // @ts-ignore
+      await client.addAsync(docs);
+      // @ts-ignore
+      await client.commitAsync();
 
       const docsOrganizations = [
         {
@@ -94,12 +94,12 @@ describe('Client#createQuery', function () {
           mgr_s: 'yes',
         },
       ];
-      client2.add(docsOrganizations, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+      // @ts-ignore
+      await client2.addAsync(docsOrganizations);
+      // @ts-ignore
+      await client2.commitAsync();
 
-      const query = client.query().q('test').joinFilter({
+      const query = client.query().q({ '*': '*' }).qop('AND').joinFilter({
         fromIndex: 'organizations',
         from: 'region_s',
         to: 'region_s',
@@ -107,14 +107,14 @@ describe('Client#createQuery', function () {
         value: 'yes',
       });
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.equal(
-          data.responseHeader.params.fq,
-          `"{!join fromIndex=organizations from=organizationId_i to=id v='name:test'}"`
-        );
-        done();
-      });
+      // @ts-ignore
+      const data = await client.searchAsync(query);
+      assert.equal(
+        data.responseHeader.params.fq,
+        `{!join fromIndex=organizations from=region_s to=region_s v='mgr_s:yes'}`
+      );
+
+      assert.equal(data.response.numFound, 3);
     });
   });
 });

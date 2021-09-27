@@ -256,7 +256,7 @@ export class Query {
   joinFilter(options: JoinOptions): Query {
     const self = this;
     let parameter = 'fq=';
-    const filter = `"{!join fromIndex=${options.fromIndex} from=${options.from} to=${options.to} v='${options.field}:${options.value}'}"`;
+    const filter = `{!join fromIndex=${options.fromIndex} from=${options.from} to=${options.to} v='${options.field}:${options.value}'}`;
     parameter += encodeURIComponent(filter);
     this.parameters.push(parameter);
     return self;

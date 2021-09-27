@@ -10,5 +10,4 @@ report
 package-lock.json
 /dist/
 /lib/
-/test/
 .github

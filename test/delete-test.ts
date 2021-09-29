@@ -20,7 +20,7 @@ describe('Client', function () {
       await client.delete('title_t', 'test');
     });
   });
-//TODO
+  //TODO
   // describe('#delete("title_t","test",{ commit : true},callback)', function () {
   //   it('should delete all documents where the field "title_t" is "test" and hard commit all changes', function (done) {
   //     const request = client.delete(

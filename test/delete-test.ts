@@ -104,9 +104,6 @@ describe('Client', function () {
   // });
   describe('#delete("unknownField","test",callback)', function () {
     it('should return a `SolrError`', async function () {
-      // client.delete('unknownField', 'test', function (err) {
-      //   sassert.nok(err);
-      //   done();
       await client.delete('unknownField', 'test');
     });
   });

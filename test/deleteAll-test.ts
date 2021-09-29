@@ -8,11 +8,8 @@ const client = createClient(config.client);
 
 describe('Client', function () {
   describe('#deleteAll(callback)', function () {
-    it('should delete all documents', function (done) {
-      client.deleteAll({}, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+    it('should delete all documents', async function () {
+      await client.deleteAll({});
     });
   });
 });

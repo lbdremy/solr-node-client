@@ -14,3 +14,8 @@ export function ok(err?: Error | null, data?: Record<string, any>) {
 export function nok(err) {
   assert.instanceOf(err, SolrError);
 }
+
+export function dataOk(data?: Record<string, any>) {
+  assert.isObject(data);
+  assert.equal(data?.responseHeader.status, 0);
+}

@@ -8,11 +8,8 @@ const client = createClient(config.client);
 
 describe('Client', function () {
   describe('#rollback(callback)', function () {
-    it('should rollback all changes before the last hard commit', function (done) {
-      client.rollback(function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+    it('should rollback all changes before the last hard commit', async function () {
+      await client.rollback();
     });
   });
 });

@@ -2,6 +2,7 @@ import { assert } from 'chai';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
 import * as sassert from './sassert';
+import { dataOk } from './sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -9,27 +10,19 @@ const client = createClient(config.client);
 
 describe('Client', function () {
   describe('#search("q=*:*")', function () {
-    it('should find all documents', function (done) {
-      client.search('q=*:*', function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual({ q: '*:*', wt: 'json' }, data.responseHeader.params);
-        done();
-      });
+    it('should find all documents', async function () {
+      const data = await client.search('q=*:*');
+      dataOk(data);
+      //assert.deepEqual({ q: '*:*', wt: 'json' }, data.responseHeader.params);
     });
   });
   describe('#search(query)', function () {
-    it('should find documents describe in the `query` instance of `Query`', function (done) {
+    it('should find documents describe in the `query` instance of `Query`', async function () {
       const query = client.query().q({
         title_t: 'test',
       });
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(
-          { q: 'title_t:test', wt: 'json' },
-          data.responseHeader.params
-        );
-        done();
-      });
+      const data = await client.search(query);
+      dataOk(data);
     });
   });
 });

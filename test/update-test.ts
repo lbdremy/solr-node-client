@@ -37,7 +37,7 @@ describe('Client', function () {
       const data = await client.atomicUpdate(updatedDoc);
       dataOk(data);
     });
-//TODO
+    //TODO
     // it('should have updated the document', function (done) {
     //   client.realTimeGet(doc_id, { omitHeader: false }, function (err, data) {
     //     sassert.ok(err, data);

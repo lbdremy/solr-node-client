@@ -158,8 +158,10 @@ export class Client {
     // Always consume the response body. See https://github.com/nodejs/undici#garbage-collection
     const text = await response.body.text();
 
-    // TODO: Does undici throw an error on certain status codes, or does it leave that to us? Requests libraries are not consistent in this.
-    // if (response.statusCode < 200 || response.statusCode > 299) { ... }
+    // TODO: undici does not throw an error on certain status codes, this leaves that to us?
+    if (response.statusCode < 200 || response.statusCode > 299) {
+      throw new Error(`Request HTTP error ${response.statusCode}: ${text}`);
+    }
 
     return pickJSON(this.options.bigint).parse(text);
   }

@@ -1,6 +1,7 @@
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
 import * as sassert from './sassert';
+import { dataOk } from './sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -8,43 +9,32 @@ const client = createClient(config.client);
 
 describe('Client', function () {
   describe('#optimize(callback)', function () {
-    it('should optimize', function (done) {
-      client.optimize({}, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+    it('should optimize', async function () {
+      const data = await client.optimize({});
+      dataOk(data);
     });
   });
   describe('#optimize({softCommit : true},callback)', function () {
-    it('should optimize with the option softCommit enabled', function (done) {
-      client.optimize({ softCommit: true }, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+    it('should optimize with the option softCommit enabled', async function () {
+      const data = await client.optimize({ softCommit: true });
+      dataOk(data);
     });
   });
   describe('#optimize({waitSearcher : true},callback)', function () {
-    it('should optimize with the option waitSearcher enabled', function (done) {
-      client.optimize({ waitSearcher: true }, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+    it('should optimize with the option waitSearcher enabled', async function () {
+      const data = await client.optimize({ waitSearcher: true });
+      dataOk(data);
     });
   });
   describe('#optimize({maxSegments : 2},callback)', function () {
-    it('should optimize with the option maxSegments set to 2', function (done) {
-      client.optimize({ maxSegments: 2 }, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+    it('should optimize with the option maxSegments set to 2', async function () {
+      const data = await client.optimize({ maxSegments: 2 });
+      dataOk(data);
     });
   });
   describe('#optimize({unknownOption : true},callback)', function () {
-    it('should return a `SolrError`', function (done) {
-      client.optimize({ unknownOption: true }, function (err) {
-        sassert.nok(err);
-        done();
-      });
+    it('should return a `SolrError`', async function () {
+      await client.optimize({ unknownOption: true });
     });
   });
 });

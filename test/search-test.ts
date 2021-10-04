@@ -13,7 +13,7 @@ describe('Client', function () {
     it('should find all documents', async function () {
       const data = await client.search('q=*:*');
       dataOk(data);
-      //assert.deepEqual({ q: '*:*', wt: 'json' }, data.responseHeader.params);
+      assert.deepEqual({ q: '*:*', wt: 'json' }, data.responseHeader.params);
     });
   });
   describe('#search(query)', function () {

@@ -31,6 +31,7 @@ export type SearchResponse<SolrDocument> = {
     QTime: 0;
     params: {
       q: string;
+      fq?: string;
       wt: string;
     };
     status: number;

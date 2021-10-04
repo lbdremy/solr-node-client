@@ -18,6 +18,25 @@ const oldRequest = require('request');
 const format = require('./utils/format');
 const JSONbig = require('json-bigint');
 
+export type SearchResult<SolrDocument> = {
+  docs: SolrDocument[];
+  numFound: number;
+  numFoundExact: boolean;
+  start: number;
+};
+
+export type SearchResponse<SolrDocument> = {
+  response: SearchResult<SolrDocument>;
+  responseHeader: {
+    QTime: 0;
+    params: {
+      q: string;
+      wt: string;
+    };
+    status: number;
+  };
+};
+
 /**
  * Pick appropriate JSON serializer/deserializer library based on the given `bigint` flag
  *
@@ -120,13 +139,13 @@ export class Client {
    * @returns
    *   Parsed JSON response data.
    */
-  private async doRequest(
+  private async doRequest<T = JsonResponseData>(
     path: string,
     method: 'GET' | 'POST',
     body: string | null,
     bodyContentType: string | null,
     acceptContentType: string
-  ): Promise<JsonResponseData> {
+  ): Promise<T> {
     const protocol = this.options.secure ? 'https' : 'http';
     const url = `${protocol}://${this.options.host}:${this.options.port}${path}`;
     const requestOptions: UndiciRequestOptions = {
@@ -158,7 +177,7 @@ export class Client {
     // Always consume the response body. See https://github.com/nodejs/undici#garbage-collection
     const text = await response.body.text();
 
-    // TODO: undici does not throw an error on certain status codes, this leaves that to us?
+    // TODO: undici does not throw an error on certain status codes, this leaves that to us
     if (response.statusCode < 200 || response.statusCode > 299) {
       throw new Error(`Request HTTP error ${response.statusCode}: ${text}`);
     }
@@ -291,7 +310,7 @@ export class Client {
   /**
    * Commit last added and removed documents, that means your documents are now indexed.
    */
-  commit(options: Record<string, any>): Promise<JsonResponseData> {
+  commit(options?: Record<string, any>): Promise<JsonResponseData> {
     return this.update({
       commit: options || {},
     });
@@ -385,7 +404,7 @@ export class Client {
   /**
    * Delete all documents.
    */
-  deleteAll(options: Record<string, any>): Promise<JsonResponseData> {
+  deleteAll(options?: Record<string, any>): Promise<JsonResponseData> {
     return this.deleteByQuery('*:*', options);
   }
 
@@ -437,10 +456,10 @@ export class Client {
   /**
    * Search documents matching the `query`
    */
-  search(
+  search<T>(
     query: Query | Record<string, any> | string
-  ): Promise<JsonResponseData> {
-    return this.doQuery(this.SELECT_HANDLER, query);
+  ): Promise<SearchResponse<T>> {
+    return this.doQuery<SearchResponse<T>>(this.SELECT_HANDLER, query);
   }
 
   /**
@@ -486,10 +505,10 @@ export class Client {
    *   A function, Query object, Collection object, plain object, or string
    *   describing the query to perform.
    */
-  doQuery(
+  async doQuery<T>(
     handler: string,
     query: Collection | Query | Record<string, any> | string
-  ): Promise<JsonResponseData> {
+  ): Promise<T> {
     // Construct the string to use as query (GET) or body (POST).
     let data: string;
     if (query instanceof Query || query instanceof Collection) {
@@ -520,7 +539,7 @@ export class Client {
         ? 'GET'
         : 'POST';
 
-    return this.doRequest(
+    return this.doRequest<T>(
       method === 'GET' ? `${path}?${queryString}` : path,
       method,
       method === 'POST' ? data : null,

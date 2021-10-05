@@ -1,7 +1,7 @@
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
-import * as sassert from './sassert';
-import { dataOk } from './sassert';
+import * as sassert from './utils/sassert';
+import { dataOk } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);

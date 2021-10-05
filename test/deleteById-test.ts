@@ -1,6 +1,3 @@
-import { assert } from 'chai';
-import * as sassert from './sassert';
-import * as versionUtils from '../lib/utils/version';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
 

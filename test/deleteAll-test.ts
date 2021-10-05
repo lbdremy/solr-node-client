@@ -1,5 +1,5 @@
 import * as figc from 'figc';
-import * as sassert from './sassert';
+import * as sassert from './utils/sassert';
 import { createClient } from '../lib/solr';
 
 const config = figc(__dirname + '/config.json');

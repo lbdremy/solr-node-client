@@ -4,7 +4,7 @@
  */
 
 import * as figc from 'figc';
-import * as sassert from './sassert';
+import * as sassert from './utils/sassert';
 import { assert } from 'chai';
 import { createClient } from '../lib/solr';
 import BigNumber from 'bignumber.js';

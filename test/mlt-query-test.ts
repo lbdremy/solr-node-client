@@ -4,7 +4,7 @@
 import { assert } from 'chai';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
-import * as sassert from './sassert';
+import * as sassert from './utils/sassert';
 import { MltOptions } from '../lib/types';
 
 const config = figc(__dirname + '/config.json');

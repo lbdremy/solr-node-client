@@ -5,6 +5,7 @@ import { Query } from './query';
 import { Collection } from './collection';
 import * as versionUtils from './utils/version';
 import {
+  CommonResponse,
   FullSolrClientParams,
   JsonResponseData,
   ResourceOptions,
@@ -468,7 +469,7 @@ export class Client {
    */
   executeCollection(
     collection: Collection | Record<string, any> | string
-  ): Promise<JsonResponseData> {
+  ): Promise<CommonResponse> {
     return this.doQuery(this.COLLECTIONS_HANDLER, collection);
   }
 

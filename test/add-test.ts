@@ -1,9 +1,6 @@
 import * as figc from 'figc';
-import * as sassert from './sassert';
-import * as versionUtils from '../lib/utils/version';
-import { assert } from 'chai';
 import { createClient } from '../lib/solr';
-import { dataOk, ok } from './sassert';
+import { dataOk, ok } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -56,28 +53,11 @@ describe('Client', function () {
       const options = {
         softCommit: true,
       };
-      // const request = client.add(docs, options, function (err, data) {
-      //   if (
-      //     client.solrVersion &&
-      //     versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-      //   ) {
-      //     assert.equal(
-      //       request.path,
-      //       basePath + '/update?softCommit=true&wt=json'
-      //     );
-      //   } else {
-      //     assert.equal(
-      //       request.path,
-      //       basePath + '/update/json?softCommit=true&wt=json'
-      //     );
-      //   }
-      //   sassert.ok(err, data);
-      //   done();
-      // });
       const data = await client.add(docs, options);
       dataOk(data);
     });
   });
+
   describe('#add(docs,{ commit : true},callback)', function () {
     it('should add all documents with the commit option enabled', async function () {
       const docs = [
@@ -93,38 +73,12 @@ describe('Client', function () {
       const options = {
         commit: true,
       };
-      // const request = client.add(docs, options, function (err, data) {
-      //   if (
-      //     client.solrVersion &&
-      //     versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-      //   ) {
-      //     assert.equal(request.path, basePath + '/update?commit=true&wt=json');
-      //   } else {
-      //     assert.equal(
-      //       request.path,
-      //       basePath + '/update/json?commit=true&wt=json'
-      //     );
-      //   }
-      //   sassert.ok(err, data);
-      //   done();
-      // });
+
       const data = await client.add(docs, options);
       dataOk(data);
-      //TODO
-      //   if (
-      //     client.solrVersion &&
-      //     versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-      //   ) {
-      //     assert.equal(request.path, basePath + '/update?commit=true&wt=json');
-      //   } else {
-      //     assert.equal(
-      //       request.path,
-      //       basePath + '/update/json?commit=true&wt=json'
-      //     );
-      //   }
-      // });
     });
   });
+
   describe('#add(docs,{ commitWithin : 10000},callback)', function () {
     it('should add all documents with the commitWithin option set to 10s', async function () {
       const docs = [
@@ -140,28 +94,9 @@ describe('Client', function () {
       const options = {
         commitWithin: 10000,
       };
-      // const request = client.add(docs, options, function (err, data) {
-      //   if (
-      //     client.solrVersion &&
-      //     versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-      //   ) {
-      //     assert.equal(
-      //       request.path,
-      //       basePath + '/update?commitWithin=10000&wt=json'
-      //     );
-      //   } else {
-      //     assert.equal(
-      //       request.path,
-      //       basePath + '/update/json?commitWithin=10000&wt=json'
-      //     );
-      //   }
-      //   sassert.ok(err, data);
-      //   done();
-      // });
+
       const data = await client.add(docs, options);
       dataOk(data);
-
-      //TODO
     });
   });
 });

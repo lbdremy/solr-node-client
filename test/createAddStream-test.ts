@@ -2,7 +2,7 @@
  * Modules dependencies
  */
 import { assert } from 'chai';
-import * as sassert from './sassert';
+import * as sassert from './utils/sassert';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
 import * as Stream from 'stream';
@@ -18,26 +18,38 @@ describe('Client', function () {
       assert.instanceOf(addStream, Stream);
     });
     describe('#write() to the `Stream` returned', function () {
-      it('should add documents', function (done) {
+      it('should add documents', async () => {
+        await client.deleteAll();
+
         const addStream = client.createAddStream();
         let data = '';
-        addStream
-          .on('end', function () {
-            sassert.ok(null, JSON.parse(data));
-            done();
-          })
-          .on('data', function (buffer) {
-            data += buffer.toString();
-          })
-          .on('error', function (err) {
-            sassert.ok(err);
-            done();
-          });
-        const n = 50;
-        for (let i = 0; i < n; i++) {
-          addStream.write({ id: i, title_t: 'title' + i, test_b: true });
-        }
-        addStream.end();
+        const addStreamPromise = new Promise((resolve, reject) => {
+          addStream
+            .on('end', function () {
+              sassert.ok(null, JSON.parse(data));
+              resolve(null);
+            })
+            .on('data', function (buffer) {
+              data += buffer.toString();
+            })
+            .on('error', function (err) {
+              sassert.ok(err);
+              reject(err);
+            });
+          const n = 49;
+          for (let i = 0; i < n; i++) {
+            addStream.write({ id: i, title_t: 'title' + i, test_b: true });
+          }
+          addStream.end();
+        });
+        await addStreamPromise;
+        await client.commit();
+
+        const query = client.query().q({
+          test_b: true,
+        });
+        const response = await client.search(query);
+        assert.equal(response.response.numFound, 49);
       });
     });
   });

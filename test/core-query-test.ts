@@ -3,77 +3,69 @@
  */
 
 import * as figc from 'figc';
-import * as sassert from './sassert';
 import { assert } from 'chai';
 import { createClient } from '../lib/solr';
+import { dataOk } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
 [config.client.path, config.client.core].join('/').replace(/\/$/, '');
 
 describe('Client#createQuery', function () {
-  before((cb) => {
-    client.createSchemaField('title', 'text_general', () => {
-      client.createSchemaField('name', 'text_general', () => {
-        client.createSchemaField('author', 'text_general', cb);
-      });
-    });
+  before(async () => {
+    await client.createSchemaField('title', 'text_general');
+    await client.createSchemaField('name', 'text_general');
+    await client.createSchemaField('author', 'text_general');
   });
 
   describe('query() with various query options', function () {
-    it('basic query with multiple fields', function (done) {
+    it('basic query with multiple fields', async function () {
       const query = client
         .query()
         .q({ title: 'name', author: 'me' })
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: 'title:name AND author:me',
-          wt: 'json',
-        });
-        done();
+      const response = await client.search(query);
+      dataOk(response);
+      assert.deepEqual(response.responseHeader.params, {
+        debugQuery: 'true',
+        q: 'title:name AND author:me',
+        wt: 'json',
       });
     });
 
-    it('query sorted', function (done) {
+    it('query sorted', async function () {
       const query = client
         .query()
         .q('*:*')
         .sort({ author: 'asc' })
         .debugQuery(); // remove ', "category":"desc"' as newer solr doesn't support
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          sort: 'author asc',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        sort: 'author asc',
+        wt: 'json',
       });
     });
 
-    it('query with paging', function (done) {
+    it('query with paging', async function () {
       const query = client.query().q('*:*').start(21).rows(20).debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          start: '21',
-          rows: '20',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        start: '21',
+        rows: '20',
+        wt: 'json',
       });
     });
 
-    it('query paged with cursorMark', function (done) {
+    it('query paged with cursorMark', async function () {
       const query = client
         .query()
         .q('*:*')
@@ -82,174 +74,154 @@ describe('Client#createQuery', function () {
         .cursorMark()
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          start: '0',
-          sort: 'id asc',
-          cursorMark: '*',
-          wt: 'json',
-        });
-        done();
+      const response = await client.search(query);
+      dataOk(response);
+      assert.deepEqual(response.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        start: '0',
+        sort: 'id asc',
+        cursorMark: '*',
+        wt: 'json',
       });
     });
 
-    it('custom parameter setting - allows for any Filterquery(fq)', function (done) {
+    it('custom parameter setting - allows for any Filterquery(fq)', async function () {
       const query = client.query().q('*:*').set('fq=sqrt(id)').debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          fq: 'sqrt(id)',
-          wt: 'json',
-        });
-        done();
+      const response = await client.search(query);
+      dataOk(response);
+      assert.deepEqual(response.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: 'sqrt(id)',
+        wt: 'json',
       });
     });
 
-    it('listing fields with fl', function (done) {
+    it('listing fields with fl', async function () {
       const query = client
         .query()
         .q('*:*')
         .fl(['id', 'title*', 'score'])
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          fl: 'id,title*,score',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fl: 'id,title*,score',
+        wt: 'json',
       });
     });
 
-    it('escapes fl parameter', function (done) {
+    it('escapes fl parameter', async function () {
       // if it's not escaped correctly, SOLR returns HTTP 400
       const query = client
         .query()
         .q('*:*')
         .fl(['id', 'score', "found_words:exists(query({!v='name:word'}))"]);
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          q: '*:*',
-          fl: "id,score,found_words:exists(query({!v='name:word'}))",
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        q: '*:*',
+        fl: "id,score,found_words:exists(query({!v='name:word'}))",
+        wt: 'json',
       });
     });
 
-    it('query with deftype', function (done) {
+    it('query with deftype', async function () {
       const query = client.query().q('*:*').defType('lucene').debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          defType: 'lucene',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        defType: 'lucene',
+        wt: 'json',
       });
     });
 
-    it('query with time-allowed', function (done) {
+    it('query with time-allowed', async function () {
       const query = client.query().q('*:*').timeout(1000).debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          timeAllowed: '1000',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        timeAllowed: '1000',
+        wt: 'json',
       });
     });
 
-    it('q.op - Default query-operator', function (done) {
+    it('q.op - Default query-operator', async function () {
       const query = client
         .query()
         .q('author:ali remy marc')
         .qop('OR')
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: 'author:ali remy marc',
-          'q.op': 'OR',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: 'author:ali remy marc',
+        'q.op': 'OR',
+        wt: 'json',
       });
     });
 
-    it('df - Default field query', function (done) {
+    it('df - Default field query', async function () {
       const query = client.query().q('ali').df('author').debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: 'ali',
-          df: 'author',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: 'ali',
+        df: 'author',
+        wt: 'json',
       });
     });
 
-    it('query with range-filter', function (done) {
+    it('query with range-filter', async function () {
       const query = client
         .query()
         .q('*:*')
         .rangeFilter({ field: 'id', start: 100, end: 200 })
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          fq: 'id:[100 TO 200]',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: 'id:[100 TO 200]',
+        wt: 'json',
       });
     });
 
-    it('query with match-filter', function (done) {
+    it('query with match-filter', async function () {
       const query = client
         .query()
         .q('*:*')
         .matchFilter('id', '19700506.173.85')
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          fq: 'id:19700506.173.85',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: 'id:19700506.173.85',
+        wt: 'json',
       });
     });
 
-    it('query with multiple match-filters', function (done) {
+    it('query with multiple match-filters', async function () {
       const query = client
         .query()
         .q('*:*')
@@ -259,34 +231,30 @@ describe('Client#createQuery', function () {
         ])
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          fq: ['id:19700506.173.85', 'title:testvalue'],
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: ['id:19700506.173.85', 'title:testvalue'],
+        wt: 'json',
       });
     });
 
-    it('query with object match-filter', function (done) {
+    it('query with object match-filter', async function () {
       const query = client
         .query()
         .q('*:*')
         .fq({ field: 'id', value: '19700506.173.85' })
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          debugQuery: 'true',
-          q: '*:*',
-          fq: 'id:19700506.173.85',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: 'id:19700506.173.85',
+        wt: 'json',
       });
     });
   });

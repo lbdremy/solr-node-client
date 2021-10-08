@@ -4,7 +4,8 @@
 import { assert } from 'chai';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
-import * as sassert from './sassert';
+import * as sassert from './utils/sassert';
+import { dataOk } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -12,7 +13,7 @@ const client = createClient(config.client);
 
 describe('Client#createQuery', function () {
   describe('#terms(options), callback)', function () {
-    it('should create a Terms query and termsSearch', function (done) {
+    it('should create a Terms query and termsSearch', async function () {
       const options = {
         on: true,
         fl: 'title',
@@ -25,11 +26,8 @@ describe('Client#createQuery', function () {
 
       const query = client.query().terms(options).debugQuery();
 
-      client.termsSearch(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.isObject(data.terms);
-        done();
-      });
+      const data = await client.termsSearch(query);
+      dataOk(data);
     });
   });
 });

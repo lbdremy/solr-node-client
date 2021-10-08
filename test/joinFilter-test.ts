@@ -1,7 +1,6 @@
 import { assert } from 'chai';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
-import * as sassert from './sassert';
 
 const config = figc(__dirname + '/config.json');
 const config2 = figc(__dirname + '/config2.json');
@@ -34,10 +33,8 @@ describe('Client#createQuery', function () {
           sales_i: 400000,
         },
       ];
-      // @ts-ignore
-      await client.addAsync(docs);
-      // @ts-ignore
-      await client.commitAsync();
+      await client.add(docs);
+      await client.commit();
 
       const docsOrganizations = [
         {
@@ -76,10 +73,8 @@ describe('Client#createQuery', function () {
           mgr_s: 'yes',
         },
       ];
-      // @ts-ignore
-      await client2.addAsync(docsOrganizations);
-      // @ts-ignore
-      await client2.commitAsync();
+      await client2.add(docsOrganizations);
+      await client2.commit();
 
       const query = client.query().q({ '*': '*' }).qop('AND').joinFilter({
         fromIndex: 'organizations',
@@ -89,10 +84,9 @@ describe('Client#createQuery', function () {
         value: 'yes',
       });
 
-      // @ts-ignore
-      const data = await client.searchAsync(query);
+      const data = await client.search(query);
       assert.equal(
-        data.responseHeader.params.fq,
+        data.responseHeader.params?.fq,
         `{!join fromIndex=organizations from=region_s to=region_s v='mgr_s:yes'}`
       );
 

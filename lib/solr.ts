@@ -177,7 +177,7 @@ export class Client {
     // Always consume the response body. See https://github.com/nodejs/undici#garbage-collection
     const text = await response.body.text();
 
-    // TODO: undici does not throw an error on certain status codes, this leaves that to us
+    // Undici does not throw an error on certain status codes, this leaves that to us
     if (response.statusCode < 200 || response.statusCode > 299) {
       throw new Error(`Request HTTP error ${response.statusCode}: ${text}`);
     }

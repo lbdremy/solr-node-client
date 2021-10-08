@@ -81,8 +81,7 @@ export class Client {
       get_max_request_entity_size: options.get_max_request_entity_size || false,
       solrVersion: options.solrVersion || versionUtils.Solr3_2,
       ipVersion: options.ipVersion == 6 ? 6 : 4,
-      // TODO: Change type of options.request
-      // request: options.request || null,
+      request: options.request || null,
     };
 
     // Default paths of all request handlers

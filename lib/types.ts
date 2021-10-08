@@ -71,7 +71,7 @@ export type SolrClientParams = {
   /**
    * Custom request options to use with every request.
    */
-  request?: Record<string, any> | null;
+  request?: UndiciRequestOptions | null;
 
   /**
    * One of [4, 6].

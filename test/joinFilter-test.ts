@@ -1,7 +1,6 @@
 import { assert } from 'chai';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
-import * as sassert from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const config2 = figc(__dirname + '/config2.json');

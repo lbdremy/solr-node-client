@@ -5,7 +5,7 @@
 import { assert } from 'chai';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
-import * as sassert from './utils/sassert';
+import { dataOk } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -13,19 +13,17 @@ const client = createClient(config.client);
 
 describe('Client#createQuery', function () {
   describe('.groupBy(field), callback)', function () {
-    it('should create a group by query', function (done) {
+    it('should create a group by query', async function () {
       const query = client.query().q('test').groupBy('title_t').debugQuery();
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert(data.responseHeader.params.group);
-        assert.equal('title_t', data.responseHeader.params['group.field']);
-        done();
-      });
+      const data = await client.search(query);
+      dataOk(data);
+      assert(data.responseHeader.params?.group);
+      assert.equal('title_t', data.responseHeader.params?.['group.field']);
     });
   });
 
   describe('#group(options), callback)', function () {
-    it('should create a group query', function (done) {
+    it('should create a group query', async function () {
       const options = {
         on: true,
         field: 'title_t',
@@ -45,22 +43,20 @@ describe('Client#createQuery', function () {
 
       const query = client.query().group(options);
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          'group.format': 'simple',
-          'group.ngroups': 'true',
-          'group.limit': '15',
-          'group.truncate': 'true',
-          'group.field': 'title_t',
-          'group.main': 'true',
-          group: 'true',
-          'group.sort': 'score desc',
-          'group.cache.percent': '50',
-          'group.offset': '8',
-          wt: 'json',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        'group.format': 'simple',
+        'group.ngroups': 'true',
+        'group.limit': '15',
+        'group.truncate': 'true',
+        'group.field': 'title_t',
+        'group.main': 'true',
+        group: 'true',
+        'group.sort': 'score desc',
+        'group.cache.percent': '50',
+        'group.offset': '8',
+        wt: 'json',
       });
     });
   });

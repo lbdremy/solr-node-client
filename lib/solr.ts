@@ -28,14 +28,11 @@ export type SearchResult<SolrDocument> = {
 };
 
 export type SearchResponse<SolrDocument> = {
+  debug?: Record<string, any>;
   response: SearchResult<SolrDocument>;
   responseHeader: {
     QTime: 0;
-    params?: {
-      q: string;
-      fq?: string;
-      wt: string;
-    };
+    params?: Record<string, any>;
     status: number;
   };
 };

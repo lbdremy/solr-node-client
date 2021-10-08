@@ -6,6 +6,7 @@ import * as figc from 'figc';
 import { createClient } from '../lib/solr';
 import * as sassert from './utils/sassert';
 import { MltOptions } from '../lib/types';
+import { dataOk } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -13,7 +14,7 @@ const client = createClient(config.client);
 
 describe('Client#createQuery', function () {
   describe('#mlt(options), callback)', function () {
-    it('should create a MoreLikeThis query', function (done) {
+    it('should create a MoreLikeThis query', async function () {
       const options: MltOptions = {
         on: true,
         fl: ['content', 'title'],
@@ -34,25 +35,23 @@ describe('Client#createQuery', function () {
         .q({ title_t: 'test' })
         .debugQuery();
 
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.deepEqual(data.responseHeader.params, {
-          'mlt.minwl': '0',
-          'mlt.fl': 'content,title',
-          'mlt.boost': 'true',
-          'mlt.mintf': '0',
-          'mlt.qf': '1',
-          mlt: 'true',
-          'mlt.maxwl': '1500',
-          'mlt.maxntp': '1500',
-          'mlt.maxqt': '1500',
-          wt: 'json',
-          'mlt.mindf': '0',
-          'mlt.count': '15',
-          debugQuery: 'true',
-          q: 'title_t:test',
-        });
-        done();
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        'mlt.minwl': '0',
+        'mlt.fl': 'content,title',
+        'mlt.boost': 'true',
+        'mlt.mintf': '0',
+        'mlt.qf': '1',
+        mlt: 'true',
+        'mlt.maxwl': '1500',
+        'mlt.maxntp': '1500',
+        'mlt.maxqt': '1500',
+        wt: 'json',
+        'mlt.mindf': '0',
+        'mlt.count': '15',
+        debugQuery: 'true',
+        q: 'title_t:test',
       });
     });
   });

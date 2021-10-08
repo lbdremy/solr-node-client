@@ -10,7 +10,7 @@ const basePath = [config.client.path, config.client.core]
 
 describe('Client', function () {
   describe('#softCommit(callback)', function () {
-    it('should do a soft commit', async function (done) {
+    it('should do a soft commit', async function () {
       const response = await client.softCommit();
       dataOk(response);
     });

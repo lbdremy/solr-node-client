@@ -18,7 +18,7 @@ describe('Client', function () {
   });
   //TODO
   // describe('#deleteByQuery("title_t:*",{softCommit : true },callback)', function () {
-  //   it('should delete all documents having the field title_t with the soft commit option enabled', function (done) {
+  //   it('should delete all documents having the field title_t with the soft commit option enabled', async function () {
   //     const request = client.deleteByQuery(
   //       'title_t:*',
   //       { softCommit: true },
@@ -37,14 +37,14 @@ describe('Client', function () {
   //             basePath + '/update/json?softCommit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#deleteByQuery("title_t:*",{commitWithin : 10000},callback)', function () {
-  //   it('should delete all documents having the field title_t and commit changes within 10s', function (done) {
+  //   it('should delete all documents having the field title_t and commit changes within 10s', async function () {
   //     const request = client.deleteByQuery(
   //       'title_t:*',
   //       { commitWithin: 10000 },
@@ -63,14 +63,14 @@ describe('Client', function () {
   //             basePath + '/update/json?commitWithin=10000&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#deleteByQuery("title_t:*",{commit : true},callback)', function () {
-  //   it('should delete all documents having the field title_t and hard commit changes', function (done) {
+  //   it('should delete all documents having the field title_t and hard commit changes', async function () {
   //     const request = client.deleteByQuery(
   //       'title_t:*',
   //       { commit: true },
@@ -89,7 +89,7 @@ describe('Client', function () {
   //             basePath + '/update/json?commit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );

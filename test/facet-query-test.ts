@@ -4,6 +4,7 @@ import { createClient } from '../lib/solr';
 import * as sassert from './utils/sassert';
 import * as versionUtils from '../lib/utils/version';
 import { FacetOptions } from '../lib/types';
+import { dataOk } from './utils/sassert';
 
 //TODO support all stuff describe there
 // http://wiki.apache.org/solr/SimpleFacetParameters#Retrieve_docs_with_facets_missing
@@ -15,7 +16,7 @@ const client = createClient(config.client);
 
 describe('Client#createQuery()', function () {
   describe('.facet(options)', function () {
-    it('should create a facet with pivot on multiple fields', function (done) {
+    it('should create a facet with pivot on multiple fields', async function () {
       const facetOptions: FacetOptions = {
         on: true,
         query: 'query',
@@ -37,39 +38,37 @@ describe('Client#createQuery()', function () {
         .facet(facetOptions)
         .q({ title_t: 'test' })
         .debugQuery();
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        const validationJSON = {
-          facet: 'true',
-          wt: 'json',
-          debugQuery: 'true',
-          q: 'title_t:test',
-          'facet.field': 'author',
-          'facet.limit': '100',
-          'facet.method': 'fc',
-          'facet.mincount': '10',
-          'facet.missing': 'true',
-          'facet.offset': '5',
-          'facet.prefix': 'prefix',
-          'facet.query': 'query',
-          'facet.sort': 'field desc',
-        };
+      const data = await client.search(query);
+      dataOk(data);
+      const validationJSON = {
+        facet: 'true',
+        wt: 'json',
+        debugQuery: 'true',
+        q: 'title_t:test',
+        'facet.field': 'author',
+        'facet.limit': '100',
+        'facet.method': 'fc',
+        'facet.mincount': '10',
+        'facet.missing': 'true',
+        'facet.offset': '5',
+        'facet.prefix': 'prefix',
+        'facet.query': 'query',
+        'facet.sort': 'field desc',
+      };
 
-        if (
-          client.solrVersion &&
-          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-        ) {
-          validationJSON['facet.pivot.mincount'] = '10';
-          validationJSON['facet.pivot'] = ['cat', 'popularity'];
-        }
+      if (
+        client.solrVersion &&
+        versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
+      ) {
+        validationJSON['facet.pivot.mincount'] = '10';
+        validationJSON['facet.pivot'] = ['cat', 'popularity'];
+      }
 
-        assert.deepEqual(data.responseHeader.params, validationJSON);
-        assert.equal(data.debug.QParser, 'LuceneQParser');
-        done();
-      });
+      assert.deepEqual(data.responseHeader.params, validationJSON);
+      assert.equal(data.debug?.QParser, 'LuceneQParser');
     });
 
-    it('should create a facet with pivot on a single field', function (done) {
+    it('should create a facet with pivot on a single field', async function () {
       const facetOptions = {
         on: true,
         query: 'query',
@@ -91,36 +90,34 @@ describe('Client#createQuery()', function () {
         .facet(facetOptions)
         .q({ title_t: 'test' })
         .debugQuery();
-      client.search(query, function (err, data) {
-        sassert.ok(err, data);
-        const validationJSON = {
-          facet: 'true',
-          wt: 'json',
-          debugQuery: 'true',
-          q: 'title_t:test',
-          'facet.field': 'author',
-          'facet.limit': '100',
-          'facet.method': 'fc',
-          'facet.mincount': '10',
-          'facet.missing': 'true',
-          'facet.offset': '5',
-          'facet.prefix': 'prefix',
-          'facet.query': 'query',
-          'facet.sort': 'field desc',
-        };
+      const data = await client.search(query);
+      dataOk(data);
+      const validationJSON = {
+        facet: 'true',
+        wt: 'json',
+        debugQuery: 'true',
+        q: 'title_t:test',
+        'facet.field': 'author',
+        'facet.limit': '100',
+        'facet.method': 'fc',
+        'facet.mincount': '10',
+        'facet.missing': 'true',
+        'facet.offset': '5',
+        'facet.prefix': 'prefix',
+        'facet.query': 'query',
+        'facet.sort': 'field desc',
+      };
 
-        if (
-          client.solrVersion &&
-          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-        ) {
-          validationJSON['facet.pivot.mincount'] = '10';
-          validationJSON['facet.pivot'] = 'cat';
-        }
+      if (
+        client.solrVersion &&
+        versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
+      ) {
+        validationJSON['facet.pivot.mincount'] = '10';
+        validationJSON['facet.pivot'] = 'cat';
+      }
 
-        assert.deepEqual(data.responseHeader.params, validationJSON);
-        assert.equal(data.debug.QParser, 'LuceneQParser');
-        done();
-      });
+      assert.deepEqual(data.responseHeader.params, validationJSON);
+      assert.equal(data.debug?.QParser, 'LuceneQParser');
     });
   });
 });

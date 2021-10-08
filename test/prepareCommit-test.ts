@@ -14,8 +14,8 @@ const basePath = [config.client.path, config.client.core]
 describe('Client', function () {
   describe('#prepareCommit(callback)', function () {
     it('should prepare the commit', async () => {
-      const request = await client.prepareCommit()
-      dataOk(request)
+      const request = await client.prepareCommit();
+      dataOk(request);
     });
   });
 });

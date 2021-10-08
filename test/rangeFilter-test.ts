@@ -24,7 +24,7 @@ describe('rangeFilter', () => {
           .debugQuery();
         const response = await client.search(query);
         assert.equal(
-          response.responseHeader.params.fq,
+          response.responseHeader.params?.fq,
           '(id:[100 TO 200] AND id:[300 TO 400])'
         );
       });
@@ -39,14 +39,14 @@ describe('rangeFilter', () => {
         .rangeFilter({ field: 'id', start: 100, end: 200 });
 
       const response = await client.search(query);
-      assert.equal('id:[100 TO 200]', response.responseHeader.params.fq);
+      assert.equal('id:[100 TO 200]', response.responseHeader.params?.fq);
     });
 
     it('should filter a query using a range when start and end values are not set', async () => {
       const query = client.query().q('test').rangeFilter({ field: 'id' });
 
       const response = await client.search(query);
-      assert.equal('id:[* TO *]', response.responseHeader.params.fq);
+      assert.equal('id:[* TO *]', response.responseHeader.params?.fq);
     });
 
     it('should filter a query using a range when start value is not set', async () => {
@@ -56,7 +56,7 @@ describe('rangeFilter', () => {
         .rangeFilter({ field: 'id', end: 200 });
 
       const response = await client.search(query);
-      assert.equal('id:[* TO 200]', response.responseHeader.params.fq);
+      assert.equal('id:[* TO 200]', response.responseHeader.params?.fq);
     });
 
     it('should filter a query using a range when end value is not set', async () => {
@@ -66,7 +66,7 @@ describe('rangeFilter', () => {
         .rangeFilter({ field: 'id', start: 200 });
 
       const response = await client.search(query);
-      assert.equal('id:[200 TO *]', response.responseHeader.params.fq);
+      assert.equal('id:[200 TO *]', response.responseHeader.params?.fq);
     });
   });
 });

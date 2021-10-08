@@ -38,9 +38,9 @@ describe('Client', function () {
       dataOk(data);
     });
     //TODO
-    // it('should have updated the document', function (done) {
-    //   client.realTimeGet(doc_id, { omitHeader: false }, function (err, data) {
-    //     sassert.ok(err, data);
+    // it('should have updated the document', async function () {
+    //   client.realTimeGet(doc_id, { omitHeader: false })
+    //     dataOk(data);
     //     assert.equal(
     //       data.response.numFound,
     //       1,

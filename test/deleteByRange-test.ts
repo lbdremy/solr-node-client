@@ -22,7 +22,7 @@ describe('Client', function () {
   });
   //TODO
   // describe('#deleteByRange(field,start,stop,{softCommit : true },callback)', function () {
-  //   it('should delete all documents between `start` and `stop` on the field `fied` with the soft commit option enabled', function (done) {
+  //   it('should delete all documents between `start` and `stop` on the field `fied` with the soft commit option enabled', async function () {
   //     const field = 'last_update_dt';
   //     const start = new Date();
   //     const stop = new Date();
@@ -47,14 +47,14 @@ describe('Client', function () {
   //             basePath + '/update/json?softCommit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#deleteByRange(field,start,stop,{commitWithin : 10000},callback)', function () {
-  //   it('should delete all documents between `start` and `stop` on the field `fied` and commit changes within 10s', function (done) {
+  //   it('should delete all documents between `start` and `stop` on the field `fied` and commit changes within 10s', async function () {
   //     const field = 'last_update_dt';
   //     const start = new Date();
   //     const stop = new Date();
@@ -79,14 +79,14 @@ describe('Client', function () {
   //             basePath + '/update/json?commitWithin=10000&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#deleteByRange(field,start,stop,{commit : true},callback)', function () {
-  //   it('should delete all documents between `start` and `stop` on the field `fied` and hard commit changes', function (done) {
+  //   it('should delete all documents between `start` and `stop` on the field `fied` and hard commit changes', async function () {
   //     const field = 'last_update_dt';
   //     const start = new Date();
   //     const stop = new Date();
@@ -111,7 +111,7 @@ describe('Client', function () {
   //             basePath + '/update/json?commit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );

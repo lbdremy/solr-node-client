@@ -22,7 +22,7 @@ describe('Client', function () {
   });
   //TODO
   // describe('#delete("title_t","test",{ commit : true},callback)', function () {
-  //   it('should delete all documents where the field "title_t" is "test" and hard commit all changes', function (done) {
+  //   it('should delete all documents where the field "title_t" is "test" and hard commit all changes', async function () {
   //     const request = client.delete(
   //       'title_t',
   //       'test',
@@ -42,14 +42,14 @@ describe('Client', function () {
   //             basePath + '/update/json?commit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#delete("title_t","test",{ softCommit : true},callback)', function () {
-  //   it('should delete all documents where the field "title_t" is "test" and soft commit all changes', function (done) {
+  //   it('should delete all documents where the field "title_t" is "test" and soft commit all changes', async function () {
   //     const request = client.delete(
   //       'title_t',
   //       'test',
@@ -69,14 +69,14 @@ describe('Client', function () {
   //             basePath + '/update/json?softCommit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#delete("title_t","test",{ commitWithin : 10000},callback)', function () {
-  //   it('should delete all documents where the field "title_t" is "test" and commit within 10s all changes', function (done) {
+  //   it('should delete all documents where the field "title_t" is "test" and commit within 10s all changes', async function () {
   //     const request = client.delete(
   //       'title_t',
   //       'test',
@@ -96,15 +96,20 @@ describe('Client', function () {
   //             basePath + '/update/json?commitWithin=10000&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   describe('#delete("unknownField","test",callback)', function () {
-    it('should return a `SolrError`', async function () {
-      await client.delete('unknownField', 'test');
+    it('should return an error', async function () {
+      try {
+        await client.delete('unknownField', 'test');
+        throw new Error("Shouldn't reach this");
+      } catch (err: any) {
+        assert.include(err.message, 'undefined field unknownField');
+      }
     });
   });
 });

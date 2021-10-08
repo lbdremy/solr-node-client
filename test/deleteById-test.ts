@@ -15,7 +15,7 @@ describe('Client', function () {
   });
   //TODO
   // describe('#deleteByID(1,{softCommit : true },callback)', function () {
-  //   it('should delete the document with the id 1 and the soft commit option enabled', function (done) {
+  //   it('should delete the document with the id 1 and the soft commit option enabled', async function () {
   //     const request = client.deleteByID(
   //       1,
   //       { softCommit: true },
@@ -34,14 +34,14 @@ describe('Client', function () {
   //             basePath + '/update/json?softCommit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#deleteByID(1,{commitWithin : 10000},callback)', function () {
-  //   it('should delete the document with the id 1 and commit changes within 10s', function (done) {
+  //   it('should delete the document with the id 1 and commit changes within 10s', async function () {
   //     const request = client.deleteByID(
   //       1,
   //       { commitWithin: 10000 },
@@ -60,14 +60,14 @@ describe('Client', function () {
   //             basePath + '/update/json?commitWithin=10000&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );
   //   });
   // });
   // describe('#deleteByID(1,{commit : true},callback)', function () {
-  //   it('should delete the document with the id 1 and hard commit changes', function (done) {
+  //   it('should delete the document with the id 1 and hard commit changes', async function () {
   //     const request = client.deleteByID(
   //       1,
   //       { commit: true },
@@ -86,7 +86,7 @@ describe('Client', function () {
   //             basePath + '/update/json?commit=true&wt=json'
   //           );
   //         }
-  //         sassert.ok(err, data);
+  //         dataOk(data);
   //         done();
   //       }
   //     );

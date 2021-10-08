@@ -25,11 +25,11 @@ describe('Client', function () {
       dataOk(data);
     });
     //TODO
-    // it('should not find that document in the index yet', function (done) {
+    // it('should not find that document in the index yet', async function () {
     //   const query = client.query();
     //   query.matchFilter('id', id);
-    //   client.search(query, function (err, data) {
-    //     sassert.ok(err, data);
+    //   client.search(query)
+    //     dataOk(data);
     //     assert.equal(
     //       data.response.numFound,
     //       0,
@@ -39,10 +39,10 @@ describe('Client', function () {
     //   });
     // });
     //
-    // it('should be able to get that specific document', function (done) {
+    // it('should be able to get that specific document', async function () {
     //   // note that by default the /get handler will have omitHeader=true configured on the server!
-    //   client.realTimeGet(id, { omitHeader: false }, function (err, data) {
-    //     sassert.ok(err, data);
+    //   client.realTimeGet(id, { omitHeader: false })
+    //     dataOk(data);
     //     assert.equal(
     //       data.response.numFound,
     //       1,
@@ -67,9 +67,9 @@ describe('Client', function () {
       await client.deleteByID(id);
     });
     //TODO
-    // it('should no longer be able to get that specific document', function (done) {
-    //   client.realTimeGet(id, { omitHeader: false }, function (err, data) {
-    //     sassert.ok(err, data);
+    // it('should no longer be able to get that specific document', async function () {
+    //   client.realTimeGet(id, { omitHeader: false })
+    //     dataOk(data);
     //     assert.equal(
     //       data.response.numFound,
     //       0,

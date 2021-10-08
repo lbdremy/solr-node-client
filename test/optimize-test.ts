@@ -2,6 +2,7 @@ import * as figc from 'figc';
 import { createClient } from '../lib/solr';
 import * as sassert from './utils/sassert';
 import { dataOk } from './utils/sassert';
+import { assert } from 'chai';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -34,7 +35,12 @@ describe('Client', function () {
   });
   describe('#optimize({unknownOption : true},callback)', function () {
     it('should return a `SolrError`', async function () {
-      await client.optimize({ unknownOption: true });
+      try {
+        await client.optimize({ unknownOption: true });
+        throw new Error('Should not reach this');
+      } catch (err: any) {
+        assert.include(err.message, 'unknownOption');
+      }
     });
   });
 });

@@ -309,6 +309,14 @@ export type RebalanceLeaders = {
   maxWaitSeconds?: number;
 };
 
+export type AddResponse = {
+  adds: any[];
+  responseHeader: {
+    status: number;
+    QTime: number;
+  };
+};
+
 export type JsonResponseData = Record<string, any> | any[];
 export type CommonResponse = {
   responseHeader: Record<string, any>;

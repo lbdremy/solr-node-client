@@ -5,6 +5,7 @@ import { Query } from './query';
 import { Collection } from './collection';
 import * as versionUtils from './utils/version';
 import {
+  AddResponse,
   CommonResponse,
   FullSolrClientParams,
   JsonResponseData,
@@ -30,7 +31,7 @@ export type SearchResponse<SolrDocument> = {
   response: SearchResult<SolrDocument>;
   responseHeader: {
     QTime: 0;
-    params: {
+    params?: {
       q: string;
       fq?: string;
       wt: string;
@@ -215,11 +216,11 @@ export class Client {
   add(
     docs: Record<string, any> | Record<string, any>[],
     queryParameters?: Record<string, any>
-  ): Promise<JsonResponseData> {
+  ): Promise<AddResponse> {
     // format `Date` object into string understood by Solr as a date.
     docs = format.dateISOify(docs);
     docs = Array.isArray(docs) ? docs : [docs];
-    return this.update(docs, queryParameters);
+    return this.update<AddResponse>(docs, queryParameters);
   }
 
   /**
@@ -237,10 +238,10 @@ export class Client {
    *   ID or list of IDs that identify the documents to get.
    * @param query
    */
-  realTimeGet(
+  realTimeGet<T>(
     ids: string | string[],
     query: Query | Record<string, any> | string = {}
-  ): Promise<JsonResponseData> {
+  ): Promise<SearchResponse<T>> {
     ids = Array.isArray(ids) ? ids : [ids];
 
     if (typeof query === 'object') {
@@ -436,17 +437,17 @@ export class Client {
    * @param queryParameters
    *   Query parameters to include in the URL.
    */
-  update(
+  update<T>(
     data: Record<string, any>,
     queryParameters?: Record<string, any>
-  ): Promise<JsonResponseData> {
+  ): Promise<T> {
     const path = this.getFullHandlerPath(this.UPDATE_JSON_HANDLER);
     const queryString = querystring.stringify({
       ...queryParameters,
       wt: 'json',
     });
 
-    return this.doRequest(
+    return this.doRequest<T>(
       `${path}?${queryString}`,
       'POST',
       pickJSON(this.options.bigint).stringify(data),

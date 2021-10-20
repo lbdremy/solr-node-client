@@ -14,23 +14,14 @@ const query = client
   .mm(2)
   .start(0)
   .rows(10);
-client.search(query, function (err, obj) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(obj);
-  }
-});
+const obj = await client.search(query);
+console.log(obj);
 
 // Lucene query
 const query2 = client.query().q({ title_t: 'laptop' }).start(0).rows(10);
-client.search(query2, function (err, obj) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(obj);
-  }
-});
+const obj2 = await client.search(query2);
+console.log(obj2);
+
 
 /**
  * EdisMax Query
@@ -50,13 +41,8 @@ const query3 = client
   .start(0)
   .rows(10);
 
-client.search(query3, function (err, obj) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(obj);
-  }
-});
+const obj3 = await client.search(query3);
+console.log(obj3);
 
 /**
  * boost()
@@ -79,10 +65,5 @@ const query4 = client
   .start(0)
   .rows(10);
 
-client.search(query4, function (err, obj) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(obj);
-  }
-});
+const obj4 = await client.search(query4);
+console.log(obj4);

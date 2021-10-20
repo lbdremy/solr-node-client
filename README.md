@@ -27,7 +27,7 @@ Solr versions 3-8 are supported.
 * If you are upgrading from an earlier version, please see the [migration guide](https://github.com/lbdremy/solr-node-client/blob/master/UPGRADING.md).
 * You can also check out the [changelog](https://github.com/lbdremy/solr-node-client/blob/master/CHANGELOG.md).
 
-## Usage
+## Usage (callback API in 0.9.0 and older)
 
 ```js
 // Load dependency
@@ -37,13 +37,22 @@ const solr = require('solr-client');
 const client = solr.createClient();
 
 // Add a new document
-client.add({ id : 12, title_t : 'Hello' },function(err,obj){
-   if (err) {
-      console.log(err);
-   } else {
-      console.log('Solr response:', obj);
-   }
-});
+const obj = await client.add({ id : 12, title_t : 'Hello' });
+console.log('Solr response:', obj);
+```
+
+## Usage (promise API in 0.10.0+`)
+
+```js
+// Load dependency
+const solr = require('solr-client');
+
+// Create a client
+const client = solr.createClient();
+
+// Add a new document
+const obj = await client.add({ id : 12, title_t : 'Hello' });
+console.log('Solr response:', obj);
 ```
 
 ## Roadmap

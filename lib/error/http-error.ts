@@ -10,7 +10,9 @@ export class HttpError extends Error {
 
     // Saving class name in the property of our custom error as a shortcut.
     this.name = this.constructor.name;
-    Error.captureStackTrace(this, this.constructor);
+    if ('captureStackTrace' in Error) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     const description = STATUS_CODES[res.statusCode] || 'Unknown status code';
     req.headers = req.headers || req._headers;

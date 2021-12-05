@@ -1,7 +1,12 @@
 module.exports = function (config) {
   config.set({
     frameworks: ['jasmine'],
-    files: ['karmaTests/**/*.js'],
+    files: [
+      {
+        pattern: 'test/**/*.ts',
+        type: 'js'  // to silence the warning. Means load with <script> tag
+      },
+    ],
     reporters: ['progress'],
     port: 9876, // karma web server port
     colors: true,

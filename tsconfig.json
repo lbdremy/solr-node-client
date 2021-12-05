@@ -19,7 +19,7 @@
     "importHelpers": true,
     "baseUrl": ".",
     "allowSyntheticDefaultImports": true,
-    "esModuleInterop": false,
+    "esModuleInterop": true,
     "forceConsistentCasingInFileNames": true
   },
   "exclude": [

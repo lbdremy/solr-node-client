@@ -2,6 +2,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2018,
+    sourceType: "module"
   },
   extends: [
     'plugin:@typescript-eslint/recommended',
@@ -22,5 +23,6 @@ module.exports = {
     node: true,
     mocha: true,
     es6: true,
+    browser: true
   },
 };

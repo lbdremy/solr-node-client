@@ -1,7 +1,6 @@
 import type { Agent as HttpAgent } from 'http';
 import type { Agent as HttpsAgent } from 'https';
-import Dispatcher from 'undici/types/dispatcher';
-
+import Dispatcher = require('undici/types/dispatcher');
 export type UndiciRequestOptions = Omit<
   Dispatcher.RequestOptions,
   'origin' | 'path'

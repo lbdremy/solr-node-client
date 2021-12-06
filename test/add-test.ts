@@ -1,8 +1,6 @@
 import * as figc from 'figc';
-import * as sassert from './sassert';
-import * as versionUtils from '../lib/utils/version';
-import { assert } from 'chai';
 import { createClient } from '../lib/solr';
+import { dataOk, ok } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -12,19 +10,19 @@ const basePath = [config.client.path, config.client.core]
 
 describe('Client', function () {
   describe('#add({ id : 1, title_t : "title"},callback)', function () {
-    it('should add one document', function (done) {
+    it('should add one document', async function () {
       const doc = {
         id: 1,
         title_t: 'title1',
       };
-      client.add(doc, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+
+      const data = await client.add(doc);
+      dataOk(data);
     });
   });
+
   describe('#add([{},{},...],callback)', function () {
-    it('should add all documents in the array', function (done) {
+    it('should add all documents in the array', async function () {
       const docs = [
         {
           id: 2,
@@ -35,14 +33,13 @@ describe('Client', function () {
           title_t: 'title3',
         },
       ];
-      client.add(docs, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+      const data = await client.add(docs);
+      dataOk(data);
     });
   });
+
   describe('#add(docs,{ softCommit : true},callback)', function () {
-    it('should add all documents with the softCommit option enabled', function (done) {
+    it('should add all documents with the softCommit option enabled', async function () {
       const docs = [
         {
           id: 4,
@@ -56,28 +53,13 @@ describe('Client', function () {
       const options = {
         softCommit: true,
       };
-      const request = client.add(docs, options, function (err, data) {
-        if (
-          client.solrVersion &&
-          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-        ) {
-          assert.equal(
-            request.path,
-            basePath + '/update?softCommit=true&wt=json'
-          );
-        } else {
-          assert.equal(
-            request.path,
-            basePath + '/update/json?softCommit=true&wt=json'
-          );
-        }
-        sassert.ok(err, data);
-        done();
-      });
+      const data = await client.add(docs, options);
+      dataOk(data);
     });
   });
+
   describe('#add(docs,{ commit : true},callback)', function () {
-    it('should add all documents with the commit option enabled', function (done) {
+    it('should add all documents with the commit option enabled', async function () {
       const docs = [
         {
           id: 6,
@@ -91,25 +73,14 @@ describe('Client', function () {
       const options = {
         commit: true,
       };
-      const request = client.add(docs, options, function (err, data) {
-        if (
-          client.solrVersion &&
-          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-        ) {
-          assert.equal(request.path, basePath + '/update?commit=true&wt=json');
-        } else {
-          assert.equal(
-            request.path,
-            basePath + '/update/json?commit=true&wt=json'
-          );
-        }
-        sassert.ok(err, data);
-        done();
-      });
+
+      const data = await client.add(docs, options);
+      dataOk(data);
     });
   });
+
   describe('#add(docs,{ commitWithin : 10000},callback)', function () {
-    it('should add all documents with the commitWithin option set to 10s', function (done) {
+    it('should add all documents with the commitWithin option set to 10s', async function () {
       const docs = [
         {
           id: 8,
@@ -123,24 +94,9 @@ describe('Client', function () {
       const options = {
         commitWithin: 10000,
       };
-      const request = client.add(docs, options, function (err, data) {
-        if (
-          client.solrVersion &&
-          versionUtils.version(client.solrVersion) >= versionUtils.Solr4_0
-        ) {
-          assert.equal(
-            request.path,
-            basePath + '/update?commitWithin=10000&wt=json'
-          );
-        } else {
-          assert.equal(
-            request.path,
-            basePath + '/update/json?commitWithin=10000&wt=json'
-          );
-        }
-        sassert.ok(err, data);
-        done();
-      });
+
+      const data = await client.add(docs, options);
+      dataOk(data);
     });
   });
 });

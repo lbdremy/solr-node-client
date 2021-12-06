@@ -1,7 +1,6 @@
-import { assert } from 'chai';
 import * as figc from 'figc';
 import { createClient } from '../lib/solr';
-import * as sassert from './sassert';
+import { dataOk } from './utils/sassert';
 
 const config = figc(__dirname + '/config.json');
 const client = createClient(config.client);
@@ -9,13 +8,10 @@ const client = createClient(config.client);
 
 describe('Client', function () {
   describe('#spell', function () {
-    it('should test the "/spell" query handler/ spellchecker', function (done) {
+    it('should test the "/spell" query handler/ spellchecker', async function () {
       const query = client.query().q('test');
-      client.spell(query, function (err, data) {
-        sassert.ok(err, data);
-        assert.equal(0, data.responseHeader.status);
-        done();
-      });
+      const data = await client.spell(query);
+      dataOk(data);
     });
   });
 });

@@ -1,5 +1,3 @@
-import type { RequestOptions } from 'http';
-import { ClientRequest } from 'http';
 import * as querystring from 'querystring';
 import * as JSONStream from 'JSONStream';
 import * as duplexer from 'duplexer';
@@ -7,17 +5,51 @@ import { Query } from './query';
 import { Collection } from './collection';
 import * as versionUtils from './utils/version';
 import {
-  CallbackFn,
+  AddResponse,
+  CommonResponse,
   FullSolrClientParams,
+  JsonResponseData,
   ResourceOptions,
   SolrClientParams,
+  UndiciRequestOptions,
 } from './types';
 import { Duplex } from 'stream';
+import { request } from 'undici';
 
-const request = require('request');
-const bluebird = require('bluebird');
+const oldRequest = require('request');
 const format = require('./utils/format');
-const { handleJSONResponse, pickJSON, pickProtocol } = require('./client');
+const JSONbig = require('json-bigint');
+
+export type SearchResult<SolrDocument> = {
+  docs: SolrDocument[];
+  numFound: number;
+  numFoundExact: boolean;
+  start: number;
+};
+
+export type SearchResponse<SolrDocument> = {
+  debug?: Record<string, any>;
+  response: SearchResult<SolrDocument>;
+  responseHeader: {
+    QTime: 0;
+    params?: Record<string, any>;
+    status: number;
+  };
+};
+
+/**
+ * Pick appropriate JSON serializer/deserializer library based on the given `bigint` flag
+ *
+ * @param bigint
+ *   Whether to handle big numbers correctly or not.
+ *   The reason for not using JSONbig all the times is it has a significant performance cost.
+ *
+ * @return
+ *   JSON or JSONbig serializer/deserializer
+ */
+function pickJSON(bigint: boolean): typeof JSON | typeof JSONbig {
+  return bigint ? JSONbig : JSON;
+}
 
 export function createClient(options: SolrClientParams = {}) {
   return new Client(options);
@@ -102,66 +134,54 @@ export class Client {
    *   Optional content type for the request body.
    * @param acceptContentType
    *   The expected content type of the response.
-   * @param callback
-   *   The function to call when done.
+   *
+   * @returns
+   *   Parsed JSON response data.
    */
-  private doRequest(
+  private async doRequest<T = JsonResponseData>(
     path: string,
-    method: string,
+    method: 'GET' | 'POST',
     body: string | null,
     bodyContentType: string | null,
-    acceptContentType: string,
-    callback?: CallbackFn
-  ): ClientRequest {
-    const requestOptions: RequestOptions = {
-      host: this.options.host,
-      port: this.options.port,
-      headers: {},
-      family: this.options.ipVersion,
-
-      // Allow these to override (not merge with) previous values.
+    acceptContentType: string
+  ): Promise<T> {
+    const protocol = this.options.secure ? 'https' : 'http';
+    const url = `${protocol}://${this.options.host}:${this.options.port}${path}`;
+    const requestOptions: UndiciRequestOptions = {
       ...this.options.request,
-
       method,
-      path,
     };
 
     // Now set options that the user should not be able to override.
     if (!requestOptions.headers) {
       requestOptions.headers = {};
     }
-    requestOptions.headers.accept = acceptContentType;
+    requestOptions.headers['accept'] = acceptContentType;
     if (method === 'POST') {
       if (bodyContentType) {
         requestOptions.headers['content-type'] = bodyContentType;
       }
       if (body) {
         requestOptions.headers['content-length'] = Buffer.byteLength(body);
+        requestOptions.body = body;
       }
     }
     if (this.options.authorization) {
-      requestOptions.headers.authorization = this.options.authorization;
-    }
-    if (this.options.agent) {
-      requestOptions.agent = this.options.agent;
+      requestOptions.headers['authorization'] = this.options.authorization;
     }
 
     // Perform the request and handle results.
-    const request = pickProtocol(this.options.secure).request(requestOptions);
-    request.on(
-      'response',
-      handleJSONResponse(request, this.options.bigint, callback)
-    );
-    request.on('error', function onError(err) {
-      if (callback) {
-        callback(err, null);
-      }
-    });
-    if (body) {
-      request.write(body);
+    const response = await request(url, requestOptions);
+
+    // Always consume the response body. See https://github.com/nodejs/undici#garbage-collection
+    const text = await response.body.text();
+
+    // Undici does not throw an error on certain status codes, this leaves that to us
+    if (response.statusCode < 200 || response.statusCode > 299) {
+      throw new Error(`Request HTTP error ${response.statusCode}: ${text}`);
     }
-    request.end();
-    return request;
+
+    return pickJSON(this.options.bigint).parse(text);
   }
 
   /**
@@ -186,22 +206,17 @@ export class Client {
    *
    * @param docs
    *   Document or list of documents to add into the Solr database.
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
+   * @param queryParameters
+   *   Query parameters to include in the URL.
    */
   add(
     docs: Record<string, any> | Record<string, any>[],
-    options?: Record<string, any> | CallbackFn,
-    callback?: CallbackFn
-  ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options as CallbackFn;
-      options = {};
-    }
-    docs = format.dateISOify(docs); // format `Date` object into string understable for Solr as a date.
+    queryParameters?: Record<string, any>
+  ): Promise<AddResponse> {
+    // format `Date` object into string understood by Solr as a date.
+    docs = format.dateISOify(docs);
     docs = Array.isArray(docs) ? docs : [docs];
-    return this.update(docs, options, callback);
+    return this.update<AddResponse>(docs, queryParameters);
   }
 
   /**
@@ -218,40 +233,25 @@ export class Client {
    * @param ids
    *   ID or list of IDs that identify the documents to get.
    * @param query
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  realTimeGet(
+  realTimeGet<T>(
     ids: string | string[],
-    query?: Query | Record<string, any> | string,
-    callback?: CallbackFn
-  ): ClientRequest {
-    if (typeof query === 'function') {
-      callback = query as CallbackFn;
-    }
-    if (!query) {
-      query = {};
-    }
+    query: Query | Record<string, any> | string = {}
+  ): Promise<SearchResponse<T>> {
     ids = Array.isArray(ids) ? ids : [ids];
 
     if (typeof query === 'object') {
       query['ids'] = ids.join(',');
     }
 
-    return this.doQuery(this.REAL_TIME_GET_HANDLER, query, callback);
+    return this.doQuery(this.REAL_TIME_GET_HANDLER, query);
   }
 
   /**
-   * Add the remote resource located at the given path `options.path` into the Solr database.
-   *
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
+   * Add the remote resource located at the given path `options.path` into
+   * the Solr database.
    */
-  addRemoteResource(
-    options: ResourceOptions,
-    callback: CallbackFn
-  ): ClientRequest {
+  addRemoteResource(options: ResourceOptions): Promise<JsonResponseData> {
     options.parameters = options.parameters || {};
     options.format = options.format === 'xml' ? '' : options.format || ''; // reason: the default route of the XmlUpdateRequestHandle is /update and not /update/xml.
     options.parameters.commit =
@@ -268,7 +268,7 @@ export class Client {
 
     const handler = this.UPDATE_HANDLER + '/' + options.format.toLowerCase();
     const query = querystring.stringify(options.parameters);
-    return this.doQuery(handler, query, callback);
+    return this.doQuery(handler, query);
   }
 
   /**
@@ -301,106 +301,65 @@ export class Client {
       headers: headers,
     };
     const jsonStreamStringify = JSONStream.stringify();
-    const postRequest = request(optionsRequest);
+    const postRequest = oldRequest(optionsRequest);
     jsonStreamStringify.pipe(postRequest);
     return duplexer(jsonStreamStringify, postRequest);
   }
 
   /**
    * Commit last added and removed documents, that means your documents are now indexed.
-   *
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  commit(
-    options: Record<string, any> | CallbackFn,
-    callback: CallbackFn
-  ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options as CallbackFn;
-      options = {};
-    }
-    const data = {
+  commit(options?: Record<string, any>): Promise<JsonResponseData> {
+    return this.update({
       commit: options || {},
-    };
-    return this.update(data, callback);
+    });
   }
 
   /**
    * Call Lucene's IndexWriter.prepareCommit, the changes won't be visible in the index.
-   *
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  prepareCommit(callback: CallbackFn): ClientRequest {
-    return this.update({}, { prepareCommit: true }, callback);
+  prepareCommit(): Promise<JsonResponseData> {
+    return this.update({}, { prepareCommit: true });
   }
 
   /**
    * Soft commit all changes
-   *
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  softCommit(callback: CallbackFn): ClientRequest {
-    return this.update({}, { softCommit: true }, callback);
+  softCommit(): Promise<JsonResponseData> {
+    return this.update({}, { softCommit: true });
   }
 
   /**
    * Delete documents based on the given `field` and `text`.
-   *
-   * @param field
-   * @param text
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
   delete(
     field: string,
     text: string,
-    options?: Record<string, any> | CallbackFn,
-    callback?: CallbackFn
-  ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options as CallbackFn;
-      options = {};
-    }
-    text = format.dateISOify(text);
-    const data = {
-      delete: {
-        query: field + ':' + format.escapeSpecialChars(text),
+    options?: Record<string, any>
+  ): Promise<JsonResponseData> {
+    return this.update(
+      {
+        delete: {
+          query:
+            field + ':' + format.escapeSpecialChars(format.dateISOify(text)),
+        },
       },
-    };
-    return this.update(data, options, callback);
+      options
+    );
   }
 
   /**
    * Delete a range of documents based on the given `field`, `start` and `stop` arguments.
-   *
-   * @param field
-   * @param start
-   * @param stop
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
   deleteByRange(
     field: string,
     start: string | Date,
     stop: string | Date,
-    options?: Record<string, any> | CallbackFn,
-    callback?: CallbackFn
-  ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options as CallbackFn;
-      options = {};
-    }
+    options?: Record<string, any>
+  ): Promise<JsonResponseData> {
     start = format.dateISOify(start);
     stop = format.dateISOify(stop);
-
-    const query = field + ':[' + start + ' TO ' + stop + ']';
-    return this.deleteByQuery(query, options, callback);
+    return this.deleteByQuery(`${field}:[${start} TO ${stop}]`, options);
   }
 
   /**
@@ -409,97 +368,61 @@ export class Client {
    * @param id
    *   ID of the document you want to delete.
    * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
   deleteByID(
     id: string | number,
-    options?: Record<string, any> | CallbackFn,
-    callback?: CallbackFn
-  ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options as CallbackFn;
-      options = {};
-    }
-    const data = {
-      delete: {
-        id: id,
+    options?: Record<string, any>
+  ): Promise<JsonResponseData> {
+    return this.update(
+      {
+        delete: {
+          id: id,
+        },
       },
-    };
-    return this.update(data, options, callback);
+      options
+    );
   }
 
   /**
    * Delete documents matching the given `query`.
-   *
-   * @param query
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
   deleteByQuery(
     query: string,
-    options?: Record<string, any> | CallbackFn,
-    callback?: CallbackFn
-  ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options as CallbackFn;
-      options = {};
-    }
-    const data = {
-      delete: {
-        query: query,
+    options?: Record<string, any>
+  ): Promise<JsonResponseData> {
+    return this.update(
+      {
+        delete: {
+          query: query,
+        },
       },
-    };
-    return this.update(data, options, callback);
+      options
+    );
   }
 
   /**
    * Delete all documents.
-   *
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  deleteAll(
-    options: Record<string, any> | CallbackFn,
-    callback: CallbackFn
-  ): ClientRequest {
-    return this.deleteByQuery('*:*', options, callback);
+  deleteAll(options?: Record<string, any>): Promise<JsonResponseData> {
+    return this.deleteByQuery('*:*', options);
   }
 
   /**
    * Optimize the index.
-   *
-   * @param options
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  optimize(
-    options: Record<string, any> | CallbackFn,
-    callback: CallbackFn
-  ): ClientRequest {
-    if (typeof options === 'function') {
-      callback = options as CallbackFn;
-      options = {};
-    }
-    const data = {
+  optimize(options: Record<string, any>): Promise<JsonResponseData> {
+    return this.update({
       optimize: options || {},
-    };
-    return this.update(data, callback);
+    });
   }
 
   /**
    * Rollback all add/delete commands made since the last commit.
-   *
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  rollback(callback: CallbackFn): ClientRequest {
-    const data = {
+  rollback(): Promise<JsonResponseData> {
+    return this.update({
       rollback: {},
-    };
-    return this.update(data, callback);
+    });
   }
 
   /**
@@ -509,98 +432,67 @@ export class Client {
    *   The data to stringify in the body.
    * @param queryParameters
    *   Query parameters to include in the URL.
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  update(
+  update<T>(
     data: Record<string, any>,
-    queryParameters?: Record<string, any> | CallbackFn,
-    callback?: any
-  ): ClientRequest {
-    if (typeof queryParameters === 'function') {
-      callback = queryParameters;
-      queryParameters = {};
-    }
-
+    queryParameters?: Record<string, any>
+  ): Promise<T> {
     const path = this.getFullHandlerPath(this.UPDATE_JSON_HANDLER);
     const queryString = querystring.stringify({
       ...queryParameters,
       wt: 'json',
     });
 
-    return this.doRequest(
+    return this.doRequest<T>(
       `${path}?${queryString}`,
       'POST',
       pickJSON(this.options.bigint).stringify(data),
       'application/json',
-      'application/json; charset=utf-8',
-      callback
+      'application/json; charset=utf-8'
     );
   }
 
   /**
    * Search documents matching the `query`
-   *
-   * @param query
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  search(
-    query: Query | Record<string, any> | string,
-    callback: CallbackFn
-  ): ClientRequest {
-    return this.doQuery(this.SELECT_HANDLER, query, callback);
+  search<T>(
+    query: Query | Record<string, any> | string
+  ): Promise<SearchResponse<T>> {
+    return this.doQuery<SearchResponse<T>>(this.SELECT_HANDLER, query);
   }
 
   /**
    * Execute an Admin Collections task on `collection`
-   *
-   * @param {Query|Object|String} collection
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
   executeCollection(
-    collection: Collection | Record<string, any> | string,
-    callback: CallbackFn
-  ): ClientRequest {
-    return this.doQuery(this.COLLECTIONS_HANDLER, collection, callback);
+    collection: Collection | Record<string, any> | string
+  ): Promise<CommonResponse> {
+    return this.doQuery(this.COLLECTIONS_HANDLER, collection);
   }
 
   /**
    * Search for all documents.
-   *
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  searchAll(callback: CallbackFn): ClientRequest {
-    return this.search('q=*', callback);
+  searchAll(): Promise<JsonResponseData> {
+    return this.search('q=*');
   }
 
   /**
    * Search documents matching the `query`, with spellchecking enabled.
-   *
-   * @param query
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  spell(query: Query, callback: CallbackFn): ClientRequest {
-    return this.doQuery(this.SPELL_HANDLER, query, callback);
+  spell(query: Query): Promise<JsonResponseData> {
+    return this.doQuery(this.SPELL_HANDLER, query);
   }
 
   /**
    * Terms search.
    *
    * Provides access to the indexed terms in a field and the number of documents that match each term.
-   *
-   * @param query
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
   termsSearch(
-    query: Query | Record<string, any> | string,
-    callback: CallbackFn
-  ) {
-    return this.doQuery(this.TERMS_HANDLER, query, callback);
+    query: Query | Record<string, any> | string
+  ): Promise<JsonResponseData> {
+    return this.doQuery(this.TERMS_HANDLER, query);
   }
 
   /**
@@ -611,14 +503,11 @@ export class Client {
    * @param query
    *   A function, Query object, Collection object, plain object, or string
    *   describing the query to perform.
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  doQuery(
+  async doQuery<T>(
     handler: string,
-    query: Collection | Query | Record<string, any> | string,
-    callback: CallbackFn | undefined
-  ): ClientRequest {
+    query: Collection | Query | Record<string, any> | string
+  ): Promise<T> {
     // Construct the string to use as query (GET) or body (POST).
     let data: string;
     if (query instanceof Query || query instanceof Collection) {
@@ -649,15 +538,14 @@ export class Client {
         ? 'GET'
         : 'POST';
 
-    return this.doRequest(
+    return this.doRequest<T>(
       method === 'GET' ? `${path}?${queryString}` : path,
       method,
       method === 'POST' ? data : null,
       method === 'POST'
         ? 'application/x-www-form-urlencoded; charset=utf-8'
         : null,
-      'application/json; charset=utf-8',
-      callback
+      'application/json; charset=utf-8'
     );
   }
 
@@ -682,12 +570,9 @@ export class Client {
 
   /**
    * Ping the Solr server.
-   *
-   * @param callback
-   *   A function to execute when the Solr server responds or an error occurs.
    */
-  ping(callback: CallbackFn) {
-    return this.doQuery(this.ADMIN_PING_HANDLER, '', callback);
+  ping(): Promise<JsonResponseData> {
+    return this.doQuery(this.ADMIN_PING_HANDLER, '');
   }
 
   /**
@@ -697,14 +582,11 @@ export class Client {
    *   The name of the field to create.
    * @param {string} fieldType
    *   The type of field to create.
-   * @param {Function} cb
-   *   A callback to run when completed.
    */
   public createSchemaField(
     fieldName: string,
-    fieldType: string,
-    cb: CallbackFn
-  ): ClientRequest {
+    fieldType: string
+  ): Promise<JsonResponseData> {
     return this.doRequest(
       this.getFullHandlerPath('schema'),
       'POST',
@@ -717,19 +599,14 @@ export class Client {
         },
       }),
       'application/json',
-      'application/json; charset=utf-8',
-      (err, data) => {
-        if (err) {
-          // TODO: We should handle this in a more robust way in the future, but
-          //   there is a difference between default setup in Solr 5 and Solr 8,
-          // so some fields already exist in Solr 8. Hence if that's the case, we
-          // just ignore that.
-          console.warn(err.message);
-        }
-        cb(undefined, data);
-      }
-    );
+      'application/json; charset=utf-8'
+    ).catch((err) => {
+      // TODO: We should handle this in a more robust way in the future, but
+      //   there is a difference between default setup in Solr 5 and Solr 8,
+      //   so some fields already exist in Solr 8. Hence if that's the case,
+      //   we just ignore that.
+      console.warn(err.message);
+      return {};
+    });
   }
 }
-
-bluebird.promisifyAll(Client.prototype);

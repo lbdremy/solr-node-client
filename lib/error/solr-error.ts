@@ -12,7 +12,9 @@ export class SolrError extends HttpError {
     this.name = this.constructor.name;
 
     // Capturing stack trace, excluding constructor call from it.
-    Error.captureStackTrace(this, this.constructor);
+    if ('captureStackTrace' in Error) {
+      Error.captureStackTrace(this, this.constructor);
+    }
 
     let message = '';
     if (htmlMessage) {

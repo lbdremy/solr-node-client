@@ -1,5 +1,5 @@
 import * as figc from 'figc';
-import * as sassert from './sassert';
+import * as sassert from './utils/sassert';
 import { createClient } from '../lib/solr';
 
 const config = figc(__dirname + '/config.json');
@@ -8,11 +8,8 @@ const client = createClient(config.client);
 
 describe('Client', function () {
   describe('#deleteAll(callback)', function () {
-    it('should delete all documents', function (done) {
-      client.deleteAll({}, function (err, data) {
-        sassert.ok(err, data);
-        done();
-      });
+    it('should delete all documents', async function () {
+      await client.deleteAll({});
     });
   });
 });

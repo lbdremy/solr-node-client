@@ -9,10 +9,5 @@ const field = 'id';
 const query = '*'; // Everything !Dangerous!
 
 // Delete every documents
-client.delete(field, query, function (err, obj) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(obj);
-  }
-});
+const obj = await client.delete(field, query)
+console.log(obj);

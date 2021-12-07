@@ -15,6 +15,7 @@ import {
   DateOptions,
   JoinOptions,
 } from './types';
+import { dateISOify } from './utils/format';
 
 export type QueryOptions = {
   solrVersion?: number;
@@ -266,7 +267,7 @@ export class Query {
    * Filter the set of documents found before to return the result with the given `field` and `value`.
    *
    * @param {String} field - name of field
-   * @param {String|Number|Date} value - value of the field that must match
+   * @param {String|String[]|Number|Number[]|Date|Date[]} value - value of the field that must match
    *
    * @return {Query}
    * @api public
@@ -274,32 +275,22 @@ export class Query {
    * @example
    * var query = client.query();
    * query.q({ '*' : '*' }).matchFilter('id', 100)
+   * query.q({ '*' : '*' }).matchFilter('id', [100, 200])
    */
 
-  matchFilter(field: string, value: string | number | Date | boolean): Query {
+  matchFilter(
+    field: string,
+    value: string | string[] | number | number[] | Date | Date[] | boolean
+  ): Query {
     const self = this;
-    value = format.dateISOify(value);
     let parameter = 'fq=';
+    if (Array.isArray(value)) {
+      value = value.map(dateISOify);
+      value = `(${value.join(' ')})`;
+    } else {
+      value = format.dateISOify(value);
+    }
     parameter += field + ':' + encodeURIComponent(value);
-    this.parameters.push(parameter);
-    return self;
-  }
-
-  /**
-   * Filter the set of documents found before to return the results by query for matching multiple values of the same index.
-   *
-   * @return {Query}
-   * @api public
-   *
-   * @example
-   * var query = client.query();
-   * query.q({ '*' : '*' }).multipleFilter(field:[value1, value2])
-   */
-  multipleFilter(field: string, values: string[] | number[] | Date[]): Query {
-    const self = this;
-    let parameter = 'fq=';
-    const multipleFilter = `${field}:(${values.join(' ')})`;
-    parameter += encodeURIComponent(multipleFilter);
     this.parameters.push(parameter);
     return self;
   }

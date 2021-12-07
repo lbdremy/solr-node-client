@@ -257,5 +257,87 @@ describe('Client#createQuery', function () {
         wt: 'json',
       });
     });
+
+    it('query with multiple values match-filters', async function () {
+      const docs = [
+        {
+          id: 1,
+          region_s: 'east',
+          sales_i: 100000,
+        },
+        {
+          id: 2,
+          region_s: 'west',
+          sales_i: 200000,
+        },
+        {
+          id: 3,
+          region_s: 'north',
+          sales_i: 300000,
+        },
+        {
+          id: 4,
+          region_s: 'south',
+          sales_i: 400000,
+        },
+      ];
+      await client.add(docs);
+      await client.commit();
+
+      const query = client
+        .query()
+        .q({ '*': '*' })
+        .qop('AND')
+        .matchFilter('region_s', ['east', 'west', 'south']);
+
+      const data = await client.search(query);
+      assert.deepEqual(
+        data.responseHeader.params?.fq,
+        `region_s:(east west south)`
+      );
+
+      assert.equal(data.response.numFound, 3);
+    });
+    it('query with multiple values and object match-filters', async function () {
+      const docs = [
+        {
+          id: '1',
+          region_s: 'east',
+          sales_i: 100000,
+        },
+        {
+          id: '2',
+          region_s: 'west',
+          sales_i: 200000,
+        },
+        {
+          id: '3',
+          region_s: 'north',
+          sales_i: 400000,
+        },
+        {
+          id: '4',
+          region_s: 'south',
+          sales_i: 200000,
+        },
+      ];
+      await client.add(docs);
+      await client.commit();
+
+      const query = client
+        .query()
+        .q({ '*': '*' })
+        .qop('AND')
+        .matchFilter('id', [1, 2, 4])
+        .fq({ field: 'sales_i', value: 200000 });
+
+      const data = await client.search(query);
+      assert.deepEqual(data.responseHeader.params?.fq, [
+        'id:(1 2 4)',
+        'sales_i:200000',
+      ]);
+      console.log(data.response.numFound);
+      assert.deepEqual(data.response.numFound, 2);
+    });
   });
 });

@@ -286,6 +286,25 @@ export class Query {
   }
 
   /**
+   * Filter the set of documents found before to return the results by query for matching multiple values of the same index.
+   *
+   * @return {Query}
+   * @api public
+   *
+   * @example
+   * var query = client.query();
+   * query.q({ '*' : '*' }).multipleFilter{field='organizations', from='region_s', to='region_s', v='mgr_s:yes'}}
+   */
+  multipleFilter(field: string, values: string[] | number[] | Date[]): Query {
+    const self = this;
+    let parameter = 'fq=';
+    const multipleFilter = `${field}:(${values.join(' ')})`;
+    parameter += encodeURIComponent(multipleFilter);
+    this.parameters.push(parameter);
+    return self;
+  }
+
+  /**
    * wrapper function for matchFilter, accepting either an object with `field` and `value` properties
    * or an array containing such objects to be mapped on matchFilter
    *

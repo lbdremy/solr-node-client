@@ -296,7 +296,7 @@ describe('Client#createQuery', function () {
         `region_s:(east west south)`
       );
 
-      assert.equal(data.response.numFound, 3);
+      assert.deepEqual(data.response.numFound, 3);
     });
     it('query with multiple values and object match-filters', async function () {
       const docs = [

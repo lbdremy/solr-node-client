@@ -8,7 +8,7 @@ const client = createClient(config.client);
 
 describe('Client#createQuery', function () {
   describe('.multipleFilter', function () {
-    it('should filter a multiple query using a multiple values', async function () {
+    it('should filter a query using multiple values for one index', async function () {
       const docs = [
         {
           id: 1,

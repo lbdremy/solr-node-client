@@ -293,7 +293,7 @@ export class Query {
    *
    * @example
    * var query = client.query();
-   * query.q({ '*' : '*' }).multipleFilter{field='organizations', from='region_s', to='region_s', v='mgr_s:yes'}}
+   * query.q({ '*' : '*' }).multipleFilter(field:[value1, value2])
    */
   multipleFilter(field: string, values: string[] | number[] | Date[]): Query {
     const self = this;

@@ -293,11 +293,12 @@ describe('Client#createQuery', function () {
       const data = await client.search(query);
       assert.deepEqual(
         data.responseHeader.params?.fq,
-        `region_s:(east west south)`
+        `region_s:(east OR west OR south)`
       );
 
       assert.deepEqual(data.response.numFound, 3);
     });
+
     it('query with multiple values and object match-filters', async function () {
       const docs = [
         {
@@ -333,7 +334,7 @@ describe('Client#createQuery', function () {
 
       const data = await client.search(query);
       assert.deepEqual(data.responseHeader.params?.fq, [
-        'id:(1 2 4)',
+        'id:(1 OR 2 OR 4)',
         'sales_i:200000',
       ]);
       console.log(data.response.numFound);

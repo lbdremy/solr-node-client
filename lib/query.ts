@@ -286,7 +286,7 @@ export class Query {
     let parameter = 'fq=';
     if (Array.isArray(value)) {
       value = value.map(dateISOify);
-      value = `(${value.join(' ')})`;
+      value = `(${value.join(' OR ')})`;
     } else {
       value = format.dateISOify(value);
     }

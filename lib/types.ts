@@ -1,7 +1,11 @@
 import type { Agent as HttpAgent } from 'http';
 import type { Agent as HttpsAgent } from 'https';
+import Dispatcher from 'undici/types/dispatcher';
 
-export type RequestOptions = { }
+export type UndiciRequestOptions = Omit<
+  Dispatcher.RequestOptions,
+  'origin' | 'path'
+  >;
 
 export type ResourceOptions = {
   /**
@@ -67,7 +71,7 @@ export type SolrClientParams = {
   /**
    * Custom request options to use with every request.
    */
-  request?: RequestOptions | null;
+  request?: UndiciRequestOptions | null;
 
   /**
    * One of [4, 6].
@@ -96,7 +100,7 @@ export type FullSolrClientParams = {
   secure: boolean;
   bigint: boolean;
   agent?: HttpAgent | HttpsAgent;
-  request?: RequestOptions | null;
+  request?: UndiciRequestOptions | null;
   ipVersion: number;
   solrVersion: number;
   get_max_request_entity_size: boolean | number;

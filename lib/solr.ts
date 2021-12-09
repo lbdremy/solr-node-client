@@ -29,6 +29,8 @@ export type SearchResult<SolrDocument> = {
 
 export type SearchResponse<SolrDocument> = {
   debug?: Record<string, any>;
+  /** If the query defined a `cursorMark` parameter then this field will be present */
+  nextCursorMark?: string;
   response: SearchResult<SolrDocument>;
   responseHeader: {
     QTime: 0;

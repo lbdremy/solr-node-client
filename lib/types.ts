@@ -1,11 +1,10 @@
-import type { Agent as HttpAgent } from 'http';
-import type { Agent as HttpsAgent } from 'https';
-import Dispatcher from 'undici/types/dispatcher';
+import { Dispatcher } from 'undici';
+import { TlsOptions } from 'tls';
 
 export type UndiciRequestOptions = Omit<
   Dispatcher.RequestOptions,
   'origin' | 'path'
->;
+> & { tls?: TlsOptions };
 
 export type ResourceOptions = {
   /**
@@ -64,9 +63,9 @@ export type SolrClientParams = {
   bigint?: boolean;
 
   /**
-   * HTTP Agent which is used for pooling sockets.
+   * TLS configuration, used for SSL
    */
-  agent?: HttpAgent | HttpsAgent;
+  tls?: TlsOptions;
 
   /**
    * Custom request options to use with every request.
@@ -99,7 +98,7 @@ export type FullSolrClientParams = {
   path: string;
   secure: boolean;
   bigint: boolean;
-  agent?: HttpAgent | HttpsAgent;
+  tls?: TlsOptions;
   request?: UndiciRequestOptions | null;
   ipVersion: number;
   solrVersion: number;

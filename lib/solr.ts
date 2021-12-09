@@ -14,7 +14,7 @@ import {
   UndiciRequestOptions,
 } from './types';
 import { Duplex } from 'stream';
-import { request } from 'undici';
+import { request, Client as UndiciClient } from 'undici';
 
 const oldRequest = require('request');
 const format = require('./utils/format');
@@ -70,6 +70,7 @@ export class Client {
   private readonly ADMIN_PING_HANDLER: string;
   private readonly COLLECTIONS_HANDLER: string;
   private readonly SELECT_HANDLER: string;
+  private readonly undiciClient: UndiciClient;
 
   constructor(options: SolrClientParams = {}) {
     this.options = {
@@ -77,7 +78,7 @@ export class Client {
       port: options.port === 0 ? 0 : options.port || '8983',
       core: options.core || '',
       path: options.path || '/solr',
-      agent: options.agent,
+      tls: options.tls,
       secure: options.secure || false,
       bigint: options.bigint || false,
       get_max_request_entity_size: options.get_max_request_entity_size || false,
@@ -98,6 +99,19 @@ export class Client {
     this.REAL_TIME_GET_HANDLER = 'get';
     this.SPELL_HANDLER = 'spell';
     this.TERMS_HANDLER = 'terms';
+
+    const urlPrefix = this.options.host.startsWith('http')
+      ? ''
+      : this.options.tls
+      ? 'https://'
+      : 'http://';
+
+    this.undiciClient = new UndiciClient(
+      `${urlPrefix}${this.options.host}:${this.options.port}`,
+      {
+        connect: this.options.tls,
+      }
+    );
   }
 
   get solrVersion(): number {
@@ -173,7 +187,10 @@ export class Client {
     }
 
     // Perform the request and handle results.
-    const response = await request(url, requestOptions);
+    const response = await this.undiciClient.request({
+      path: url,
+      ...requestOptions,
+    });
 
     // Always consume the response body. See https://github.com/nodejs/undici#garbage-collection
     const text = await response.body.text();

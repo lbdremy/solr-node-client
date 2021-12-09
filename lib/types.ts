@@ -5,7 +5,7 @@ import Dispatcher from 'undici/types/dispatcher';
 export type UndiciRequestOptions = Omit<
   Dispatcher.RequestOptions,
   'origin' | 'path'
-  >;
+>;
 
 export type ResourceOptions = {
   /**

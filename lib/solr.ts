@@ -37,7 +37,6 @@ export type SearchResponse<SolrDocument> = {
   };
 };
 
-
 /**
  * Pick appropriate JSON serializer/deserializer library based on the given `bigint` flag
  *

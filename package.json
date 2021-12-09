@@ -25,6 +25,7 @@
     "node": ">= 12"
   },
   "dependencies": {
+    "axios": "^0.24.0",
     "duplexer": "^0.1.2",
     "hnp": "^1.0.1",
     "json-bigint": "^1.0.0",

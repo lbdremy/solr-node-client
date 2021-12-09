@@ -5,6 +5,17 @@ module.exports = function (config) {
     preprocessors: {
       "**/*.ts": "karma-typescript"
     },
+    karmaTypescriptConfig: {
+      compilerOptions: {
+        emitDecoratorMetadata: true,
+        experimentalDecorators: true,
+        jsx: "react",
+        module: "commonjs",
+        sourceMap: true,
+        target: "2018"
+      },
+      exclude: ["node_modules"]
+    },
     reporters: ['progress'],
     port: 9876, // karma web server port
     colors: true,

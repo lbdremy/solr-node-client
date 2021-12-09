@@ -1,6 +1,5 @@
 import * as querystring from 'querystring';
 import * as JSONStream from 'JSONStream';
-import * as duplexer from 'duplexer';
 import { Query } from './query';
 import { Collection } from './collection';
 import * as versionUtils from './utils/version';
@@ -15,8 +14,9 @@ import {
 } from './types';
 import { Duplex } from 'stream';
 import { request } from 'undici';
+import undici from 'undici';
+import stream from 'stream';
 
-const oldRequest = require('request');
 const format = require('./utils/format');
 const JSONbig = require('json-bigint');
 
@@ -302,10 +302,13 @@ export class Client {
       method: 'POST',
       headers: headers,
     };
-    const jsonStreamStringify = JSONStream.stringify();
-    const postRequest = oldRequest(optionsRequest);
-    jsonStreamStringify.pipe(postRequest);
-    return duplexer(jsonStreamStringify, postRequest);
+    return stream.compose(
+      JSONStream.stringify(),
+      undici.pipeline(optionsRequest.url, optionsRequest, ({ statusCode, headers, body }) => {
+        // TODO:
+        return body
+      })
+    )
   }
 
   /**

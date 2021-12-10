@@ -93,8 +93,8 @@ If you have a version of Windows 10 Pro or Enterprise, simply download [Docker D
 
 #### Windows 10 Home
 
-If you have a version of Windows 10 Home, a little more effort is needed. By default, Hyper-V is not able to be turned on for Home.
-**The steps I found to work:**
+If you have a version of Windows 10 Home, a little more effort is needed. By default, Hyper-V cannot be turned on for Home edition.
+**The steps that seem to work:**
 - Check to ensure you have WSL1, WSL2, and the Kernel Update. This can be done using the shell commands found [here](https://blog.devgenius.io installing-docker-onwindows-10-home-edition-2e7c1b79d76d). 
 - [Follow the instructions in this link](https://www.itechtics.com/enable-hyper-v-windows-10-home/) to install Hyper-V. Please note, that you must have WSL1/WSL2 and the update for Hyper-V to install properly or the changes may be undone during restart.
 - After restarting and checking that Hyper-V is enabled, you may install [Docker Desktop](https://docs.docker.com/desktop/windows/install/) using the setup wizard.

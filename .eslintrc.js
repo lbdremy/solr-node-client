@@ -2,7 +2,6 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 2018,
-    sourceType: "module"
   },
   extends: [
     'plugin:@typescript-eslint/recommended',
@@ -17,12 +16,10 @@ module.exports = {
     '@typescript-eslint/no-this-alias': 'off',
     '@typescript-eslint/no-var-requires': 'off',
     '@typescript-eslint/ban-ts-comment': 'off',
-    'prettier/prettier': ['off', { singleQuote: true }],
   },
   env: {
     node: true,
     mocha: true,
     es6: true,
-    browser: true
   },
 };

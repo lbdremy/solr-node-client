@@ -11,13 +11,14 @@ import {
   JsonResponseData,
   ResourceOptions,
   SolrClientParams,
+  UndiciRequestOptions,
 } from './types';
 import { Duplex } from 'stream';
-import { httpClient } from './http/httpClient'
-import { pickJSON } from './http/utils';
+import { request } from 'undici';
 
 const oldRequest = require('request');
 const format = require('./utils/format');
+const JSONbig = require('json-bigint');
 
 export type SearchResult<SolrDocument> = {
   docs: SolrDocument[];
@@ -35,6 +36,20 @@ export type SearchResponse<SolrDocument> = {
     status: number;
   };
 };
+
+/**
+ * Pick appropriate JSON serializer/deserializer library based on the given `bigint` flag
+ *
+ * @param bigint
+ *   Whether to handle big numbers correctly or not.
+ *   The reason for not using JSONbig all the times is it has a significant performance cost.
+ *
+ * @return
+ *   JSON or JSONbig serializer/deserializer
+ */
+function pickJSON(bigint: boolean): typeof JSON | typeof JSONbig {
+  return bigint ? JSONbig : JSON;
+}
 
 export function createClient(options: SolrClientParams = {}) {
   return new Client(options);
@@ -106,7 +121,68 @@ export class Client {
     return pathArray.filter((e) => e).join('/');
   }
 
+  /**
+   * Common function for all HTTP requests.
+   *
+   * @param path
+   *   Full URL for the request.
+   * @param method
+   *   HTTP method, like "GET" or "POST".
+   * @param body
+   *   Optional data for the request body.
+   * @param bodyContentType
+   *   Optional content type for the request body.
+   * @param acceptContentType
+   *   The expected content type of the response.
+   *
+   * @returns
+   *   Parsed JSON response data.
+   */
+  private async doRequest<T = JsonResponseData>(
+    path: string,
+    method: 'GET' | 'POST',
+    body: string | null,
+    bodyContentType: string | null,
+    acceptContentType: string
+  ): Promise<T> {
+    const protocol = this.options.secure ? 'https' : 'http';
+    const url = `${protocol}://${this.options.host}:${this.options.port}${path}`;
+    const requestOptions: UndiciRequestOptions = {
+      ...this.options.request,
+      method,
+    };
 
+    // Now set options that the user should not be able to override.
+    if (!requestOptions.headers) {
+      requestOptions.headers = {};
+    }
+    requestOptions.headers['accept'] = acceptContentType;
+    if (method === 'POST') {
+      if (bodyContentType) {
+        requestOptions.headers['content-type'] = bodyContentType;
+      }
+      if (body) {
+        requestOptions.headers['content-length'] = Buffer.byteLength(body);
+        requestOptions.body = body;
+      }
+    }
+    if (this.options.authorization) {
+      requestOptions.headers['authorization'] = this.options.authorization;
+    }
+
+    // Perform the request and handle results.
+    const response = await request(url, requestOptions);
+
+    // Always consume the response body. See https://github.com/nodejs/undici#garbage-collection
+    const text = await response.body.text();
+
+    // Undici does not throw an error on certain status codes, this leaves that to us
+    if (response.statusCode < 200 || response.statusCode > 299) {
+      throw new Error(`Request HTTP error ${response.statusCode}: ${text}`);
+    }
+
+    return pickJSON(this.options.bigint).parse(text);
+  }
 
   /**
    * Create credential using the basic access authentication method
@@ -367,7 +443,7 @@ export class Client {
       wt: 'json',
     });
 
-    return httpClient.doRequest<T>(
+    return this.doRequest<T>(
       `${path}?${queryString}`,
       'POST',
       pickJSON(this.options.bigint).stringify(data),
@@ -462,7 +538,7 @@ export class Client {
         ? 'GET'
         : 'POST';
 
-    return httpClient.doRequest<T>(
+    return this.doRequest<T>(
       method === 'GET' ? `${path}?${queryString}` : path,
       method,
       method === 'POST' ? data : null,
@@ -511,7 +587,7 @@ export class Client {
     fieldName: string,
     fieldType: string
   ): Promise<JsonResponseData> {
-    return httpClient.doRequest(
+    return this.doRequest(
       this.getFullHandlerPath('schema'),
       'POST',
       pickJSON(this.options.bigint).stringify({

@@ -1,20 +1,20 @@
-import * as querystring from 'querystring';
-import * as JSONStream from 'JSONStream';
 import * as duplexer from 'duplexer';
-import { Query } from './query';
-import { Collection } from './collection';
-import * as versionUtils from './utils/version';
-import {
-  AddResponse,
-  CommonResponse,
-  FullSolrClientParams,
-  JsonResponseData,
-  ResourceOptions,
-  SolrClientParams,
-  UndiciRequestOptions,
-} from './types';
+import * as JSONStream from 'JSONStream';
+import * as querystring from 'querystring';
 import { Duplex } from 'stream';
-import { request, Client as UndiciClient } from 'undici';
+import { Client as UndiciClient } from 'undici';
+import { Collection } from './collection';
+import { Query } from './query';
+import {
+	AddResponse,
+	CommonResponse,
+	FullSolrClientParams,
+	JsonResponseData,
+	ResourceOptions,
+	SolrClientParams,
+	UndiciRequestOptions
+} from './types';
+import * as versionUtils from './utils/version';
 
 const oldRequest = require('request');
 const format = require('./utils/format');
@@ -106,12 +106,14 @@ export class Client {
       ? 'https://'
       : 'http://';
 
-    this.undiciClient = new UndiciClient(
-      `${urlPrefix}${this.options.host}:${this.options.port}`,
-      {
-        connect: this.options.tls,
-      }
-    );
+	  const port = options.noPort ? '' : `:${this.options.port}`;
+
+	  this.undiciClient = new UndiciClient(
+		`${urlPrefix}${this.options.host}${port}`,
+		{
+		  connect: this.options.tls,
+		}
+	  );
   }
 
   get solrVersion(): number {

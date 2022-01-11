@@ -1,5 +1,5 @@
-import { Dispatcher } from 'undici';
 import { TlsOptions } from 'tls';
+import { Dispatcher } from 'undici';
 
 export type UndiciRequestOptions = Omit<
   Dispatcher.RequestOptions,
@@ -40,6 +40,11 @@ export type SolrClientParams = {
    * Port of the Solr server
    */
   port?: string | number;
+
+  /**
+   * Set this to true if you do not require a port to connect.
+   */
+   noPort?: boolean;
 
   /**
    * Name of the Solr core to use.

@@ -29,6 +29,23 @@ describe('rangeFilter', () => {
         );
       });
     });
+    describe('.partialPhraseSearch', function () {
+      it('should filter a query using an array of multiple fields', async () => {
+        const query = client
+          .query()
+          .q('test')
+          .rangeFilter([
+            { field: 'id', start: 100, end: 200 },
+            { field: 'id', start: 300, end: 400 },
+          ])
+          .debugQuery();
+        const response = await client.search(query);
+        assert.equal(
+          response.responseHeader.params?.fq,
+          '(id:[100 TO 200] AND id:[300 TO 400])'
+        );
+      });
+    });
   });
 
   describe('.rangeFilter(start, end)', function () {

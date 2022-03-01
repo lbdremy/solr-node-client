@@ -321,3 +321,7 @@ export type JsonResponseData = Record<string, any> | any[];
 export type CommonResponse = {
   responseHeader: Record<string, any>;
 };
+
+export type MatchFilterOption = {
+  complexPhrase: boolean;
+};

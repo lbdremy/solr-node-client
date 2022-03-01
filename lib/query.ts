@@ -14,6 +14,7 @@ import {
   FacetOptions,
   DateOptions,
   JoinOptions,
+  MatchFilterOption,
 } from './types';
 
 export type QueryOptions = {
@@ -92,13 +93,20 @@ export class Query {
    * @return  {Query}
    * @api public
    */
-  q(q: string | Record<string, any>): Query {
+  q(q: string | Record<string, any>, configOption?: MatchFilterOption): Query {
     const self = this;
+    const complexPhrase = '{!complexphrase inOrder=true}';
     let parameter = 'q=';
     if (typeof q === 'string') {
-      parameter += encodeURIComponent(q);
+      parameter += configOption?.complexPhrase
+        ? encodeURIComponent(complexPhrase + q)
+        : encodeURIComponent(q);
+      console.log(complexPhrase + q);
     } else {
-      parameter += querystring.stringify(q, '%20AND%20', ':');
+      const qToString = querystring.stringify(q, '%20AND%20', ':');
+      parameter += configOption?.complexPhrase
+        ? complexPhrase + qToString
+        : qToString;
     }
     this.parameters.push(parameter);
     return self;
@@ -276,10 +284,17 @@ export class Query {
    * query.q({ '*' : '*' }).matchFilter('id', 100)
    */
 
-  matchFilter(field: string, value: string | number | Date | boolean): Query {
+  matchFilter(
+    field: string,
+    value: string | number | Date | boolean,
+    configOptions?: MatchFilterOption
+  ): Query {
     const self = this;
-    value = format.dateISOify(value);
+    value = `${format.dateISOify(value)}`;
     let parameter = 'fq=';
+    if (configOptions?.complexPhrase) {
+      parameter += `{!complexphrase inOrder=true}`;
+    }
     parameter += field + ':' + encodeURIComponent(value);
     this.parameters.push(parameter);
     return self;
@@ -301,15 +316,26 @@ export class Query {
    * query.q({ '*' : '*' }).fq({field: 'id', value: 100})
    * query.q({ '*' : '*' }).fq([{field: 'id', value: 100}, {field: 'name', value: 'John'}])
    */
-  fq(filters: Filters | Filters[]): Query {
+  fq(filters: Filters | Filters[], configOptions?: MatchFilterOption): Query {
     const self = this;
     if (Array.isArray(filters)) {
-      filters.map((f) => this.matchFilter(f.field, f.value));
+      if (!configOptions) {
+        filters.map((f) => this.matchFilter(f.field, f.value));
+        return self;
+      }
+      filters.map((f) =>
+        this.matchFilter(f.field, f.value, { complexPhrase: true })
+      );
       return self;
     }
-    if (filters instanceof Object)
-      return this.matchFilter(filters.field, filters.value);
-    else {
+    if (filters instanceof Object) {
+      if (!configOptions) {
+        return this.matchFilter(filters.field, filters.value);
+      }
+      return this.matchFilter(filters.field, filters.value, {
+        complexPhrase: true,
+      });
+    } else {
       throw new Error('unknown type for filter in fq()');
     }
   }

@@ -257,5 +257,65 @@ describe('Client#createQuery', function () {
         wt: 'json',
       });
     });
+
+    it('query with match-filter and complexPhrase', async function () {
+      const query = client
+        .query()
+        .q('*:*')
+        .matchFilter('id', '19700506.173.85', { complexPhrase: true })
+        .debugQuery();
+
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: '{!complexphrase inOrder=true}id:19700506.173.85',
+        wt: 'json',
+      });
+    });
+
+    it('query with multiple match-filters and complexPhrase', async function () {
+      const query = client
+        .query()
+        .q('*:*')
+        .fq(
+          [
+            { field: 'id', value: '19700506.173.85' },
+            { field: 'title', value: 'testvalue' },
+          ],
+          { complexPhrase: true }
+        )
+        .debugQuery();
+
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: [
+          '{!complexphrase inOrder=true}id:19700506.173.85',
+          '{!complexphrase inOrder=true}title:testvalue',
+        ],
+        wt: 'json',
+      });
+    });
+
+    it('query with object match-filter and complexPhrase', async function () {
+      const query = client
+        .query()
+        .q('*:*')
+        .fq({ field: 'id', value: '19700506.173.85' }, { complexPhrase: true })
+        .debugQuery();
+
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: '{!complexphrase inOrder=true}id:19700506.173.85',
+        wt: 'json',
+      });
+    });
   });
 });

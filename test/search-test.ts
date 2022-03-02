@@ -114,13 +114,15 @@ describe('Client', function () {
       await client.add(docs);
       await client.commit();
 
-      const query = client.query().q({ '*': '*' }).qop('AND').fq(
-        {
+      const query = client
+        .query()
+        .q({ '*': '*' })
+        .qop('AND')
+        .fq({
           field: 'region_t',
           value: `"north east"`,
-        },
-        { complexPhrase: true }
-      );
+          configOption: { complexPhrase: true },
+        });
 
       const data = await client.search(query);
       assert.equal(
@@ -160,24 +162,22 @@ describe('Client', function () {
         .query()
         .q({ '*': '*' })
         .qop('AND')
-        .fq(
-          [
-            {
-              field: 'region_t',
-              value: 'south',
-            },
-            {
-              field: 'description_t',
-              value: 'point',
-            },
-          ],
-          { complexPhrase: true }
-        );
+        .fq([
+          {
+            field: 'region_t',
+            value: 'south',
+          },
+          {
+            field: 'description_t',
+            value: 'point',
+            configOption: { complexPhrase: true },
+          },
+        ]);
 
       const data = await client.search(query);
 
-      assert.equal(data.responseHeader.params?.fq, [
-        '{!complexphrase inOrder=true}region_t:south',
+      assert.deepEqual(data.responseHeader.params?.fq, [
+        'region_t:south',
         '{!complexphrase inOrder=true}description_t:point',
       ]);
       assert.equal(data.response.numFound, 2);

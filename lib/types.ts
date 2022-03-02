@@ -123,6 +123,7 @@ export type JoinOptions = {
 export type Filters = {
   field: string;
   value: string | number | Date | boolean;
+  configOption?: MatchFilterOption;
 };
 export type GroupOptions = {
   on?: boolean;

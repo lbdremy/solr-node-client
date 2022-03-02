@@ -245,7 +245,11 @@ describe('Client#createQuery', function () {
       const query = client
         .query()
         .q('*:*')
-        .fq({ field: 'id', value: '19700506.173.85' })
+        .fq({
+          field: 'id',
+          value: '19700506.173.85',
+          configOption: { complexPhrase: false },
+        })
         .debugQuery();
 
       const data = await client.search(query);
@@ -362,13 +366,14 @@ describe('Client#createQuery', function () {
       const query = client
         .query()
         .q('*:*')
-        .fq(
-          [
-            { field: 'id', value: '19700506.173.85' },
-            { field: 'title', value: 'testvalue' },
-          ],
-          { complexPhrase: true }
-        )
+        .fq([
+          {
+            field: 'id',
+            value: '19700506.173.85',
+            configOption: { complexPhrase: true },
+          },
+          { field: 'title', value: 'testvalue' },
+        ])
         .debugQuery();
 
       const data = await client.search(query);
@@ -378,7 +383,7 @@ describe('Client#createQuery', function () {
         q: '*:*',
         fq: [
           '{!complexphrase inOrder=true}id:19700506.173.85',
-          '{!complexphrase inOrder=true}title:testvalue',
+          'title:testvalue',
         ],
         wt: 'json',
       });
@@ -388,7 +393,11 @@ describe('Client#createQuery', function () {
       const query = client
         .query()
         .q('*:*')
-        .fq({ field: 'id', value: '19700506' }, { complexPhrase: true })
+        .fq({
+          field: 'id',
+          value: '19700506',
+          configOption: { complexPhrase: true },
+        })
         .debugQuery();
 
       const data = await client.search(query);

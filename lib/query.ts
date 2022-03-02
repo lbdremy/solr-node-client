@@ -304,21 +304,6 @@ export class Query {
     this.parameters.push(parameter);
     return self;
   }
-  // matchFilter(
-  //   field: string,
-  //   value: string | number | Date | boolean,
-  //   configOptions?: MatchFilterOption
-  // ): Query {
-  //   const self = this;
-  //   value = `${format.dateISOify(value)}`;
-  //   let parameter = 'fq=';
-  //   if (configOptions?.complexPhrase) {
-  //     parameter += `{!complexphrase inOrder=true}`;
-  //   }
-  //   parameter += field + ':' + encodeURIComponent(value);
-  //   this.parameters.push(parameter);
-  //   return self;
-  // }
 
   /**
    * wrapper function for matchFilter, accepting either an object with `field` and `value` properties
@@ -336,26 +321,18 @@ export class Query {
    * query.q({ '*' : '*' }).fq({field: 'id', value: 100})
    * query.q({ '*' : '*' }).fq([{field: 'id', value: 100}, {field: 'name', value: 'John'}])
    */
-  fq(filters: Filters | Filters[], configOptions?: MatchFilterOption): Query {
+  fq(filters: Filters | Filters[]): Query {
     const self = this;
     if (Array.isArray(filters)) {
-      if (configOptions?.complexPhrase) {
-        filters.map((f) =>
-          this.matchFilter(f.field, f.value, { complexPhrase: true })
-        );
-        return self;
-      }
-
-      filters.map((f) => this.matchFilter(f.field, f.value));
+      filters.map((f) => this.matchFilter(f.field, f.value, f.configOption));
       return self;
     }
     if (filters instanceof Object) {
-      if (configOptions?.complexPhrase) {
-        return this.matchFilter(filters.field, filters.value, {
-          complexPhrase: true,
-        });
-      }
-      return this.matchFilter(filters.field, filters.value);
+      return this.matchFilter(
+        filters.field,
+        filters.value,
+        filters.configOption
+      );
     } else {
       throw new Error('unknown type for filter in fq()');
     }

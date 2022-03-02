@@ -345,7 +345,7 @@ describe('Client#createQuery', function () {
       const query = client
         .query()
         .q('*:*')
-        .matchFilter('id', '19700506.173.85', { complexPhrase: true })
+        .matchFilter('id', '19700506', { complexPhrase: true })
         .debugQuery();
 
       const data = await client.search(query);
@@ -353,7 +353,7 @@ describe('Client#createQuery', function () {
       assert.deepEqual(data.responseHeader.params, {
         debugQuery: 'true',
         q: '*:*',
-        fq: '{!complexphrase inOrder=true}id:19700506.173.85',
+        fq: '{!complexphrase inOrder=true}id:19700506',
         wt: 'json',
       });
     });
@@ -388,7 +388,7 @@ describe('Client#createQuery', function () {
       const query = client
         .query()
         .q('*:*')
-        .fq({ field: 'id', value: '19700506.173.85' }, { complexPhrase: true })
+        .fq({ field: 'id', value: '19700506' }, { complexPhrase: true })
         .debugQuery();
 
       const data = await client.search(query);
@@ -396,7 +396,7 @@ describe('Client#createQuery', function () {
       assert.deepEqual(data.responseHeader.params, {
         debugQuery: 'true',
         q: '*:*',
-        fq: '{!complexphrase inOrder=true}id:19700506.173.85',
+        fq: '{!complexphrase inOrder=true}id:19700506',
         wt: 'json',
       });
     });

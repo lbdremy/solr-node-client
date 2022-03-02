@@ -97,19 +97,17 @@ export class Query {
   q(q: string | Record<string, any>, configOption?: MatchFilterOption): Query {
     const self = this;
     const complexPhrase = '{!complexphrase inOrder=true}';
-    let parameter = 'q=';
-    if (typeof q === 'string') {
-      parameter += configOption?.complexPhrase
-        ? encodeURIComponent(complexPhrase + q)
-        : encodeURIComponent(q);
-      console.log(complexPhrase + q);
-    } else {
-      const qToString = querystring.stringify(q, '%20AND%20', ':');
-      parameter += configOption?.complexPhrase
-        ? complexPhrase + qToString
-        : qToString;
-    }
-    this.parameters.push(parameter);
+
+    const parameter =
+      typeof q === 'string'
+        ? encodeURIComponent(q)
+        : querystring.stringify(q, '%20AND%20', ':');
+
+    const fullParameter = configOption?.complexPhrase
+      ? encodeURIComponent(complexPhrase) + parameter
+      : parameter;
+
+    this.parameters.push('q=' + fullParameter);
     return self;
   }
 
@@ -298,11 +296,29 @@ export class Query {
       value = `(${value.join(' OR ')})`;
     } else {
       value = format.dateISOify(value);
+      field = configOptions?.complexPhrase
+        ? `{!complexphrase inOrder=true}${field}`
+        : field;
     }
-    parameter += field + ':' + encodeURIComponent(value);
+    parameter += encodeURIComponent(field + ':' + value);
     this.parameters.push(parameter);
     return self;
   }
+  // matchFilter(
+  //   field: string,
+  //   value: string | number | Date | boolean,
+  //   configOptions?: MatchFilterOption
+  // ): Query {
+  //   const self = this;
+  //   value = `${format.dateISOify(value)}`;
+  //   let parameter = 'fq=';
+  //   if (configOptions?.complexPhrase) {
+  //     parameter += `{!complexphrase inOrder=true}`;
+  //   }
+  //   parameter += field + ':' + encodeURIComponent(value);
+  //   this.parameters.push(parameter);
+  //   return self;
+  // }
 
   /**
    * wrapper function for matchFilter, accepting either an object with `field` and `value` properties
@@ -323,22 +339,23 @@ export class Query {
   fq(filters: Filters | Filters[], configOptions?: MatchFilterOption): Query {
     const self = this;
     if (Array.isArray(filters)) {
-      if (!configOptions) {
-        filters.map((f) => this.matchFilter(f.field, f.value));
+      if (configOptions?.complexPhrase) {
+        filters.map((f) =>
+          this.matchFilter(f.field, f.value, { complexPhrase: true })
+        );
         return self;
       }
-      filters.map((f) =>
-        this.matchFilter(f.field, f.value, { complexPhrase: true })
-      );
+
+      filters.map((f) => this.matchFilter(f.field, f.value));
       return self;
     }
     if (filters instanceof Object) {
-      if (!configOptions) {
-        return this.matchFilter(filters.field, filters.value);
+      if (configOptions?.complexPhrase) {
+        return this.matchFilter(filters.field, filters.value, {
+          complexPhrase: true,
+        });
       }
-      return this.matchFilter(filters.field, filters.value, {
-        complexPhrase: true,
-      });
+      return this.matchFilter(filters.field, filters.value);
     } else {
       throw new Error('unknown type for filter in fq()');
     }

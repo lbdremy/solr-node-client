@@ -49,7 +49,7 @@ describe('Client', function () {
 
       const query = client
         .query()
-        .q('region_t:"east"', { complexPhrase: false })
+        .q('region_t:east', { complexPhrase: true })
         .qop('AND');
 
       const data = await client.search(query);
@@ -83,8 +83,7 @@ describe('Client', function () {
 
       const query = client
         .query()
-        .q({ region_t: 'east' }, { complexPhrase: true })
-        .qop('AND');
+        .q({ region_t: 'east' }, { complexPhrase: true });
 
       const data = await client.search(query);
       assert.equal(data.responseHeader.params?.q, [
@@ -150,7 +149,7 @@ describe('Client', function () {
         },
         {
           id: 4,
-          region_t: `"south east"`,
+          region_t: 'south',
           description_t: 'point',
         },
       ];
@@ -165,7 +164,7 @@ describe('Client', function () {
           [
             {
               field: 'region_t',
-              value: `"south east"`,
+              value: 'south',
             },
             {
               field: 'description_t',
@@ -176,11 +175,11 @@ describe('Client', function () {
         );
 
       const data = await client.search(query);
-      assert.equal(data.responseHeader.params?.fq, [
-        `{!complexphrase inOrder=true}region_t:"south east"`,
-        `{!complexphrase inOrder=true}description_t:point`,
-      ]);
 
+      assert.equal(data.responseHeader.params?.fq, [
+        '{!complexphrase inOrder=true}region_t:south',
+        '{!complexphrase inOrder=true}description_t:point',
+      ]);
       assert.equal(data.response.numFound, 2);
     });
   });

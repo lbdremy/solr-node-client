@@ -109,7 +109,7 @@ export class Query {
         : querystring.stringify(q, '%20AND%20', ':');
 
     const fullParameter = matchFilterOptions?.complexPhrase
-      ? encodeURIComponent(COMPLEX_PHRASE_PARAM + parameter)
+      ? encodeURIComponent(COMPLEX_PHRASE_PARAM) + parameter
       : parameter;
 
     this.parameters.push('q=' + fullParameter);

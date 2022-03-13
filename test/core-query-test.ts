@@ -248,7 +248,7 @@ describe('Client#createQuery', function () {
         .fq({
           field: 'id',
           value: '19700506.173.85',
-          configOption: { complexPhrase: false },
+          matchFilterOptions: { complexPhrase: false },
         })
         .debugQuery();
 
@@ -370,7 +370,7 @@ describe('Client#createQuery', function () {
           {
             field: 'id',
             value: '19700506.173.85',
-            configOption: { complexPhrase: true },
+            matchFilterOptions: { complexPhrase: true },
           },
           { field: 'title', value: 'testvalue' },
         ])
@@ -396,7 +396,7 @@ describe('Client#createQuery', function () {
         .fq({
           field: 'id',
           value: '19700506',
-          configOption: { complexPhrase: true },
+          matchFilterOptions: { complexPhrase: true },
         })
         .debugQuery();
 

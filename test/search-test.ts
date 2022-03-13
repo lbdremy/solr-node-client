@@ -121,7 +121,7 @@ describe('Client', function () {
         .fq({
           field: 'region_t',
           value: `"north east"`,
-          configOption: { complexPhrase: true },
+          matchFilterOptions: { complexPhrase: true },
         });
 
       const data = await client.search(query);
@@ -170,7 +170,7 @@ describe('Client', function () {
           {
             field: 'description_t',
             value: 'point',
-            configOption: { complexPhrase: true },
+            matchFilterOptions: { complexPhrase: true },
           },
         ]);
 

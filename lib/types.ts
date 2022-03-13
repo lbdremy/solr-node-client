@@ -123,6 +123,7 @@ export type JoinOptions = {
 export type Filters = {
   field: string;
   value: string | number | Date | boolean;
+  matchFilterOptions?: MatchFilterOptions;
 };
 export type GroupOptions = {
   on?: boolean;
@@ -319,4 +320,8 @@ export type AddResponse = {
 export type JsonResponseData = Record<string, any> | any[];
 export type CommonResponse = {
   responseHeader: Record<string, any>;
+};
+
+export type MatchFilterOptions = {
+  complexPhrase?: boolean;
 };

@@ -245,7 +245,11 @@ describe('Client#createQuery', function () {
       const query = client
         .query()
         .q('*:*')
-        .fq({ field: 'id', value: '19700506.173.85' })
+        .fq({
+          field: 'id',
+          value: '19700506.173.85',
+          matchFilterOptions: { complexPhrase: false },
+        })
         .debugQuery();
 
       const data = await client.search(query);
@@ -339,6 +343,71 @@ describe('Client#createQuery', function () {
       ]);
       console.log(data.response.numFound);
       assert.deepEqual(data.response.numFound, 2);
+    });
+
+    it('query with match-filter and complexPhrase', async function () {
+      const query = client
+        .query()
+        .q('*:*')
+        .matchFilter('id', '19700506', { complexPhrase: true })
+        .debugQuery();
+
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: '{!complexphrase inOrder=true}id:19700506',
+        wt: 'json',
+      });
+    });
+
+    it('query with multiple match-filters and complexPhrase', async function () {
+      const query = client
+        .query()
+        .q('*:*')
+        .fq([
+          {
+            field: 'id',
+            value: '19700506.173.85',
+            matchFilterOptions: { complexPhrase: true },
+          },
+          { field: 'title', value: 'testvalue' },
+        ])
+        .debugQuery();
+
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: [
+          '{!complexphrase inOrder=true}id:19700506.173.85',
+          'title:testvalue',
+        ],
+        wt: 'json',
+      });
+    });
+
+    it('query with object match-filter and complexPhrase', async function () {
+      const query = client
+        .query()
+        .q('*:*')
+        .fq({
+          field: 'id',
+          value: '19700506',
+          matchFilterOptions: { complexPhrase: true },
+        })
+        .debugQuery();
+
+      const data = await client.search(query);
+      dataOk(data);
+      assert.deepEqual(data.responseHeader.params, {
+        debugQuery: 'true',
+        q: '*:*',
+        fq: '{!complexphrase inOrder=true}id:19700506',
+        wt: 'json',
+      });
     });
   });
 });

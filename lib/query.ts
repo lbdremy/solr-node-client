@@ -14,8 +14,11 @@ import {
   FacetOptions,
   DateOptions,
   JoinOptions,
+  MatchFilterOptions,
 } from './types';
 import { dateISOify } from './utils/format';
+
+const COMPLEX_PHRASE_PARAM = '{!complexphrase inOrder=true}';
 
 export type QueryOptions = {
   solrVersion?: number;
@@ -90,18 +93,26 @@ export class Query {
    *
    * @param {String|Object} q -
    *
+   * @param matchFilterOptions
    * @return  {Query}
    * @api public
    */
-  q(q: string | Record<string, any>): Query {
+  q(
+    q: string | Record<string, any>,
+    matchFilterOptions?: MatchFilterOptions
+  ): Query {
     const self = this;
-    let parameter = 'q=';
-    if (typeof q === 'string') {
-      parameter += encodeURIComponent(q);
-    } else {
-      parameter += querystring.stringify(q, '%20AND%20', ':');
-    }
-    this.parameters.push(parameter);
+
+    const parameter =
+      typeof q === 'string'
+        ? encodeURIComponent(q)
+        : querystring.stringify(q, '%20AND%20', ':');
+
+    const fullParameter = matchFilterOptions?.complexPhrase
+      ? encodeURIComponent(COMPLEX_PHRASE_PARAM) + parameter
+      : parameter;
+
+    this.parameters.push('q=' + fullParameter);
     return self;
   }
 
@@ -269,6 +280,7 @@ export class Query {
    * @param {String} field - name of field
    * @param {String|String[]|Number|Number[]|Date|Date[]} value - value of the field that must match
    *
+   * @param matchFilterOptions
    * @return {Query}
    * @api public
    *
@@ -280,7 +292,8 @@ export class Query {
 
   matchFilter(
     field: string,
-    value: string | string[] | number | number[] | Date | Date[] | boolean
+    value: string | string[] | number | number[] | Date | Date[] | boolean,
+    matchFilterOptions?: MatchFilterOptions
   ): Query {
     const self = this;
     let parameter = 'fq=';
@@ -289,8 +302,11 @@ export class Query {
       value = `(${value.join(' OR ')})`;
     } else {
       value = format.dateISOify(value);
+      field = matchFilterOptions?.complexPhrase
+        ? `{!complexphrase inOrder=true}${field}`
+        : field;
     }
-    parameter += field + ':' + encodeURIComponent(value);
+    parameter += encodeURIComponent(field + ':' + value);
     this.parameters.push(parameter);
     return self;
   }
@@ -314,12 +330,18 @@ export class Query {
   fq(filters: Filters | Filters[]): Query {
     const self = this;
     if (Array.isArray(filters)) {
-      filters.map((f) => this.matchFilter(f.field, f.value));
+      filters.map((f) =>
+        this.matchFilter(f.field, f.value, f.matchFilterOptions)
+      );
       return self;
     }
-    if (filters instanceof Object)
-      return this.matchFilter(filters.field, filters.value);
-    else {
+    if (filters instanceof Object) {
+      return this.matchFilter(
+        filters.field,
+        filters.value,
+        filters.matchFilterOptions
+      );
+    } else {
       throw new Error('unknown type for filter in fq()');
     }
   }

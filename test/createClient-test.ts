@@ -10,6 +10,26 @@ describe('solr', function () {
       assert.equal(client['options'].core, '');
       assert.equal(client['options'].path, '/solr');
     });
+
+    it('should return a `Client` instance without port', function () {
+      const client = createClient({
+        port: null,
+      });
+      assert.equal(client['options'].host, '127.0.0.1');
+      assert.equal(client['options'].port, '');
+      assert.equal(client['options'].core, '');
+      assert.equal(client['options'].path, '/solr');
+    });
+
+    it('should return a `Client` instance with port 0', function () {
+      const client = createClient({
+        port: 0,
+      });
+      assert.equal(client['options'].host, '127.0.0.1');
+      assert.equal(client['options'].port, '');
+      assert.equal(client['options'].core, '');
+      assert.equal(client['options'].path, '/solr');
+    });
   });
 
   describe('.createClient({ host : "10.10.10.10",port : 8080, core : "core1", path : "/solr4"})', function () {

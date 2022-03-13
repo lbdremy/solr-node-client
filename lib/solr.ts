@@ -57,6 +57,16 @@ export function createClient(options: SolrClientParams = {}) {
   return new Client(options);
 }
 
+export function resolvePort(options: SolrClientParams): string | number {
+  if (options.port === undefined) {
+    return '8983';
+  }
+  if (options.port === null || options.port === '') {
+    return '';
+  }
+  return options.port;
+}
+
 /**
  * Solr client.
  */
@@ -75,7 +85,7 @@ export class Client {
   constructor(options: SolrClientParams = {}) {
     this.options = {
       host: options.host || '127.0.0.1',
-      port: options.port === 0 ? 0 : options.port || '8983',
+      port: resolvePort(options),
       core: options.core || '',
       path: options.path || '/solr',
       tls: options.tls,

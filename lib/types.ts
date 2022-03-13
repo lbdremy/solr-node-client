@@ -39,7 +39,7 @@ export type SolrClientParams = {
   /**
    * Port of the Solr server
    */
-  port?: string | number;
+  port?: string | number | null;
 
   /**
    * Name of the Solr core to use.

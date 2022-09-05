@@ -47,7 +47,7 @@
     "eslint-config-prettier": "^8.3.0",
     "eslint-plugin-prettier": "^4.0.0",
     "figc": "^0.0.3",
-    "jasmine-core": "^3.10.1",
+    "jasmine-core": "^4.4.0",
     "minimist": "^1.2.5",
     "mocha": "^9.1.2",
     "prettier": "^2.4.1",
